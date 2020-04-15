@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+<group
+    android:id="@+id/grupo_itens_bottomnavigation"
+    android:visible="true"
+    android:menuCategory="container">
+
+    <item
+        android:id="@+id/perfil_navigation_itemMenu"
+        android:icon="@drawable/ic_home_branco"
+        android:title="@string/petperfil"
+        android:orderInCategory="1"
+        />
+    <item
+        android:id="@+id/pesquisar_navigation_itemMenu"
+        android:icon="@drawable/ic_search_pesquisar"
+        android:title="@string/pesquisar"
+        android:orderInCategory="2"
+        />
+    <item
+        android:id="@+id/home_navigation_itemMenu"
+        android:icon="@drawable/ic_pets_white_24dp"
+        android:title="@string/pethome"
+        android:orderInCategory="3"
+        />
+    <item
+        android:id="@+id/notificacao_navigation_itemMenu"
+        android:icon="@drawable/ic_like_branco"
+        android:title="@string/notifica_o"
+        android:orderInCategory="4"
+        />
+    <item
+        android:id="@+id/postar_navigation_itemMenu"
+        android:icon="@drawable/ic_add_foto"
+        android:title="@string/petpostagem"
+        android:orderInCategory="5"
+        />
+
+</group>
+</menu>

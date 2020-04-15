@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "709978173578",
+    "firebase_url": "https://petgramapp.firebaseio.com",
+    "project_id": "petgramapp",
+    "storage_bucket": "petgramapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709978173578:android:8fa7343e608c53a44f7d73",
+        "android_client_info": {
+          "package_name": "br.com.petgramapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "709978173578-gjq5hum2ocdcq5o3fvdicabutdt0hkag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO3X1nYA2ZlE_0MLGaMxtvC2XMOT88frw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "709978173578-gjq5hum2ocdcq5o3fvdicabutdt0hkag.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

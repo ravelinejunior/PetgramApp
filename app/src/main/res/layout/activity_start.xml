@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_principal"
+    tools:context=".activities.StartActivity">
+
+    <FrameLayout
+        android:id="@+id/fragment_container_principal_StartAct"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/appBarLayout_startAct">
+
+    </FrameLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout_startAct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+       >
+
+        <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+            android:id="@+id/bottomNavigation_StartAct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/VermelhoNovo"
+            app:itemIconTint="@color/passagem_fragment_ativado_color"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/bottom_navigation">
+
+        </com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+
+</RelativeLayout>

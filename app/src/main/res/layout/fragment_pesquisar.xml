@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.PesquisarFragment">
+
+   <com.google.android.material.appbar.AppBarLayout
+       android:id="@+id/appBar_pesquisarFragment"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+
+       >
+
+       <androidx.appcompat.widget.Toolbar
+           android:id="@+id/toolBar_pesquisarFragment"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:background="@color/cinzaClaro">
+
+
+           <com.google.android.material.textfield.TextInputLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:textColorHint="@color/branco"
+               app:startIconTintMode="screen"
+               app:startIconDrawable="@drawable/ic_search_pesquisar">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/pesquisarUsuario_pesquisarFragment_Edittext"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                    android:textColor="@color/branco"
+                   android:hint="@string/pesquisar_usu_rios" />
+           </com.google.android.material.textfield.TextInputLayout>
+
+
+       </androidx.appcompat.widget.Toolbar>
+
+
+   </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_pesquisarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBar_pesquisarFragment" />
+
+
+</RelativeLayout>

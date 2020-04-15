@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/item_todosUsuarioa_MenuSair"
+        android:title="@string/todos_usu_rios" />
+
+    <item android:id="@+id/item_sair_MenuSair"
+        android:title="@string/sair"
+        />
+</menu>

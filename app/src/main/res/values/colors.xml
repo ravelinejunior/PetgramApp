@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="vermelhoescuro">#8B1515</color>
+    <color name="roxoescuro">#321E6D</color>
+    <color name="vermelhoGold">#B10E57</color>
+    <color name="primaryColor">#7A7C8A</color>
+    <color name="primaryLightColor">#ff5f52</color>
+    <color name="primaryDarkColor">#550101</color>
+    <color name="vermelhocomum">#d50000</color>
+    <color name="vermelholaranja">#ff5131</color>
+    <color name="vermelho">#B12602</color>
+    <color name="branco">#ffffff</color>
+    <color name="preto">#000000</color>
+    <color name="laranja">#e64a19</color>
+    <color name="laranjaClaro">#F38C61</color>
+    <color name="roxo">#250A44</color>
+    <color name="cinza">#772D0C58</color>
+    <color name="cinzaClaro">#4f5b62</color>
+    <color name="cinzaEscuro">#000a12</color>
+    <color name="toolbarcor">#7EF8F8F8</color>
+    <color name="laranjaComum">#ff8000</color>
+    <color name="laranjaVermelho">#FF4500</color>
+    <color name="azul">#0040ff</color>
+    <color name="azulMarinho">#002080</color>
+    <color name="azulescuro">#0033cc</color>
+    <color name="escuroAzul">#001a66</color>
+    <color name="amarelo">#cccc00</color>
+    <color name="amareloG">#FFFF00</color>
+    <color name="goldAmarelo">#FFD700</color>
+    <color name="amareloKhak">#F0E68C</color>
+    <color name="amareloEsc">#CDCD00</color>
+    <color name="Lima">#FDE910</color>
+    <color name="azulPiscina">#4ABDAC</color>
+    <color name="sunshine">#F7B733</color>
+    <color name="Clean">#DFDCE3</color>
+    <color name="Azulnovo">#345D7E</color>
+    <color name="VermelhoNovo">#F27281</color>
+    <color name="LaranjaNovo">#F8B195</color>
+    <color name="Verde">#00FA9A</color>
+    <color name="VerdeSptring">#1E7141</color>
+    <color name="Verdeescuro">#006400</color>
+    <color name="verdao">#008000</color>
+
+
+</resources>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/azulPiscina"
+    tools:context=".activities.CadastrarActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
+    <LinearLayout
+        android:id="@+id/linearLayout_cadastro_act"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/branco"
+            app:startIconDrawable="@drawable/ic_pets_white_24dp"
+            app:helperText="Nome do pet (CAMPO OBRIGATÓRIO)"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nomePet_Cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/nome_do_petuser"
+                android:singleLine="true"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/branco"
+            app:startIconDrawable="@drawable/ic_pets_white_24dp"
+            app:helperText="Email do usuario (CAMPO OBRIGATÓRIO)"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailUsuarioPet_Cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/email_do_a_pai_m_e_do_pet"
+                android:singleLine="true"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/branco"
+            app:startIconDrawable="@drawable/ic_pets_white_24dp"
+            app:helperText="Idade do pet (OPCIONAL)"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/idade_Cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/idade_do_pet"
+                android:inputType="number"
+                android:singleLine="true"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/branco"
+            app:startIconDrawable="@drawable/ic_pets_white_24dp"
+            app:helperText="Vida, rotina, bagunças, alegrias.(OPCIONAL)"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/descricaoPet_Cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/estilo_de_vida_pet"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <RadioGroup
+            android:id="@+id/radioGroup_cadastrarSexo_act"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            >
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sexo_do_pet"
+                android:textSize="18sp"
+                android:paddingStart="10dp"
+                android:drawableTint="@color/cinza"
+                android:drawableStart="@drawable/ic_pets_white_24dp"
+                android:drawablePadding="10dp"
+                android:textColor="@color/branco"/>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/cinzaEscuro" />
+
+            <RadioButton
+                android:id="@+id/radioButton_masculino_cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/branco"
+                android:text="@string/masculino" />
+
+            <RadioButton
+                android:id="@+id/radioButton_feminino_cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/feminino"
+                android:layout_marginBottom="6dp"
+                android:textColor="@color/branco"/>
+
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/branco"
+            app:passwordToggleDrawable="@drawable/ic_password_senha_24dp"
+            app:passwordToggleEnabled="true"
+            app:startIconDrawable="@drawable/ic_pets_white_24dp"
+            app:helperText="Senha (CAMPO OBRIGATÓRIO)"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/senhaPet_Cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/senha_pet"
+                android:singleLine="true"
+                android:inputType="textPassword"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/branco"
+            app:startIconDrawable="@drawable/ic_pets_white_24dp"
+            app:passwordToggleDrawable="@drawable/ic_password_senha_24dp"
+            app:passwordToggleEnabled="true"
+            app:helperText="Confirmação de senha (CAMPO OBRIGATÓRIO)"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirmacaoSenhaPet_Cadastro_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/confirma_o_de_senha_pet"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar_Cadastrar_act"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressBackgroundTint="@color/branco"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/botaoCadastrar_Cadastro_act"
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/cadastro"
+            android:background="@drawable/botao_login_shape_bg"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/branco"
+            />
+
+
+
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,20 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/Azulnovo</item>
+        <item name="colorPrimaryDark">@color/vermelhoescuro</item>
+        <item name="colorAccent">@color/preto</item>
+    </style>
+
+    <style name="AppThemeComentarioActivity" parent="Theme.AppCompat.Light.DarkActionBar"  >
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/Azulnovo</item>
+        <item name="colorPrimaryDark">@color/vermelhoescuro</item>
+        <item name="colorAccent">@color/preto</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>
