@@ -44,8 +44,8 @@
     <View
         android:id="@+id/divider_AdapterComentario"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#3A3D3E"
+        android:layout_height="1dp"
+        android:background="#454849"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_below="@id/layoutLinear_principal_Comentarios"

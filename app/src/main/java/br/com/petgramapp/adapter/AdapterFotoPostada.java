@@ -204,9 +204,11 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                 if (dataSnapshot.child(user.getUid()).exists()){
                        // likeButtonImage.setImageResource(R.drawable.ic_likebutton_colorido);
                         likeButtonImage.setTag("curtido");
+                        likeButtonImage.setLiked(true);
                 }else{
                    // likeButtonImage.setImageResource(R.drawable.ic_like_branco);
                     likeButtonImage.setTag("curtir");
+                    likeButtonImage.setLiked(false);
                 }
             }
 
