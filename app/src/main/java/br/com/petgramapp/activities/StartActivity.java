@@ -47,7 +47,23 @@ public class StartActivity extends AppCompatActivity {
         configurarBottomNavigation();
         FragmentManager fragmentManager= getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_principal_StartAct,new PesquisarFragment()).commit();
+
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null){
+            String autorComentario = bundle.getString("idAutorComentario");
+
+            SharedPreferences.Editor editor = getSharedPreferences("PREFS",MODE_PRIVATE).edit();
+            editor.putString("idUsuario",autorComentario);
+            editor.apply();
+
+            fragmentTransaction.replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();
+
+        }else{
+            fragmentTransaction.replace(R.id.fragment_container_principal_StartAct,new HomeFragment()).commit();
+        }
+
 
     }
 
@@ -78,42 +94,39 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void habilitarEventosNavigation(BottomNavigationViewEx viewEx){
-        viewEx.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        viewEx.setOnNavigationItemSelectedListener(item -> {
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                switch (item.getItemId()){
+            switch (item.getItemId()){
 
-                    case R.id.home_navigation_itemMenu:
-                        fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new HomeFragment()).commit();
-                        return true;
+                case R.id.home_navigation_itemMenu:
+                    fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new HomeFragment()).commit();
+                    return true;
 
-                    case R.id.perfil_navigation_itemMenu:
-                        SharedPreferences.Editor editor = getSharedPreferences("PREFS",MODE_PRIVATE).edit();
-                        editor.putString("idUsuario",firebaseAuth.getCurrentUser().getUid());
-                        editor.apply();
-                        fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new PerfilFragment()).commit();
-                        return true;
+                case R.id.perfil_navigation_itemMenu:
+                    SharedPreferences.Editor editor = getSharedPreferences("PREFS",MODE_PRIVATE).edit();
+                    editor.putString("idUsuario",firebaseAuth.getCurrentUser().getUid());
+                    editor.apply();
+                    fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new PerfilFragment()).commit();
+                    return true;
 
-                    case R.id.postar_navigation_itemMenu:
-                       // startActivity(new Intent(getContext(),PostagemActivity.class));
-                        fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new PostarFragment()).commit();
-                        return true;
+                case R.id.postar_navigation_itemMenu:
+                   // startActivity(new Intent(getContext(),PostagemActivity.class));
+                    fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new PostarFragment()).commit();
+                    return true;
 
-                    case R.id.notificacao_navigation_itemMenu:
-                        fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new NotificacaoFragment()).commit();
-                        return true;
+                case R.id.notificacao_navigation_itemMenu:
+                    fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new NotificacaoFragment()).commit();
+                    return true;
 
-                    case R.id.pesquisar_navigation_itemMenu:
-                        fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new PesquisarFragment()).commit();
-                        return true;
-                }
-
-                return false;
+                case R.id.pesquisar_navigation_itemMenu:
+                    fragmentTransaction.replace(R.id.fragment_container_principal_StartAct , new PesquisarFragment()).commit();
+                    return true;
             }
+
+            return false;
         });
     }
 
@@ -164,10 +177,8 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.item_sair_MenuSair:
-                deslogarUsuario();
-                break;
+        if (item.getItemId() == R.id.item_sair_MenuSair) {
+            deslogarUsuario();
         }
         return super.onOptionsItemSelected(item);
 

@@ -40,6 +40,7 @@
     <string name="_1_like">1 like</string>
     <string name="digite_um_comentario">Digite um comentario</string>
     <string name="postar">Postar</string>
+    <string name="nome_usuario_digitado">Nome usuario digitado</string>
 
 
 </resources>

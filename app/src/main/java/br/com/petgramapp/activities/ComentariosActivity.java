@@ -3,12 +3,16 @@ package br.com.petgramapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,11 +22,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.adapter.AdapterComentarios;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
+import br.com.petgramapp.model.Comentarios;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,6 +43,9 @@ public class ComentariosActivity extends AppCompatActivity {
     private String idUsuarioPostou;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
+    private RecyclerView recyclerViewComentarios;
+    private AdapterComentarios adapterComentarios;
+    private List<Comentarios> comentariosList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +62,24 @@ public class ComentariosActivity extends AppCompatActivity {
 
         databaseReference = ConfiguracaoFirebase.getReferenciaDatabase();
 
+        recyclerViewComentarios = findViewById(R.id.recyclerView_ComentariosAct_id);
+        recyclerViewComentarios.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerViewComentarios.setLayoutManager(linearLayoutManager);
+
+        adapterComentarios = new AdapterComentarios(comentariosList,getContext());
+        recyclerViewComentarios.setAdapter(adapterComentarios);
+
         recuperarImagem();
+        readComentarios();
 
 
 
 
+    }
+
+    public Context getContext(){
+        return ComentariosActivity.this;
     }
 
     public void clicarBotaoSalvarComentario(View v){
@@ -67,6 +91,28 @@ public class ComentariosActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void readComentarios(){
+        DatabaseReference comentariosRef = databaseReference.child("Comentarios").child(idPostagem);
+
+        comentariosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                comentariosList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    Comentarios comentarios = ds.getValue(Comentarios.class);
+                    comentariosList.add(comentarios);
+                }
+
+                adapterComentarios.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void adicionarComentario() {
