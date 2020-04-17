@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import br.com.petgramapp.R;
+import br.com.petgramapp.adapter.AdapterMinhasFotos;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
@@ -33,6 +40,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class PerfilFragment extends Fragment {
 
+    //WIDGETS
     private Button botaoEditarPerfilFrament;
     private ImageButton imageButtonMinhasFotos;
     private ImageButton imageButtonSalvarFotos;
@@ -44,10 +52,15 @@ public class PerfilFragment extends Fragment {
     private TextView quantidadeSeguindoPerfilFragment;
     private CircleImageView imagemFotoPerfilUsuarioFragment;
 
+    //DADOS
     String idPerfilUsuario;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
 
+    //VIEWS/ADAPTER
+    private RecyclerView recyclerViewMinhasFotos;
+    private AdapterMinhasFotos adapterMinhasFotos;
+    private List<FotoPostada> fotoPostadaList;
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -82,6 +95,7 @@ public class PerfilFragment extends Fragment {
         getSeguidores();
         getSeguindo();
         getLikes();
+        carregarMinhasFotos();
 
         if (idPerfilUsuario.equals(firebaseUser.getUid())){
             botaoEditarPerfilFrament.setText(R.string.editar_petperfil);
@@ -90,8 +104,42 @@ public class PerfilFragment extends Fragment {
             imageButtonSalvarFotos.setVisibility(View.GONE);
         }
 
+        recyclerViewMinhasFotos = view.findViewById(R.id.recyclerView_minhasFotos_PerfilFragment);
+        recyclerViewMinhasFotos.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerViewMinhasFotos.setLayoutManager(linearLayoutManager);
+        fotoPostadaList = new ArrayList<>();
+        adapterMinhasFotos = new AdapterMinhasFotos(getContext(),fotoPostadaList);
+        recyclerViewMinhasFotos.setAdapter(adapterMinhasFotos);
+
+
 
         return view;
+    }
+
+    private void carregarMinhasFotos(){
+        DatabaseReference fotosRef = reference.child("Posts");
+        fotosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                fotoPostadaList.clear();
+
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
+                    if (fotoPostada.getIdUsuarioPostou().equals(idPerfilUsuario)){
+                        fotoPostadaList.add(fotoPostada);
+                    }
+                }
+
+                Collections.reverse(fotoPostadaList);
+                adapterMinhasFotos.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void seguirUsuario(){
