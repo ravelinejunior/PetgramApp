@@ -75,7 +75,7 @@ public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquis
         }
 
         holder.itemView.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = c.getSharedPreferences("PREFERENCES",Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = c.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
             editor.putString("idUsuario",usuario.getId());
             editor.apply();
 

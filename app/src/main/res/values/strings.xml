@@ -42,6 +42,8 @@
     <string name="postar">Postar</string>
     <string name="nome_usuario_digitado">Nome usuario digitado</string>
     <string name="editar_petperfil">Editar PetPerfil</string>
+    <string name="likes">Likes</string>
+    <string name="seguidores">Seguidores</string>
 
 
 </resources>

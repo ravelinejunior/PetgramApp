@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +29,6 @@ import br.com.petgramapp.activities.ComentariosActivity;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
-import br.com.petgramapp.model.HomeFeed;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 

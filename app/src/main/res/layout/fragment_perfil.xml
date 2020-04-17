@@ -99,14 +99,14 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/postagensPet_PerfilFragment_id"
+                            android:id="@+id/quantidade_PostagensPet_PerfilFragment_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#101417"
-                            android:gravity="center"
+                            android:layout_gravity="center"
                             android:textStyle="bold"
                             android:textSize="18sp"
-                            android:text="@string/petperfil"
+
                             />
                         <TextView
                             android:layout_width="wrap_content"
@@ -119,16 +119,15 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/seguidoresPet_PerfilFragment_id"
+                            android:id="@+id/quantidade_SeguidoresPet_PerfilFragment_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/petperfil"
+                            android:layout_gravity="center"
                             android:textColor="#101417"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -136,7 +135,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="seguidores" />
+                            android:text="@string/seguidores" />
 
                     </LinearLayout>
 
@@ -146,12 +145,11 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/seguindoPet_PerfilFragment_id"
+                            android:id="@+id/quantidade_SeguindoPet_PerfilFragment_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
+                            android:layout_gravity="center"
                             android:padding="2dp"
-                            android:text="1"
                             android:textColor="#101417"
                             android:textSize="18sp"
                             android:textStyle="bold" />

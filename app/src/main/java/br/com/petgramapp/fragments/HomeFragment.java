@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-    }
+    } // para recuperar as postagens dos usuarios que estão sendo seguidos apenas
 
     public void checarUsuarios(){
         listaIdUsuarios = new ArrayList<>();

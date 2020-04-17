@@ -55,22 +55,16 @@ public class AdapterComentarios extends RecyclerView.Adapter<AdapterComentarios.
 
         informacoesUsuario(holder.imagemPerfilUsuarioComentario,holder.nomeUsuarioComentario,comentarios.getIdQuemPublicou());
 
-        holder.comentarioFeitoComentario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, StartActivity.class);
-                intent.putExtra("idAutorComentario",comentarios.getIdQuemPublicou());
-                context.startActivity(intent);
-            }
+        holder.comentarioFeitoComentario.setOnClickListener(v -> {
+            Intent intent = new Intent(context, StartActivity.class);
+            intent.putExtra("idAutorComentario",comentarios.getIdQuemPublicou());
+            context.startActivity(intent);
         });
 
-        holder.imagemPerfilUsuarioComentario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, StartActivity.class);
-                intent.putExtra("idAutorComentario",comentarios.getIdQuemPublicou());
-                context.startActivity(intent);
-            }
+        holder.imagemPerfilUsuarioComentario.setOnClickListener(v -> {
+            Intent intent = new Intent(context, StartActivity.class);
+            intent.putExtra("idAutorComentario",comentarios.getIdQuemPublicou());
+            context.startActivity(intent);
         });
     }
 
