@@ -44,6 +44,7 @@
     <string name="editar_petperfil">Editar PetPerfil</string>
     <string name="likes">Likes</string>
     <string name="seguidores">Seguidores</string>
+    <string name="foto">Foto</string>
 
 
 </resources>

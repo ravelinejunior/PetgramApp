@@ -7,9 +7,9 @@
     <ImageView
         android:id="@+id/imagensPostadas_adapterFotos"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="175dp"
         android:scaleType="fitXY"
-        android:layout_margin="5dp"
+        android:layout_margin="1dp"
         />
 
 </RelativeLayout>

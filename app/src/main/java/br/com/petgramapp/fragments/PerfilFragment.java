@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,6 +62,13 @@ public class PerfilFragment extends Fragment {
     private RecyclerView recyclerViewMinhasFotos;
     private AdapterMinhasFotos adapterMinhasFotos;
     private List<FotoPostada> fotoPostadaList;
+    //fotos salvas
+    private List<FotoPostada> fotosSalvasList;
+    private RecyclerView recyclerViewFotosSalvas;
+    private AdapterMinhasFotos adapterMinhasFotos_fotosSalvas;
+    private List<String> fotosSalvasStrings;
+
+
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -96,6 +104,7 @@ public class PerfilFragment extends Fragment {
         getSeguindo();
         getLikes();
         carregarMinhasFotos();
+        minhasFotosSalvas();
 
         if (idPerfilUsuario.equals(firebaseUser.getUid())){
             botaoEditarPerfilFrament.setText(R.string.editar_petperfil);
@@ -104,17 +113,42 @@ public class PerfilFragment extends Fragment {
             imageButtonSalvarFotos.setVisibility(View.GONE);
         }
 
+
+        //RECYCLER VIEW DE MINHAS FOTOS
         recyclerViewMinhasFotos = view.findViewById(R.id.recyclerView_minhasFotos_PerfilFragment);
         recyclerViewMinhasFotos.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(),3);
         recyclerViewMinhasFotos.setLayoutManager(linearLayoutManager);
         fotoPostadaList = new ArrayList<>();
         adapterMinhasFotos = new AdapterMinhasFotos(getContext(),fotoPostadaList);
         recyclerViewMinhasFotos.setAdapter(adapterMinhasFotos);
 
+        //RECYCLER VIEW DE FOTOS SALVAS
+        recyclerViewFotosSalvas = view.findViewById(R.id.recyclerView_fotosSalvas_PerfilFragment);
+        recyclerViewFotosSalvas.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManagerFotosSalvas = new GridLayoutManager(getContext(),3);
+        recyclerViewFotosSalvas.setLayoutManager(linearLayoutManagerFotosSalvas);
+        fotosSalvasList = new ArrayList<>();
+        adapterMinhasFotos_fotosSalvas = new AdapterMinhasFotos(getContext(),fotosSalvasList);
+        recyclerViewFotosSalvas.setAdapter(adapterMinhasFotos_fotosSalvas);
+        recyclerViewMinhasFotos.setVisibility(View.VISIBLE);
+        recyclerViewFotosSalvas.setVisibility(View.GONE);
+
+
+        imageButtonMinhasFotos.setOnClickListener(v -> {
+            recyclerViewMinhasFotos.setVisibility(View.VISIBLE);
+            recyclerViewFotosSalvas.setVisibility(View.GONE);
+        });
+
+        imageButtonSalvarFotos.setOnClickListener(v -> {
+            recyclerViewMinhasFotos.setVisibility(View.GONE);
+            recyclerViewFotosSalvas.setVisibility(View.VISIBLE);
+        });
 
 
         return view;
+
+
     }
 
     private void carregarMinhasFotos(){
@@ -292,4 +326,53 @@ public class PerfilFragment extends Fragment {
             }
         });
     }
+
+    private void minhasFotosSalvas(){
+        fotosSalvasStrings = new ArrayList<>();
+        DatabaseReference salvarReferencia = reference.child("SalvarFotos").child(firebaseUser.getUid());
+        salvarReferencia.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    fotosSalvasStrings.add(ds.getKey());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        readMinhasFotosSalvas();
+    }
+
+    private void readMinhasFotosSalvas(){
+        DatabaseReference postsReferencia = reference.child("Posts");
+        postsReferencia.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                fotosSalvasList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
+                    for (String idSalvo:fotosSalvasStrings){
+                        if (fotoPostada.getIdPostagem().equals(idSalvo))
+                        fotosSalvasList.add(fotoPostada);
+                    }
+
+                }
+                Collections.reverse(fotosSalvasList);
+                adapterMinhasFotos_fotosSalvas.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
+
 }

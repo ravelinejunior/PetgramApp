@@ -33,9 +33,8 @@ public class HomeFragment extends Fragment {
 
     public AdapterFotoPostada adapterFotoPostada;
     private List<FotoPostada> fotoPostadaList;
-    RecyclerView recyclerViewHomeFragment;
+    private RecyclerView recyclerViewHomeFragment;
 
-    private Query homeFeedRef;
     private List<String> listaIdUsuarios = new ArrayList<>();
 
     @Override

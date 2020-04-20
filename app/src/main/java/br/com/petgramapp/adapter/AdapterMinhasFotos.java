@@ -1,6 +1,7 @@
 package br.com.petgramapp.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,15 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.fragments.PostagemUsuarioFragment;
 import br.com.petgramapp.model.FotoPostada;
 
 public class AdapterMinhasFotos extends RecyclerView.Adapter<AdapterMinhasFotos.ViewHolder> {
@@ -42,6 +44,15 @@ public class AdapterMinhasFotos extends RecyclerView.Adapter<AdapterMinhasFotos.
 
         Uri imagemUri = Uri.parse(fotoPostada.getImagemPostada());
         Picasso.get().load(imagemUri).placeholder(R.drawable.ic_coco_pet).into(holder.imagens_itensFoto);
+
+        holder.imagens_itensFoto.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = contexto.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
+            editor.putString("idPostagem",fotoPostada.getIdPostagem());
+            editor.apply();
+
+            ((FragmentActivity)contexto).getSupportFragmentManager().beginTransaction().
+                    replace(R.id.fragment_container_principal_StartAct,new PostagemUsuarioFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+        });
     }
 
     @Override
