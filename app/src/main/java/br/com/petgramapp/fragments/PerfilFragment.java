@@ -1,6 +1,7 @@
 package br.com.petgramapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -29,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.activities.PerfilActivity;
 import br.com.petgramapp.adapter.AdapterMinhasFotos;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
@@ -62,6 +64,7 @@ public class PerfilFragment extends Fragment {
     private RecyclerView recyclerViewMinhasFotos;
     private AdapterMinhasFotos adapterMinhasFotos;
     private List<FotoPostada> fotoPostadaList;
+
     //fotos salvas
     private List<FotoPostada> fotosSalvasList;
     private RecyclerView recyclerViewFotosSalvas;
@@ -92,6 +95,7 @@ public class PerfilFragment extends Fragment {
 
             if (botaoEdit.equalsIgnoreCase("Editar PetPerfil")){
                 //ir para editar perfil
+                startActivity(new Intent(getContext(),PerfilActivity.class));
             }else if(botaoEdit.equalsIgnoreCase("Seguir")){
                     seguirUsuario();
             }else if(botaoEdit.equalsIgnoreCase("Seguindo")){
