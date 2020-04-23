@@ -123,7 +123,14 @@ public class ComentariosActivity extends AppCompatActivity {
         hashMap.put("idQuemPublicou",firebaseUser.getUid());
 
         comentariosRef.push().setValue(hashMap);
+
+        //NOTIFICACAO
+        addNovaNotificacao();
+
+
         comentarioEditComentario.setText("");
+
+
     }
 
     private void recuperarImagem(){
@@ -142,6 +149,19 @@ public class ComentariosActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addNovaNotificacao(){
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuarioPostou);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario",firebaseUser.getUid());
+        hashMap.put("comentarioFeito","Comentou: "+comentarioEditComentario.getText().toString());
+        hashMap.put("idPostagem",idPostagem);
+        hashMap.put("isPostado",true);
+
+        notificacaoReference.push().setValue(hashMap);
+
     }
 
     public void carregarElementos(){

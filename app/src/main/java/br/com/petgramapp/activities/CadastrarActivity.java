@@ -50,7 +50,6 @@ public class CadastrarActivity extends AppCompatActivity {
 
     //firebase
     private FirebaseAuth auth;
-    private DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class CadastrarActivity extends AppCompatActivity {
 
         //configurações iniciais
         auth = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
 
         botaoCadastrarUsuario();
 

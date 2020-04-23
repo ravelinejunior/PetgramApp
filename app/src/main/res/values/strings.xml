@@ -47,6 +47,8 @@
     <string name="editar_petperfil">Editar PetPerfil</string>
     <string name="salvar">Salvar</string>
     <string name="alterar_foto">Alterar foto</string>
+    <string name="outro">Outro</string>
+    <string name="notifica_es">Notificações</string>
 
 
 </resources>

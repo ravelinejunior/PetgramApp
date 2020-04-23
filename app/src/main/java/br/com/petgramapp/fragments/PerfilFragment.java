@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import br.com.petgramapp.R;
@@ -97,7 +98,12 @@ public class PerfilFragment extends Fragment {
                 //ir para editar perfil
                 startActivity(new Intent(getContext(),PerfilActivity.class));
             }else if(botaoEdit.equalsIgnoreCase("Seguir")){
+
                     seguirUsuario();
+
+                    //NOTIFICAÇÃO
+                addNovaNotificacao();
+
             }else if(botaoEdit.equalsIgnoreCase("Seguindo")){
                     unfollowUsuario();
             }
@@ -374,6 +380,19 @@ public class PerfilFragment extends Fragment {
 
             }
         });
+    }
+
+    private void addNovaNotificacao(){
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idPerfilUsuario);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario",firebaseUser.getUid());
+        hashMap.put("comentarioFeito","Começou a seguir você!");
+        hashMap.put("idPostagem","");
+        hashMap.put("isPostado",false);
+
+        notificacaoReference.push().setValue(hashMap);
+
     }
 
 

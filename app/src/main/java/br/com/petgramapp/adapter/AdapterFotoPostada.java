@@ -24,6 +24,7 @@ import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import br.com.petgramapp.R;
@@ -87,6 +88,9 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                         child("Likes").
                         child(fotoPostada.getIdPostagem()).
                         child(firebaseUser.getUid()).setValue(true);
+
+                //NOTIFICACAO
+                addNovaNotificacao(fotoPostada.getIdUsuarioPostou(),fotoPostada.getIdPostagem());
             }
 
             @Override
@@ -108,6 +112,9 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                         .child(firebaseUser.getUid())
                         .child(fotoPostada.getIdPostagem())
                         .setValue(true);
+                addNovaNotificacaoSalvar(fotoPostada.getIdUsuarioPostou(),fotoPostada.getIdPostagem());
+
+
 
             }else{
                 ConfiguracaoFirebase.getReferenciaDatabase().child("SalvarFotos")
@@ -321,6 +328,33 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             }
         });
     }
+
+    private void addNovaNotificacao(String idUsuario,String idPostagem){
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario",firebaseUser.getUid());
+        hashMap.put("comentarioFeito","Gostou da sua postagem");
+        hashMap.put("idPostagem",idPostagem);
+        hashMap.put("isPostado",true);
+
+        notificacaoReference.push().setValue(hashMap);
+
+    }
+
+    private void addNovaNotificacaoSalvar(String idUsuario,String idPostagem){
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario",firebaseUser.getUid());
+        hashMap.put("comentarioFeito","Salvou sua postagem!");
+        hashMap.put("idPostagem",idPostagem);
+        hashMap.put("isPostado",true);
+
+        notificacaoReference.push().setValue(hashMap);
+
+    }
+
 
 
 }

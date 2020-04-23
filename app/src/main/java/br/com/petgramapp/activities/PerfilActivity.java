@@ -2,12 +2,14 @@ package br.com.petgramapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -92,6 +94,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     }
 
+  @RequiresApi(api = Build.VERSION_CODES.P)
   public void  onClicks(){
 
       fecharEdicaoPerfil.setOnClickListener(v -> finish());
@@ -103,7 +106,7 @@ public class PerfilActivity extends AppCompatActivity {
           String descricaoPerfil = descricaoEdicaoPerfil.getText().toString();
               atualizarPerfil(nomePet,nomeDonoPet,descricaoPerfil,v);
 
-              salvarEdicaoPerfil.clearFocus();
+              v.setScreenReaderFocusable(true);
 
       });
 

@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import br.com.petgramapp.R;
@@ -98,6 +99,9 @@ public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquis
                                 child(usuario.getId()).
                                     setValue(true);
 
+                //NOTIFICACAO
+                addNovaNotificacao(usuario.getId());
+
                 //CASO USUARIO CLIQUE EM SEGUIR, ADICIONA USUARIO LOGADO AO NÓ CITANDO QUEM ELE ESTÁ SEGUINDO
                 database.child("Seguir").
                              child(usuario.getId()).
@@ -169,6 +173,19 @@ public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquis
 
             }
         });
+
+    }
+
+    private void addNovaNotificacao(String idUsuario){
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario",firebaseUser.getUid());
+        hashMap.put("comentarioFeito","Começou a seguir você");
+        hashMap.put("idPostagem","");
+        hashMap.put("isPostado",false);
+
+        notificacaoReference.push().setValue(hashMap);
 
     }
 }
