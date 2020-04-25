@@ -17,7 +17,7 @@
         android:id="@+id/toolbar_PerfilFragment_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/azulPiscina"
+        android:background="@color/VermelhoNovo"
         >
 
         <RelativeLayout
@@ -41,7 +41,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_options_menu"
+                android:src="@drawable/ic_menu_preto_black"
                 />
 
 
@@ -109,11 +109,12 @@
                             android:textSize="18sp"
 
                             />
+
                         <TextView
+                            android:id="@+id/postagensPerfilFragment"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/postar"
-                            />
+                            android:text="@string/postagens" />
 
                     </LinearLayout>
 
@@ -121,7 +122,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
-
                         android:orientation="vertical">
 
                         <TextView
@@ -134,6 +134,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/texto_quantidadeSeguidores_PerfilFragment"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/seguidores" />
@@ -143,6 +144,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -150,15 +152,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:padding="2dp"
                             android:textColor="#101417"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/texto_quantidadeSeguindo_PerfilFragment"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="2dp"
                             android:text="@string/seguindo" />
 
                     </LinearLayout>

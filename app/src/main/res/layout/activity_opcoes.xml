@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.OpcoesActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_Opcoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/LaranjaNovo"
+
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cinzaClaro"
+        />
+
+    <TextView
+        android:id="@+id/configuracoes_Opcoes_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_margin="8dp"
+        android:text="@string/congifura_es"
+        android:padding="8dp"
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cinzaClaro"
+        />
+
+    <TextView
+        android:id="@+id/sair_Opcoes_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="@string/sair"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cinzaClaro"
+        />
+
+
+</LinearLayout>

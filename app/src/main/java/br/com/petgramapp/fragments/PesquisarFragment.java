@@ -53,7 +53,7 @@ public class PesquisarFragment extends Fragment {
         textoBuscaPesquisarFragment = view.findViewById(R.id.pesquisarUsuario_pesquisarFragment_Edittext);
         listaUsuario = new ArrayList<>();
 
-        adapterPesquisarUsuario = new AdapterPesquisarUsuario(getActivity(),listaUsuario);
+        adapterPesquisarUsuario = new AdapterPesquisarUsuario(getActivity(),listaUsuario,true);
         recyclerViewPesquisarFragment.setAdapter(adapterPesquisarUsuario);
 
         readUsuarios();

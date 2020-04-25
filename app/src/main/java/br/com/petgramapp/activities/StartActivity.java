@@ -69,7 +69,7 @@ public class StartActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       deslogarUsuario();
+      super.onBackPressed();
     }
 
 
@@ -87,7 +87,7 @@ public class StartActivity extends AppCompatActivity {
 
         //configurar menu inicial quando tela for carrega ou houver algum impacto na rede
         Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(0);
+        MenuItem menuItem = menu.getItem(2);
         menuItem.setChecked(true);
 
 
@@ -156,8 +156,6 @@ public class StartActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
-
 
     }
 

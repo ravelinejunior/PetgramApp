@@ -29,6 +29,7 @@ import java.util.List;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.activities.ComentariosActivity;
+import br.com.petgramapp.activities.SeguidoresActivity;
 import br.com.petgramapp.fragments.PerfilFragment;
 import br.com.petgramapp.fragments.PostagemUsuarioFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
@@ -106,6 +107,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         fotoSalvar(fotoPostada.getIdPostagem(),holder.salvarButtonHome);
 
         holder.salvarButtonHome.setOnClickListener(v -> {
+
             if(holder.salvarButtonHome.getTag().equals("Salvar")){
 
                 ConfiguracaoFirebase.getReferenciaDatabase().child("SalvarFotos")
@@ -122,6 +124,16 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                         .child(fotoPostada.getIdPostagem())
                         .removeValue();
             }
+        });
+
+        //SEGUIDORES
+        holder.qtLikesHome.setOnClickListener(v -> {
+
+                    Intent intent = new Intent(context, SeguidoresActivity.class);
+                    intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
+                    intent.putExtra("titulo","Curtir");
+                    context.startActivity(intent);
+
         });
 
 
@@ -169,8 +181,6 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();
         });
-
-
 
     }
 

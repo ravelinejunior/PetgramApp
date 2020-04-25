@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.activities.OpcoesActivity;
 import br.com.petgramapp.activities.PerfilActivity;
+import br.com.petgramapp.activities.SeguidoresActivity;
 import br.com.petgramapp.adapter.AdapterMinhasFotos;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
@@ -39,9 +42,6 @@ import br.com.petgramapp.model.FotoPostada;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PerfilFragment extends Fragment {
 
     //WIDGETS
@@ -54,7 +54,10 @@ public class PerfilFragment extends Fragment {
     private TextView quantidadeCurtidasPetUsuarioPerfilFragment;
     private TextView quantidadeSeguidoresPerfilFragment;
     private TextView quantidadeSeguindoPerfilFragment;
+    private TextView textoQuantidadeSeguindoPerfilFragment;
+    private TextView textoQuantidadeSeguidoresPerfilFragment;
     private CircleImageView imagemFotoPerfilUsuarioFragment;
+    private CircleImageView opcoesImagemView;
 
     //DADOS
     String idPerfilUsuario;
@@ -108,6 +111,50 @@ public class PerfilFragment extends Fragment {
                     unfollowUsuario();
             }
         });
+
+        //SEGUINDO
+        quantidadeSeguindoPerfilFragment.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SeguidoresActivity.class);
+            intent.putExtra("idUsuario",idPerfilUsuario);
+            intent.putExtra("titulo","Seguindo");
+            startActivity(intent);
+        });
+
+        textoQuantidadeSeguindoPerfilFragment.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SeguidoresActivity.class);
+            intent.putExtra("idUsuario",idPerfilUsuario);
+            intent.putExtra("titulo","Seguindo");
+            startActivity(intent);
+        });
+
+        //SEGUIDORES
+
+        quantidadeSeguidoresPerfilFragment.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SeguidoresActivity.class);
+            intent.putExtra("idUsuario",idPerfilUsuario);
+            intent.putExtra("titulo","Seguidores");
+            startActivity(intent);
+        });
+
+        textoQuantidadeSeguidoresPerfilFragment.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SeguidoresActivity.class);
+            intent.putExtra("idUsuario",idPerfilUsuario);
+            intent.putExtra("titulo","Seguidores");
+            startActivity(intent);
+        });
+
+        //MENU OPÇÕES
+        opcoesImagemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), OpcoesActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        });
+
+
+
 
         usuarioInfo();
         getSeguidores();
@@ -228,6 +275,9 @@ public class PerfilFragment extends Fragment {
         quantidadeSeguidoresPerfilFragment = view.findViewById(R.id.quantidade_SeguidoresPet_PerfilFragment_id);
         quantidadeSeguindoPerfilFragment = view.findViewById(R.id.quantidade_SeguindoPet_PerfilFragment_id);
         imagemFotoPerfilUsuarioFragment = view.findViewById(R.id.imagem_PerfilUsuario_PerfilFragment_id);
+        textoQuantidadeSeguidoresPerfilFragment = view.findViewById(R.id.texto_quantidadeSeguidores_PerfilFragment);
+        textoQuantidadeSeguindoPerfilFragment = view.findViewById(R.id.texto_quantidadeSeguindo_PerfilFragment);
+        opcoesImagemView = view.findViewById(R.id.opcoes_PerfilFramgent_id);
     }
 
     private void usuarioInfo(){

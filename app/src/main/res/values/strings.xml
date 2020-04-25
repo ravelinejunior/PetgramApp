@@ -49,6 +49,9 @@
     <string name="alterar_foto">Alterar foto</string>
     <string name="outro">Outro</string>
     <string name="notifica_es">Notificações</string>
+    <string name="postagens">Postagens</string>
+    <string name="congifura_es">Congifurações</string>
+    <string name="opcoes">Opções</string>
 
 
 </resources>

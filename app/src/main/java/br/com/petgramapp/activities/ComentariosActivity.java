@@ -173,6 +173,7 @@ public class ComentariosActivity extends AppCompatActivity {
         setSupportActionBar(toolbarComentario);
         getSupportActionBar().setTitle("Comentarios");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarComentario.setNavigationOnClickListener(v -> {
             finish();
         });

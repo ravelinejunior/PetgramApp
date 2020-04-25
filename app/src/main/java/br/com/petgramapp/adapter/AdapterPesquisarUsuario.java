@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.activities.StartActivity;
 import br.com.petgramapp.fragments.PerfilFragment;
 import br.com.petgramapp.fragments.PesquisarFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
@@ -37,16 +38,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquisarUsuario.ViewHolder> {
 
-    public Context c;
+    private Context c;
     private List<Usuario> usuarioList;
 
     FirebaseUser firebaseUser;
     public static Integer posicaoSelecionada;
     DatabaseReference database = ConfiguracaoFirebase.getReferenciaDatabase();
+    private Boolean isFragments;
 
-    public AdapterPesquisarUsuario(Context c, List<Usuario> usuarioList) {
+    public AdapterPesquisarUsuario(Context c, List<Usuario> usuarioList, boolean isFragment) {
         this.c = c;
         this.usuarioList = usuarioList;
+        this.isFragments = isFragment;
     }
 
     @NonNull
@@ -76,17 +79,28 @@ public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquis
         }
 
         holder.itemView.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = c.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
-            editor.putString("idUsuario",usuario.getId());
-            editor.apply();
 
-            ((FragmentActivity)c).getSupportFragmentManager().
-                    beginTransaction().
-                    replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).
-                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
-                    commit();
+            if (isFragments) {
+
+                SharedPreferences.Editor editor = c.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
+                editor.putString("idUsuario", usuario.getId());
+                editor.apply();
+
+                ((FragmentActivity) c).getSupportFragmentManager().
+                        beginTransaction().
+                        replace(R.id.fragment_container_principal_StartAct, new PerfilFragment()).
+                        setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
+                        commit();
+            }else{
+                Intent intent = new Intent(c, StartActivity.class);
+                intent.putExtra("idAutorComentario",usuario.getId());
+                c.startActivity(intent);
+
+            }
 
         });
+
+
 
         //VERIFICAR SE BOTAO ESTÁ SETADO COMO SEGUIDO PARA "DES SEGUIR"
         holder.botaoSeguirUsuarioPet.setOnClickListener(v -> {
