@@ -3,12 +3,17 @@ package br.com.petgramapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.fragments.PesquisarFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
+import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.Stories;
 import br.com.petgramapp.model.Usuario;
 import jp.shts.android.storiesprogressview.StoriesProgressView;
@@ -31,9 +38,12 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
     private long limite = 500L;
     private ImageView imagemStories;
     private ImageView fotoStoriesPerfil;
+    private ImageView visualicoesStories;
+    private ImageView deletarStories;
     private TextView nomeUsuarioStories;
+    private TextView visualizacoesNumeroStories;
     private StoriesProgressView storiesProgressView;
-
+    private LinearLayout storiesVisualizadosLayout;
     List<String> imagens;
     List<String> storiesId;
     String idUsuario;
@@ -65,13 +75,24 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stories);
+        idUsuario = getIntent().getStringExtra("idUsuario");
 
         storiesProgressView = findViewById(R.id.storiesProgress_StoriesActivity);
         imagemStories = findViewById(R.id.imagem_stories_StoriesActivity);
         fotoStoriesPerfil = findViewById(R.id.fotoStoriesPerfil_StoriesActivity);
         nomeUsuarioStories = findViewById(R.id.nomeUsuario_StoriesActivity);
+        storiesVisualizadosLayout = findViewById(R.id.stories_visualizados_StoriesLayout);
+        deletarStories = findViewById(R.id.deletar_StoriesActivity);
+        visualizacoesNumeroStories = findViewById(R.id.numeroVisualizacoes_StoriesActivity);
+        storiesVisualizadosLayout.setVisibility(View.GONE);
+        deletarStories.setVisibility(View.GONE);
 
-        idUsuario = getIntent().getStringExtra("idUsuario");
+        if (idUsuario.equals(UsuarioFirebase.getIdentificadorUsuario())){
+            storiesVisualizadosLayout.setVisibility(View.VISIBLE);
+            deletarStories.setVisibility(View.VISIBLE);
+        }
+
+
         getStories(idUsuario);
         getUsuarioInfo(idUsuario);
 
@@ -84,11 +105,43 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
         reverse.setOnClickListener(v -> storiesProgressView.skip());
 
         skip.setOnTouchListener(onTouchListener);
+
+        storiesVisualizadosLayout.setOnClickListener(v -> {
+
+            Intent intent = new Intent(StoriesActivity.this, SeguidoresActivity.class);
+            intent.putExtra("idUsuario",idUsuario);
+            intent.putExtra("idStories",storiesId.get(count));
+            intent.putExtra("titulo","Views");
+            startActivity(intent);
+
+        });
+
+        deletarStories.setOnClickListener(v -> {
+
+            DatabaseReference storiesRef = ConfiguracaoFirebase.getReferenciaDatabase()
+                    .child("Stories").child(idUsuario).child(storiesId.get(count));
+
+          storiesRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+              @Override
+              public void onComplete(@NonNull Task<Void> task) {
+
+                  if (task.isSuccessful()){
+                      Toast.makeText(StoriesActivity.this, "Deletado.", Toast.LENGTH_SHORT).show();
+                      finish();
+                  }
+
+              }
+          });
+
+        });
     }
 
     @Override
     public void onNext() {
         Picasso.get().load(imagens.get(++count)).into(imagemStories);
+
+        addVisualizacao(storiesId.get(count));
+        visualicoesNumero(storiesId.get(count));
     }
 
     @Override
@@ -145,6 +198,9 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
                 storiesProgressView.setStoriesListener(StoriesActivity.this);
                 storiesProgressView.startStories(count);
                 Picasso.get().load(imagens.get(count)).into(imagemStories);
+
+                addVisualizacao(storiesId.get(count));
+                visualicoesNumero(storiesId.get(count));
             }
 
             @Override
@@ -174,4 +230,49 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
 
     }
 
+    private void addVisualizacao(String idStories){
+        ConfiguracaoFirebase.getReferenciaDatabase().
+                child("Stories").
+                    child(idUsuario).
+                        child(idStories)
+                            .child("Views")
+                                .child(UsuarioFirebase.getIdentificadorUsuario()).setValue(true);
+
+    }
+
+    private void visualicoesNumero(String idStories){
+        DatabaseReference visualizacoesRef = ConfiguracaoFirebase.getReferenciaDatabase().
+                child("Stories").
+                    child(idUsuario).
+                        child(idStories)
+                            .child("Views");
+
+        visualizacoesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                visualizacoesNumeroStories.setText(""+dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

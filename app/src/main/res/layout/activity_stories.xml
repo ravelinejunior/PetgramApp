@@ -79,6 +79,53 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/stories_visualizados_StoriesLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:padding="3dp"
+        android:layout_margin="10dp"
+        android:background="#20000000"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_visibilidade_views"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/numeroVisualizacoes_StoriesActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="16sp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/branco"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/deletar_StoriesActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete_branco"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:background="#20000000"
+        android:padding="3dp"
+        />
+
+
+
 
 
 

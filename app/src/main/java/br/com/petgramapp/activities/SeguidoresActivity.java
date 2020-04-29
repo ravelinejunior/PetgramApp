@@ -82,9 +82,33 @@ public class SeguidoresActivity extends AppCompatActivity {
             case "Seguidores":
                 getSeguidores();
                 break;
+            case "Views":
+                getVisualizacoes();
+                break;
         }
 
 
+    }
+
+    private void getVisualizacoes(){
+        DatabaseReference visualizacoesRef = ConfiguracaoFirebase.getReferenciaDatabase()
+                .child("Stories").child(idUsuario).child(getIntent().getStringExtra("idStories")).child("Views");
+
+        visualizacoesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                idLista.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    idLista.add(ds.getKey());
+                }
+                exibirUsuarios();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getSeguidores() {

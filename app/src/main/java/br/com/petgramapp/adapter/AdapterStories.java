@@ -200,7 +200,7 @@ public class AdapterStories extends RecyclerView.Adapter<AdapterStories.MyViewHo
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int i  = 0;
                 for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    if (!ds.child("views").child(UsuarioFirebase.getUsuarioAtual().getUid())
+                    if (!ds.child("Views").child(UsuarioFirebase.getUsuarioAtual().getUid())
                             .exists() && System.currentTimeMillis() < ds.getValue(Stories.class).getDataFim())
                     {
                         i++;
