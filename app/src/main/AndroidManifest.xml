@@ -25,7 +25,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.AddStoriesActivity"/>
+        <activity android:name=".activities.StoriesActivity"></activity>
+        <activity android:name=".activities.AddStoriesActivity" />
         <activity
             android:name=".activities.OpcoesActivity"
             android:theme="@style/AppThemeComentarioActivity" />

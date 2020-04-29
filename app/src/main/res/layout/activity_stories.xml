@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_principal"
+    tools:context=".activities.StoriesActivity">
+
+    <ImageView
+        android:id="@+id/imagem_stories_StoriesActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_person_black_preto"
+        android:scaleType="centerCrop"
+        >
+
+    </ImageView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+
+        <View
+            android:id="@+id/skip_StoriesActivity"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/reverse_StoriesActivity"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
+    <jp.shts.android.storiesprogressview.StoriesProgressView
+        android:id="@+id/storiesProgress_StoriesActivity"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:layout_gravity="top"
+        android:layout_marginTop="8dp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_id_middle_Stories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/storiesProgress_StoriesActivity"
+        android:layout_margin="10dp"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/fotoStoriesPerfil_StoriesActivity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/nomeUsuario_StoriesActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/branco"
+            android:text="@string/usu_rio"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/fotoStoriesPerfil_StoriesActivity"
+            android:layout_margin="5dp"
+            />
+
+    </RelativeLayout>
+
+
+
+
+
+</RelativeLayout>

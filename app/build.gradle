@@ -16,6 +16,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packagingOptions {
+        pickFirst 'firebase-abt.properties'
+    }
+
     buildTypes {
         release {
             minifyEnabled false

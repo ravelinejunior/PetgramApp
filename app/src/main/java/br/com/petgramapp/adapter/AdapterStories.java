@@ -23,6 +23,7 @@ import java.util.List;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.activities.AddStoriesActivity;
+import br.com.petgramapp.activities.StoriesActivity;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.Stories;
@@ -63,7 +64,19 @@ public class AdapterStories extends RecyclerView.Adapter<AdapterStories.MyViewHo
             myStories(holder.storyTextoStories,holder.imagemPlusStories,false);
         }
 
-        holder.itemView.setOnClickListener(v -> myStories(holder.storyTextoStories,holder.imagemPlusStories,true));
+
+        holder.itemView.setOnClickListener(v -> {
+            if (holder.getAdapterPosition() == 0){
+                     myStories(holder.storyTextoStories, holder.imagemPlusStories, true);
+                }else{
+                Intent intent = new Intent(contexto, StoriesActivity.class);
+                intent.putExtra("idUsuario",stories.getIdUsuario());
+                contexto.startActivity(intent);
+            }
+
+        }
+
+        );
     }
 
     @Override
@@ -140,8 +153,13 @@ public class AdapterStories extends RecyclerView.Adapter<AdapterStories.MyViewHo
 
                     if (count>0){
                       AlertDialog dialog = new AlertDialog.Builder(contexto).create();
+
                       dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Visualizar Story", (dialog12, which) -> {
 
+                          Intent intent = new Intent(contexto, StoriesActivity.class);
+                          intent.putExtra("idUsuario",UsuarioFirebase.getIdentificadorUsuario());
+                          contexto.startActivity(intent);
+                          dialog.dismiss();
                       });
 
                       dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Adicionar Story", (dialog1, which) -> {
