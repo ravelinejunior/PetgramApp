@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -112,7 +113,8 @@ public class AdapterNotificacao extends RecyclerView.Adapter<AdapterNotificacao.
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(imagemPerfil);
+            //    Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(imagemPerfil);
+                Glide.with(contexto).load(usuario.getUriCaminhoFotoPetUsuario()).into(imagemPerfil);
                 nomeUsuarioD.setText(usuario.getNomePetUsuario());
             }
 
@@ -129,7 +131,8 @@ public class AdapterNotificacao extends RecyclerView.Adapter<AdapterNotificacao.
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 FotoPostada fotoPostada = dataSnapshot.getValue(FotoPostada.class);
-                Picasso.get().load(fotoPostada.getImagemPostada()).into(imagemPostada);
+                //Picasso.get().load(fotoPostada.getImagemPostada()).into(imagemPostada);
+                Glide.with(contexto).load(fotoPostada.getImagemPostada()).into(imagemPostada);
             }
 
             @Override

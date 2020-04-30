@@ -3,12 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:background="@color/Azulnovo"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/linearLayout_horizontal_adapterHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/VermelhoNovo"
+        android:padding="1dp"
+        android:layout_margin="1dp"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -23,8 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:textColor="@color/branco"
             android:padding="10dp"
-            android:text="Teste de nome de usuario"
+            android:textStyle="bold"
             android:layout_marginStart="5dp"
             android:layout_gravity="center_vertical"
             android:paddingStart="10dp"
@@ -33,34 +38,36 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imagemPostada_HomeAdapter_id"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_HomeFragment"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:src="@drawable/ic_nearme_preto"
-        android:scaleType="fitXY" />
+        android:layout_height="match_parent"
+        android:elevation="10dp"
+        app:cardElevation="5dp"
+        android:background="@color/VermelhoNovo"
+        app:cardCornerRadius="5dp"
 
-    <TextView
-        android:id="@+id/descricao_HomeAdapter_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Descrição teste Descrição teste Descrição teste
-         Descrição teste Descrição teste"/>
+        >
+        <ImageView
+            android:id="@+id/imagemPostada_HomeAdapter_id"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:background="@drawable/background_principal"
+            android:src="@drawable/ic_nearme_preto"
+            android:scaleType="fitXY" />
+
+
+    </androidx.cardview.widget.CardView>
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cinza"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
-<!--
-        <ImageView
-            android:id="@+id/likeButton_HomeAdapter_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:src="@drawable/ic_likebutton_oco"
-            android:contentDescription="@string/comentario"/>-->
+
+
 
         <com.like.LikeButton
             android:id="@+id/likeButton_HomeAdapter_id"
@@ -76,17 +83,18 @@
 
         <ImageView
             android:id="@+id/mensagemButton_HomeAdapter_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_toEndOf="@id/likeButton_HomeAdapter_id"
-            android:src="@drawable/ic_comentario"
-            android:contentDescription="@string/comentario" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/comentario"
+            android:src="@drawable/ic_comentario" />
 
         <ImageView
             android:id="@+id/salvarButton_HomeAdapter_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_foguinho"
             android:layout_alignParentEnd="true"
             android:layout_margin="5dp"
@@ -94,23 +102,79 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/VermelhoNovo"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="1dp"
+        />
+
+    <TextView
+        android:text="@string/descri_o"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="@color/branco"
+        />
+
+    <TextView
+        android:id="@+id/descricao_HomeAdapter_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="#C6C3C3"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/VermelhoNovo"
+
+        />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    >
     <TextView
         android:id="@+id/quantidadeLikes_HomeAdapter_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:textColor="@color/preto"
+        android:textColor="@color/branco"
         android:text="@string/_1_like" />
+
+    <ImageView
+        android:id="@+id/like_visualizarLikes"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="3dp"
+        android:layout_marginStart="10dp"
+        android:contentDescription="@string/comentario"
+        android:src="@drawable/ic_curtidas_frag_vermeho" />
+
+
+</LinearLayout>
+
 
     <TextView
         android:id="@+id/publicadaPor_HomeAdapter_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
-        android:text="@string/ver_todos_os_10_comentarios" />
+        android:layout_marginStart="2dp"
+        android:textColor="#DFD6D6"
+        android:textStyle="bold|italic"
+        android:padding="5dp"
+/>
 
     <TextView
         android:id="@+id/verTodosComentarios_HomeAdapter_id"
@@ -118,8 +182,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
+        android:textColor="@color/branco"
+        android:textStyle="bold"
         android:textSize="16sp"
-        android:text="@string/ver_todos_os_10_comentarios" />
+        android:layout_marginBottom="5dp"
+        />
+
+
+
 
 
 </LinearLayout>

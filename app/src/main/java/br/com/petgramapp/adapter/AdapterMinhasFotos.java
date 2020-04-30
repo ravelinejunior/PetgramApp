@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -43,7 +44,8 @@ public class AdapterMinhasFotos extends RecyclerView.Adapter<AdapterMinhasFotos.
     FotoPostada fotoPostada = fotoPostadaList.get(position);
 
         Uri imagemUri = Uri.parse(fotoPostada.getImagemPostada());
-        Picasso.get().load(imagemUri).placeholder(R.drawable.ic_coco_pet).into(holder.imagens_itensFoto);
+      //  Picasso.get().load(imagemUri).placeholder(R.drawable.ic_coco_pet).into(holder.imagens_itensFoto);
+        Glide.with(contexto).load(imagemUri).into(holder.imagens_itensFoto);
 
         holder.imagens_itensFoto.setOnClickListener(v -> {
             SharedPreferences.Editor editor = contexto.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();

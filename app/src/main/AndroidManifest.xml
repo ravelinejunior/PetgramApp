@@ -25,7 +25,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.StoriesActivity"></activity>
+        <activity android:name=".activities.FotoPostadaActivity"></activity>
+        <activity android:name=".activities.StoriesActivity" />
         <activity android:name=".activities.AddStoriesActivity" />
         <activity
             android:name=".activities.OpcoesActivity"
@@ -45,7 +46,7 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".activities.StartActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:theme="@style/AppThemeLogin" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.CadastrarActivity" />
         <activity android:name=".activities.MainActivity">

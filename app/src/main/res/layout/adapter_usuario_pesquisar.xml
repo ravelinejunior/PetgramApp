@@ -34,7 +34,7 @@
                 android:text="@string/pesquisar"/>
 
             <TextView
-                android:id="@+id/sexoPet_pesquisarUsuarioFragment_id"
+                android:id="@+id/emailPet_pesquisarUsuarioFragment_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"

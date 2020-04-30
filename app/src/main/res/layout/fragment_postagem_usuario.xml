@@ -15,7 +15,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_fotosPostagemFragment_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@color/Azulnovo"
         >
 
@@ -28,9 +28,9 @@
             android:id="@+id/nomeUsuario_fotosPostagemFragment_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:textSize="18sp"
             android:text="@string/foto"
-
             android:textStyle="bold"
             android:textColor="@color/Clean"
             />

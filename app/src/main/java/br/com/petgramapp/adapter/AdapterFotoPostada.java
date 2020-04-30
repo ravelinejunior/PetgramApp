@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,7 +66,8 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     //USUARIOS
     Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
 
-    Picasso.get().load(fotoUri).placeholder(R.drawable.ic_pets_black_24dp).into(holder.imagemPostadaHome);
+        Picasso.get().load(fotoUri).into(holder.imagemPostadaHome);
+        //Glide.with(context).load(fotoUri).into(holder.imagemPostadaHome);
 
     if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {
         holder.descricaoHome.setVisibility(View.GONE);
@@ -321,13 +323,15 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
                 if (usuario.getUriCaminhoFotoPetUsuario() != null){
                     Uri uriFotoPerfil = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
-                    Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                   // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                    Glide.with(context).load(uriFotoPerfil).into(imagemPerfil);
                 }else{
-                    Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                    //Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                    Glide.with(context).load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                 }
 
                 nomeUsuario.setText(usuario.getNomePetUsuario());
-                publicadoPor.setText(usuario.getNomePetUsuario());
+                publicadoPor.setText("@"+usuario.getNomePetUsuario());
 
 
             }

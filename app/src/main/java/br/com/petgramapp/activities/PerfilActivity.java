@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -65,6 +67,7 @@ public class PerfilActivity extends AppCompatActivity {
     private String identificadorUsuario;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public void carregarElementos(){
         fecharEdicaoPerfil = findViewById(R.id.fechar_PerfilActivity_id);
         salvarEdicaoPerfil = findViewById(R.id.salvar_PerfilActivity_id);
@@ -134,7 +138,7 @@ public class PerfilActivity extends AppCompatActivity {
             //#TODO 1: CRIAR UM NÓ DE NOME DONO DO PET NO BANCO DE DADOS
             //hashMap.put("nomeDonoPet",nomeDonoPet);
             hashMap.put("nomePetUsuario", nomePet);
-            hashMap.put("nomePetUsuarioUp", nomeDonoPet); // alterar esse aqui
+            hashMap.put("nomeDonoPet", nomeDonoPet); // alterar esse aqui
             hashMap.put("descricaoPetUsuario", descricaoPerfil);
 
             usuariosRef.updateChildren(hashMap);
@@ -208,6 +212,9 @@ public class PerfilActivity extends AppCompatActivity {
             Toast.makeText(this, "Algo deu errado! Tente mais tarde ou verifique sua internet;", Toast.LENGTH_LONG).show();
         }
     }
+    public Context getContext(){
+        return PerfilActivity.this;
+    }
 
     public void informacoesUsuario() {
         DatabaseReference usuariosRef = reference.child("usuarios").child(usuarioFirebase.getUid());
@@ -215,10 +222,11 @@ public class PerfilActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                nomeDonoEdicaoPerfil.setText(usuario.getNomePetUsuarioUp());
+                nomeDonoEdicaoPerfil.setText(usuario.getNomeDonoPet());
                 nomePetEdicaoPerfil.setText(usuario.getNomePetUsuario());
                 descricaoEdicaoPerfil.setText(usuario.getDescricaoPetUsuario());
-                Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(fotoPerfilEdicaoPerfil);
+                //Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(fotoPerfilEdicaoPerfil);
+                Glide.with(getContext()).load(usuario.getUriCaminhoFotoPetUsuario()).into(fotoPerfilEdicaoPerfil);
             }
 
             @Override

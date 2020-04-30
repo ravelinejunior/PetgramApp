@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -30,7 +28,6 @@ import java.util.List;
 import br.com.petgramapp.R;
 import br.com.petgramapp.activities.StartActivity;
 import br.com.petgramapp.fragments.PerfilFragment;
-import br.com.petgramapp.fragments.PesquisarFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.Usuario;
@@ -67,7 +64,7 @@ public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquis
 
         holder.botaoSeguirUsuarioPet.setVisibility(View.VISIBLE);
         holder.nomeUsuarioPet.setText(usuario.getNomePetUsuario());
-        holder.sexoUsuarioPet.setText(usuario.getSexoPetUsuario());
+        holder.emailPetUsuario.setText(usuario.getEmailPetUsuario());
 
         Uri uriImagem = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
         Picasso.get().load(uriImagem).placeholder(R.drawable.ic_person_alterar).into(holder.imagemPerfilUsuarioPet);
@@ -153,13 +150,13 @@ public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquis
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView nomeUsuarioPet;
-        TextView sexoUsuarioPet;
+        TextView emailPetUsuario;
         CircleImageView imagemPerfilUsuarioPet;
         Button botaoSeguirUsuarioPet;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nomeUsuarioPet = itemView.findViewById(R.id.nomeUsuario_pesquisarUsuarioFragment_id);
-            sexoUsuarioPet = itemView.findViewById(R.id.sexoPet_pesquisarUsuarioFragment_id);
+            emailPetUsuario = itemView.findViewById(R.id.emailPet_pesquisarUsuarioFragment_id);
             imagemPerfilUsuarioPet = itemView.findViewById(R.id.fotoUsuario_pesquisarUsuarioFragment_id);
             botaoSeguirUsuarioPet = itemView.findViewById(R.id.botaoSeguirPet_pesquisarUsuarioFragment_id);
         }

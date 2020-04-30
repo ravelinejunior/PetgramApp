@@ -1,45 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Azulnovo"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/actionBar_HomeFragment_id">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_HomeFragment_id"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/vermelhoGold"
+            android:layout_height="40dp"
+            android:background="@color/Azulnovo"
+            android:minHeight="?attr/actionBarSize"
+            app:titleTextColor="@color/branco"
+            app:subtitleTextColor="@color/branco"
+            android:theme="?attr/actionBarTheme"
             >
+
 
         <RelativeLayout
             android:id="@+id/relativeLayout_homeFrag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="20dp"
-                android:src="@drawable/logodogs"
-                android:scaleType="centerCrop"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_nearme_branco"
-                android:scaleType="fitXY"/>
 
 
         </RelativeLayout>
@@ -51,7 +41,7 @@
         android:id="@+id/nestedScroll_HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/actionBar_HomeFragment_id"
+     android:layout_below="@id/actionBar_HomeFragment_id"
         >
 
         <LinearLayout
@@ -75,8 +65,6 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-
 
     <ProgressBar
         android:id="@+id/progressBar_HomeFragment"

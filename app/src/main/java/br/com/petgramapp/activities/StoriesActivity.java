@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -176,6 +177,7 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
     private void getStories(String idUsuario){
         imagens = new ArrayList<>();
         storiesId = new ArrayList<>();
+
         DatabaseReference storiesRef = ConfiguracaoFirebase.getReferenciaDatabase().child("Stories")
                 .child(idUsuario);
         storiesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -197,7 +199,8 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
                 storiesProgressView.setStoryDuration(5000L);
                 storiesProgressView.setStoriesListener(StoriesActivity.this);
                 storiesProgressView.startStories(count);
-                Picasso.get().load(imagens.get(count)).into(imagemStories);
+              //  Picasso.get().load(imagens.get(count)).into(imagemStories);
+                Glide.with(getApplicationContext()).load(imagens.get(count)).into(imagemStories);
 
                 addVisualizacao(storiesId.get(count));
                 visualicoesNumero(storiesId.get(count));

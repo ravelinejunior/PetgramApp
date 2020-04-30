@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -127,7 +128,6 @@ public class ComentariosActivity extends AppCompatActivity {
         //NOTIFICACAO
         addNovaNotificacao();
 
-
         comentarioEditComentario.setText("");
 
 
@@ -140,8 +140,8 @@ public class ComentariosActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).placeholder(R.drawable.ic_pets_black_24dp).into(fotoPerfilComentario);
-
+                //Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).placeholder(R.drawable.ic_pets_black_24dp).into(fotoPerfilComentario);
+                Glide.with(getContext()).load(usuario.getUriCaminhoFotoPetUsuario()).into(fotoPerfilComentario);
             }
 
             @Override

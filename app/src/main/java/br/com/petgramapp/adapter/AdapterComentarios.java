@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -100,7 +101,8 @@ public class AdapterComentarios extends RecyclerView.Adapter<AdapterComentarios.
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
                 nomeUsuario.setText(usuario.getNomePetUsuario());
-                Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(circleView);
+                Glide.with(context).load(usuario.getUriCaminhoFotoPetUsuario()).into(circleView);
+                //Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(circleView);
             }
 
             @Override

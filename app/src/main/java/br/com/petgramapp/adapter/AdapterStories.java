@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -119,10 +120,12 @@ public class AdapterStories extends RecyclerView.Adapter<AdapterStories.MyViewHo
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                Usuario usuario = dataSnapshot.getValue(Usuario.class);
-               Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(viewHolder.imagemPerfilStories);
+               //Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).noFade().into(viewHolder.imagemPerfilStories);
+                Glide.with(contexto).load(usuario.getUriCaminhoFotoPetUsuario()).into(viewHolder.imagemPerfilStories);
 
                 if(posicao != 0){
-                    Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(viewHolder.imagemVisualizadaStories);
+                  //  Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).noFade().into(viewHolder.imagemVisualizadaStories);
+                    Glide.with(contexto).load(usuario.getUriCaminhoFotoPetUsuario()).into(viewHolder.imagemVisualizadaStories);
                     viewHolder.nomeUsuarioStories.setText(usuario.getNomePetUsuario());
                 }
             }

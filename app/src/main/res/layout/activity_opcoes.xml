@@ -13,7 +13,7 @@
         android:id="@+id/toolbar_Opcoes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/LaranjaNovo"
+        android:background="@color/Azulnovo"
 
         />
 

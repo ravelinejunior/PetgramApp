@@ -3,6 +3,8 @@ package br.com.petgramapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -35,6 +37,7 @@ public class StartActivity extends AppCompatActivity {
 
     //navigations
     public BottomNavigationView bottomNavigationViewStart;
+    public Toolbar toolbarStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,6 @@ public class StartActivity extends AppCompatActivity {
         carregarElementos();
 
         //configurações iniciais
-        firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
         configurarBottomNavigation();
         FragmentManager fragmentManager= getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -80,7 +82,7 @@ public class StartActivity extends AppCompatActivity {
         bottomNavigationViewEx.enableItemShiftingMode(true);
         bottomNavigationViewEx.enableShiftingMode(true);
         bottomNavigationViewEx.setTextVisibility(true);
-        bottomNavigationViewEx.setItemTextColor(ColorStateList.valueOf(getResources().getColor(R.color.preto)));
+        bottomNavigationViewEx.setItemTextColor(ColorStateList.valueOf(getResources().getColor(R.color.branco)));
 
         //criando eventos de clique no navigationbottom
         habilitarEventosNavigation(bottomNavigationViewEx);
@@ -133,7 +135,16 @@ public class StartActivity extends AppCompatActivity {
     public void carregarElementos(){
         bottomNavigationViewStart = findViewById(R.id.bottomNavigation_StartAct);
 
-    }
+      /*  toolbarStart = findViewById(R.id.toolbar_principal_main_activity);
+        toolbarStart.setTitle("Bem Vindo.");
+        toolbarStart.setTitleTextColor(ContextCompat.getColor(getApplicationContext(),R.color.branco));
+        toolbarStart.setLogo(R.drawable.ic_pets_white_24dp);
+        toolbarStart.setPadding(15,0,0,0);
+
+        setSupportActionBar(toolbarStart);
+*/
+        firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
+   }
 
     private void deslogarUsuario(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -163,7 +174,7 @@ public class StartActivity extends AppCompatActivity {
         return StartActivity.this;
     }
 
-    //criando menu na tela
+    /*//criando menu na tela
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -180,7 +191,7 @@ public class StartActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
 
-    }
+    }*/
 
 }
 

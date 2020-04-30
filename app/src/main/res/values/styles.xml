@@ -17,4 +17,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Tema para Tela de login -->
+    <style name="AppThemeLogin" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/azulescuro</item>
+        <item name="colorPrimaryDark">@color/cinzaClaro</item>
+        <item name="colorAccent">@color/vermelhoescuro</item>
+    </style>
+
+
 </resources>

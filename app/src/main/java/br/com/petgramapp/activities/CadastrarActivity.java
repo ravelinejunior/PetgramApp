@@ -38,8 +38,6 @@ public class CadastrarActivity extends AppCompatActivity {
     private TextInputEditText emailPet;
     private TextInputEditText idadePet;
     private TextInputEditText descricaoPet;
-    private RadioButton sexoGeneroPet;
-    private RadioGroup sexoRadioGroupPet;
     private TextInputEditText senhaPet;
     private TextInputEditText confirmaSenhaPet;
     private Button botaoCadastrarPet;
@@ -66,6 +64,16 @@ public class CadastrarActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onNavigateUp() {
+        return super.onNavigateUp();
+    }
+
     public Context getContext(){
       return CadastrarActivity.this;
     }
@@ -75,15 +83,11 @@ public class CadastrarActivity extends AppCompatActivity {
             progressBarCadastrarPet.setVisibility(View.VISIBLE);
             progressBarCadastrarPet.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-            int radioId = sexoRadioGroupPet.getCheckedRadioButtonId();
-            sexoGeneroPet = findViewById(radioId);
-
             //receber as strings de cadastro
             String str_nome = nomePet.getText().toString();
             String str_email = emailPet.getText().toString();
             String str_idade = idadePet.getText().toString();
             String str_descricao = descricaoPet.getText().toString();
-            String str_sexo = sexoGeneroPet.getText().toString();
             String str_senha = senhaPet.getText().toString();
             String str_confirmaSenha = confirmaSenhaPet.getText().toString();
 
@@ -99,7 +103,6 @@ public class CadastrarActivity extends AppCompatActivity {
                             usuario.setConfirmacaoSenhaPetUsuario(str_confirmaSenha);
                             usuario.setIdadePetUsuario(str_idade);
                             usuario.setDescricaoPetUsuario(str_descricao);
-                            usuario.setSexoPetUsuario(str_sexo);
                             cadastrarNovoUsuario(usuario);
                         }else{
                             Snackbar.make(v,"Favor, digitar sua Pet senha como a senha superior digitada!",Snackbar.LENGTH_SHORT).show();
@@ -182,7 +185,6 @@ public class CadastrarActivity extends AppCompatActivity {
         emailPet = findViewById(R.id.emailUsuarioPet_Cadastro_act);
         idadePet = findViewById(R.id.idade_Cadastro_act);
         descricaoPet = findViewById(R.id.descricaoPet_Cadastro_act);
-        sexoRadioGroupPet = findViewById(R.id.radioGroup_cadastrarSexo_act);
         senhaPet = findViewById(R.id.senhaPet_Cadastro_act);
         confirmaSenhaPet = findViewById(R.id.confirmacaoSenhaPet_Cadastro_act);
         botaoCadastrarPet = findViewById(R.id.botaoCadastrar_Cadastro_act);

@@ -34,6 +34,7 @@ public class Usuario implements Serializable {
     private String senhaPetUsuario;
     private String confirmacaoSenhaPetUsuario;
     private String uriCaminhoFotoPetUsuario;
+    private String nomeDonoPet;
     private int fotos = 0;
     private int clientes = random.nextInt(3500);
     private int fas = random.nextInt(3500);
@@ -152,6 +153,14 @@ public class Usuario implements Serializable {
         this.uriCaminhoFotoPetUsuario = uriCaminhoFotoPetUsuario;
     }
 
+    public String getNomeDonoPet() {
+        return nomeDonoPet;
+    }
+
+    public void setNomeDonoPet(String nomeDonoPet) {
+        this.nomeDonoPet = nomeDonoPet;
+    }
+
     public boolean salvarUsuario(){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference usuariosRef = databaseReference.child("usuarios").child(getId());
@@ -163,7 +172,6 @@ public class Usuario implements Serializable {
         hashMap.put("emailPetUsuario",getEmailPetUsuario());
         hashMap.put("idadePetUsuario",getIdadePetUsuario());
         hashMap.put("descricaoPetUsuario",getDescricaoPetUsuario());
-        hashMap.put("sexoPetUsuario",getSexoPetUsuario());
         hashMap.put("senhaPetUsuario",getSenhaPetUsuario());
         hashMap.put("uriCaminhoFotoPetUsuario","https://firebasestorage.googleapis.com/v0/b/petgramapp.appspot.com/o/placeholder.png?alt=media&token=4c92c48f-bcf9-4643-a620-6495c29d1e73");
 
