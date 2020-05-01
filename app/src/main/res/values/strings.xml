@@ -54,6 +54,9 @@
     <string name="opcoes">Opções</string>
     <string name="usu_rio">Usuário</string>
     <string name="nome_papai_mam_e_do_pet">Nome Papai/Mamãe do Pet</string>
+    <string name="publicar">Publicar</string>
+    <string name="c_mera">Câmera</string>
+    <string name="galeria">Galeria</string>
 
 
 </resources>

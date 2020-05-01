@@ -37,7 +37,7 @@ public class AddStoriesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_stories);
         storageReference = ConfiguracaoFirebase.getStorageReference().child("Stories");
         reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        CropImage.activity().setAspectRatio(50,50).start(AddStoriesActivity.this);
+        CropImage.activity().setAspectRatio(100,100).start(AddStoriesActivity.this);
 
     }
 

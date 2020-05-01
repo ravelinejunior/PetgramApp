@@ -25,7 +25,7 @@
             android:id="@+id/nomeUsuario_NotificacaoAdapter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/cinzaEscuro"
+            android:textColor="@color/preto"
             android:textStyle="bold"
         />
 
@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/comentario_NotificacaoAdapter"
+            android:textColor="@color/textColor_padrao"
             android:maxLines="5"
             />
 

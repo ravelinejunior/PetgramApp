@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
+
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/laranjaClaro"
+    android:background="@color/branco"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.PostagemActivity"
     android:fillViewport="true"
     >
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
+
+        <Toolbar
+            android:id="@+id/toolbar_PostagemGaleria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Azulnovo"
+            android:title="@string/postar"
+            android:titleTextColor="@color/branco"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_add_foto"
+                />
+
+
+
+        </Toolbar>
 
 
         <ImageView
@@ -24,7 +48,6 @@
             android:layout_height="500dp"
             android:scaleType="fitXY"
             android:layout_marginTop="2dp"
-            android:layout_margin="5dp"
             />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -32,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/descri_o"
-            android:textColorHint="@color/branco"
+            android:textColorHint="@color/cinzaEscuro"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -40,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="@color/branco"
+                android:textColor="@color/textColor_padrao"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -54,7 +77,7 @@
             android:id="@+id/botao_PostarFoto_Postagem_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/laranja"
+            android:background="@color/azulPiscina"
             android:layout_marginTop="5dp"
             android:textColor="@color/branco"
             android:layout_marginBottom="5dp"

@@ -5,6 +5,58 @@
     android:layout_height="match_parent"
     tools:context=".fragments.PostarFragment">
 
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_margin="10dp"
+    >
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_camera_icone"
+        android:scaleType="fitXY"
+        android:layout_gravity="center_horizontal"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Adicionar um nova PetFoto"
+        android:padding="8dp"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textColor="@color/textColor_padrao"
+        android:layout_marginBottom="30dp"
+        />
+
+    <Button
+        android:id="@+id/botao_galeria_Postar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/galeria"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/branco"
+        android:background="@drawable/shape_botao_perfil_fragment"
+        />
+
+    <Button
+        android:id="@+id/botao_camera_Postar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/c_mera"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/branco"
+        android:textStyle="bold"
+        android:background="@drawable/shape_botao_perfil_fragment"
+        />
+
+</LinearLayout>
+
 
 
 </FrameLayout>

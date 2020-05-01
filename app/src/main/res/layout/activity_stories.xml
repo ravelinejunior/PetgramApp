@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_principal"
+    android:background="@color/branco"
     tools:context=".activities.StoriesActivity">
 
     <ImageView
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:textColor="@color/branco"
+            android:textColor="@color/textColor_padrao"
             android:text="@string/usu_rio"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/fotoStoriesPerfil_StoriesActivity"
@@ -104,7 +104,7 @@
             android:text="0"
             android:textSize="16sp"
             android:layout_marginStart="10dp"
-            android:textColor="@color/branco"
+            android:textColor="@color/preto"
             android:textStyle="bold"
             android:layout_gravity="center"
             />

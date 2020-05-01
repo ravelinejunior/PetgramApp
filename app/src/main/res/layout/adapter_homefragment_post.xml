@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/Azulnovo"
+    android:background="@color/branco"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/linearLayout_horizontal_adapterHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/VermelhoNovo"
+        android:background="@color/branco"
         android:padding="1dp"
         android:layout_margin="1dp"
         android:orientation="horizontal">
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textColor="@color/branco"
+            android:textColor="@color/textColor_padrao"
             android:padding="10dp"
             android:textStyle="bold"
             android:layout_marginStart="5dp"
@@ -38,23 +38,30 @@
 
     </LinearLayout>
 
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView_HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="10dp"
         app:cardElevation="5dp"
-        android:background="@color/VermelhoNovo"
+        android:background="@color/branco"
         app:cardCornerRadius="5dp"
 
         >
+
         <ImageView
             android:id="@+id/imagemPostada_HomeAdapter_id"
             android:layout_width="match_parent"
             android:layout_height="450dp"
-            android:background="@drawable/background_principal"
-            android:src="@drawable/ic_nearme_preto"
-            android:scaleType="fitXY" />
+            android:background="@color/branco"
+            android:clickable="true"
+            android:focusable="true"
+            android:longClickable="true"
+            android:saveEnabled="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_nearme_preto" />
 
 
     </androidx.cardview.widget.CardView>
@@ -105,7 +112,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/VermelhoNovo"
+        android:background="@color/branco_avermelhado"
         android:layout_marginBottom="2dp"
         android:layout_marginTop="1dp"
         />
@@ -117,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textColor="@color/branco"
+        android:textColor="@color/preto"
         />
 
     <TextView
@@ -125,13 +132,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textColor="#C6C3C3"
+        android:textColor="@color/textColor_padrao"
         />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/VermelhoNovo"
+        android:background="@color/branco_avermelhado"
 
         />
 
@@ -149,7 +156,7 @@
         android:layout_marginTop="5dp"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:textColor="@color/branco"
+        android:textColor="@color/preto"
         android:text="@string/_1_like" />
 
     <ImageView
@@ -171,7 +178,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginStart="2dp"
-        android:textColor="#DFD6D6"
+        android:textColor="@color/textColor_padrao"
         android:textStyle="bold|italic"
         android:padding="5dp"
 />
@@ -182,10 +189,19 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
-        android:textColor="@color/branco"
+        android:textColor="@color/preto"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginBottom="5dp"
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cinzaClaro"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
         />
 
 

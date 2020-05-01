@@ -40,6 +40,10 @@
     <color name="VerdeSptring">#1E7141</color>
     <color name="Verdeescuro">#006400</color>
     <color name="verdao">#008000</color>
+    <color name="branco_avermelhado">#FFEBEE</color>
+    <color name="vermelho_icones">#FF0016</color>
+    <color name="textColor_padrao">#171111</color>
+    <color name="branco_azulado">#E0F7FA</color>
 
 
 </resources>

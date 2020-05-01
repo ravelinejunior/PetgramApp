@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -34,19 +33,18 @@ import br.com.petgramapp.activities.ComentariosActivity;
 import br.com.petgramapp.activities.FotoPostadaActivity;
 import br.com.petgramapp.activities.SeguidoresActivity;
 import br.com.petgramapp.fragments.PerfilFragment;
-import br.com.petgramapp.fragments.PostagemUsuarioFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.ViewHolder> {
+public class AdapterFotoPostadaComActivity extends RecyclerView.Adapter<AdapterFotoPostadaComActivity.ViewHolder> {
     public List<FotoPostada> fotoPostadaList;
     public Context context;
     private FirebaseUser firebaseUser;
 
-    public AdapterFotoPostada(List<FotoPostada> fotoPostadaList, Context c) {
+    public AdapterFotoPostadaComActivity(List<FotoPostada> fotoPostadaList, Context c) {
         this.fotoPostadaList = fotoPostadaList;
         this.context = c;
     }
@@ -55,7 +53,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.adapter_homefragment_post,parent,false);
-        return new AdapterFotoPostada.ViewHolder(view);
+        return new AdapterFotoPostadaComActivity.ViewHolder(view);
     }
 
     @Override
@@ -118,8 +116,6 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                         .child(firebaseUser.getUid())
                         .child(fotoPostada.getIdPostagem())
                         .setValue(true);
-                Toast.makeText(context, "Fofo né? Agora está salvo com você.", Toast.LENGTH_LONG).show();
-
                 addNovaNotificacaoSalvar(fotoPostada.getIdUsuarioPostou(),fotoPostada.getIdPostagem());
 
 
@@ -129,9 +125,6 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                         .child(firebaseUser.getUid())
                         .child(fotoPostada.getIdPostagem())
                         .removeValue();
-
-                Toast.makeText(context, "Você pode me favoritar depois se quiser. Sentirei sua falta.", Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -169,9 +162,14 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             editor.putString("idPostagem",fotoPostada.getIdPostagem());
             editor.apply();
 
-
+           /*
            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().
                     replace(R.id.fragment_container_principal_StartAct,new PostagemUsuarioFragment()).commit();
+            */
+
+
+            Intent intent = new Intent(context, FotoPostadaActivity.class);
+            context.startActivity(intent);
 
 
         });
@@ -281,12 +279,10 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(idPostagem).exists()){
-                    imagemSalva.setImageResource(R.drawable.ic_foto_salva_completo);
+                    imagemSalva.setImageResource(R.drawable.ic_pets_white_24dp);
                     imagemSalva.setTag("Salva");
-
                 }else{
-
-                    imagemSalva.setImageResource(R.drawable.ic_foto_salva_oco);
+                    imagemSalva.setImageResource(R.drawable.ic_home_pet);
                     imagemSalva.setTag("Salvar");
                 }
             }

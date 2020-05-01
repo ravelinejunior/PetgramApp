@@ -25,7 +25,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.FotoPostadaActivity"></activity>
+        <activity android:name=".activities.PostagemCamera"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
+        <activity
+            android:name=".activities.FotoPostadaActivity"
+            android:label="Que petFoto fofa, não acha?"
+            android:roundIcon="@drawable/ic_pets_white_24dp" />
         <activity android:name=".activities.StoriesActivity" />
         <activity android:name=".activities.AddStoriesActivity" />
         <activity

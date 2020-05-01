@@ -64,11 +64,10 @@ public class HomeFragment extends Fragment {
         toolbar.setLogo(R.drawable.ic_pets_white_24dp);
         toolbar.setPadding(15,0,0,0);
         toolbar.setTitleTextColor(ContextCompat.getColor(getContext(),R.color.branco));
-/*
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setIcon(R.drawable.ic_pets_white_24dp);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);*/
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Bem vindo "+UsuarioFirebase.getUsuarioAtual().getDisplayName());
 
 
         //FEED

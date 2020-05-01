@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_principal"
+    android:background="@color/branco"
     tools:context=".activities.StartActivity">
 <!--
 <include layout="@layout/toolbar"
@@ -30,9 +30,9 @@ android:id="@+id/include"
             android:id="@+id/bottomNavigation_StartAct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/VermelhoNovo"
+            android:background="@color/Azulnovo"
             app:itemIconTint="@color/passagem_fragment_ativado_color"
-            app:labelVisibilityMode="unlabeled"
+            app:itemTextColor="@color/branco"
             app:menu="@menu/bottom_navigation">
 
         </com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx>

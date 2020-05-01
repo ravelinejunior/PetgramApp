@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_principal"
+    android:background="@color/branco"
     tools:context=".activities.PerfilActivity">
 
 
@@ -20,7 +20,7 @@
             android:id="@+id/toolbar_PerfilUsuario_Activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+            android:background="@color/Azulnovo"
             >
 
             <RelativeLayout
@@ -34,7 +34,7 @@
                     android:layout_height="30dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_fechar_escuro"
+                    android:src="@drawable/ic_close_fechar"
 
                     />
 
@@ -48,7 +48,7 @@
                     android:textStyle="bold"
                     android:layout_marginStart="10dp"
                     android:layout_centerVertical="true"
-                    android:textColor="#43464A"
+                    android:textColor="@color/branco"
                     />
 
                 <Button
@@ -64,7 +64,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
-                    android:textColor="#43464A"
+                    android:textColor="@color/branco"
                     />
 
 
@@ -109,7 +109,7 @@
             android:id="@+id/nomePet_Perfil_Activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:met_textColorHint="@color/branco"
+            app:met_textColorHint="@color/textColor_padrao"
             android:hint="@string/nome_do_petuser"
             android:singleLine="true"
             android:layout_marginTop="20dp"
@@ -124,20 +124,20 @@
             android:hint="@string/nome_papai_mam_e_do_pet"
             android:layout_marginTop="10dp"
             app:met_floatingLabel="normal"
-            app:met_textColorHint="@color/branco"
+            app:met_textColorHint="@color/textColor_padrao"
             android:singleLine="true"
-            app:met_floatingLabelTextColor="@color/branco"
+            app:met_floatingLabelTextColor="@color/preto"
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/descricaoPet_Perfil_Activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:met_textColorHint="@color/branco"
+            app:met_textColorHint="@color/textColor_padrao"
             android:hint="@string/descri_o"
             android:layout_marginTop="10dp"
             app:met_floatingLabel="normal"
-            app:met_floatingLabelTextColor="@color/branco"
+            app:met_floatingLabelTextColor="@color/preto"
             />
 
 

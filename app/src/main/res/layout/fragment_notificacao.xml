@@ -15,7 +15,7 @@
         android:id="@+id/toolbar_NotificacaoFragment_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/LaranjaNovo"
+        android:background="@color/Azulnovo"
         >
 
         <RelativeLayout
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:padding="5dp"
-                android:textColor="@color/cinzaEscuro"
+                android:textColor="@color/branco"
                 android:textStyle="bold"
                 />
 

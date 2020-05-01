@@ -29,6 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
+                android:textColor="@color/preto"
                android:textStyle="bold"
                 android:textSize="16sp"
                 android:text="@string/pesquisar"/>
@@ -38,6 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
+                android:textColor="@color/textColor_padrao"
                 android:textSize="14sp"
                 android:text="@string/pesquisar"/>
 
@@ -51,7 +53,7 @@
         android:layout_height="wrap_content"
         android:text="@string/seguir"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:textColor="@color/branco"
+        android:textColor="@color/preto"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:visibility="gone"

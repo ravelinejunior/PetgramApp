@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +21,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -174,6 +179,15 @@ public class PostagemActivity extends AppCompatActivity {
         botaoPostarFoto = findViewById(R.id.botao_PostarFoto_Postagem_id);
         recyclerViewFiltros = findViewById(R.id.recycler_view_Postagem_id);
 
+        //configurando toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar_PostagemGaleria);
+        toolbar.setTitle("Postar PetFoto");
+        toolbar.setTitleTextColor(ContextCompat.getColor(getApplicationContext(),R.color.branco));
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_fechar);
+
     }
 
     private void recuperarDadosPostagem(){
@@ -226,7 +240,7 @@ public class PostagemActivity extends AppCompatActivity {
                         }
                 ).addOnSuccessListener(taskSnapshot -> {
             //recuperar local da foto
-            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+             taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
                 //recuperando local da foto postada
                 fotoPostada.setImagemPostada(uri.toString());
 
@@ -377,6 +391,34 @@ public class PostagemActivity extends AppCompatActivity {
             Toast.makeText(this, "Algo deu errado. Verifique sua conexão com a Internet!", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_filtros_postar,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //definindo itens que foram selecionados
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.ic_salvar_postagem_menu_postar:
+                postarFoto();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return false;
     }
 }
 

@@ -55,6 +55,7 @@ public class SeguidoresActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(titulo);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarSeguidores.setTitleTextColor(getResources().getColor(R.color.branco));
 
         toolbarSeguidores.setNavigationOnClickListener(v -> finish());
 

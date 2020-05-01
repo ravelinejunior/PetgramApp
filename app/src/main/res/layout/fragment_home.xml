@@ -56,6 +56,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
                 />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/cinzaClaro"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_HomeFragment_id"
