@@ -270,6 +270,13 @@
                 android:visibility="gone"
                 />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_menuFotosSalvas_PerfilFragment"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:visibility="gone"
+                />
+
         </LinearLayout>
 
     </ScrollView>

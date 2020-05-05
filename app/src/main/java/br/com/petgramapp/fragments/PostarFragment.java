@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.theartofdev.edmodo.cropper.CropImage;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Objects;
@@ -83,7 +80,7 @@ public class PostarFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Bitmap imagem = null;
+        Bitmap imagem;
 
         //valida o tipo de seleção de imagem
         try {
@@ -97,7 +94,7 @@ public class PostarFragment extends Fragment {
 
                     //converter imagem em byte array
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    imagem.compress(Bitmap.CompressFormat.WEBP,80,baos);
+                    imagem.compress(Bitmap.CompressFormat.WEBP,50,baos);
                     byte[] dadosFoto = baos.toByteArray();
 
                     //enviar imagem para tela de filtros

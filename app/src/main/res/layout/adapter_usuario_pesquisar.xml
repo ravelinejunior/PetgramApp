@@ -38,9 +38,10 @@
                 android:id="@+id/emailPet_pesquisarUsuarioFragment_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
                 android:padding="5dp"
                 android:textColor="@color/textColor_padrao"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:text="@string/pesquisar"/>
 
         </LinearLayout>
@@ -50,13 +51,19 @@
     <Button
         android:id="@+id/botaoSeguirPet_pesquisarUsuarioFragment_id"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:text="@string/seguir"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:textColor="@color/preto"
+        android:layout_height="30dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/shape_edit_text"
+        android:textColor="@color/Azulnovo"
+        android:textSize="12sp"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:visibility="gone"
+
+
+
+
         />
 
 </RelativeLayout>

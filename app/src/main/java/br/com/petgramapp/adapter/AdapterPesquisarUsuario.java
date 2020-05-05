@@ -64,7 +64,12 @@ public class AdapterPesquisarUsuario extends RecyclerView.Adapter<AdapterPesquis
 
         holder.botaoSeguirUsuarioPet.setVisibility(View.VISIBLE);
         holder.nomeUsuarioPet.setText(usuario.getNomePetUsuario());
-        holder.emailPetUsuario.setText(usuario.getEmailPetUsuario());
+        if (usuario.getNomeDonoPet() != null){
+            holder.emailPetUsuario.setText("Filho(a) de "+usuario.getNomeDonoPet());
+        }else{
+            holder.emailPetUsuario.setText(usuario.getEmailPetUsuario());
+        }
+
 
         Uri uriImagem = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
         Picasso.get().load(uriImagem).placeholder(R.drawable.ic_person_alterar).into(holder.imagemPerfilUsuarioPet);

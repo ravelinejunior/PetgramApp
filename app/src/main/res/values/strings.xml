@@ -57,6 +57,7 @@
     <string name="publicar">Publicar</string>
     <string name="c_mera">Câmera</string>
     <string name="galeria">Galeria</string>
+    <string name="adicionar_um_nova_petfoto">Adicionar um nova PetFoto</string>
 
 
 </resources>

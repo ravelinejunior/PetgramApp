@@ -1,22 +1,20 @@
 package br.com.petgramapp.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -80,7 +78,7 @@ public class PesquisarFragment extends Fragment {
     private void pesquisarUsuarios(String s){
 
         Query queryPesquisa = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios")
-                .orderByChild("nomePetUsuarioUp")
+                .orderByChild("nomePetUsuario")
                 .startAt(s)
                 .endAt(s+"\uf8ff");
 

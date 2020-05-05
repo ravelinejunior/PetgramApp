@@ -13,28 +13,40 @@
         android:background="@color/branco"
         android:padding="1dp"
         android:layout_margin="1dp"
+        android:elevation="20dp"
         android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imagem_perfilUsuario_HomeAdapter_id"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/logodogs"/>
-
-        <TextView
-            android:id="@+id/nome_perfilUsuario_HomeAdapter_id"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_HomeFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="@color/textColor_padrao"
-            android:padding="10dp"
-            android:textStyle="bold"
-            android:layout_marginStart="5dp"
-            android:layout_gravity="center_vertical"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            />
+
+
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imagem_perfilUsuario_HomeAdapter_id"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/logodogs"/>
+
+            <TextView
+                android:id="@+id/nome_perfilUsuario_HomeAdapter_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/textColor_padrao"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+        </androidx.appcompat.widget.Toolbar>
+
+
 
     </LinearLayout>
 
@@ -109,38 +121,48 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/branco_avermelhado"
-        android:layout_marginBottom="2dp"
-        android:layout_marginTop="1dp"
-        />
-
-    <TextView
-        android:text="@string/descri_o"
-        android:textStyle="bold"
-        android:textSize="16sp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/preto"
-        />
+        android:elevation="50dp"
+        android:orientation="vertical"
+        >
 
-    <TextView
-        android:id="@+id/descricao_HomeAdapter_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/textColor_padrao"
-        />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/branco_avermelhado"
+            />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/branco_avermelhado"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/descri_o"
+            android:textColor="@color/preto"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
 
-        />
+        <TextView
+            android:id="@+id/descricao_HomeAdapter_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/textColor_padrao"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/branco_avermelhado"
+
+            />
+
+    </LinearLayout>
+
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -171,38 +193,50 @@
 
 </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/publicadaPor_HomeAdapter_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="2dp"
-        android:textColor="@color/textColor_padrao"
-        android:textStyle="bold|italic"
-        android:padding="5dp"
-/>
-
-    <TextView
-        android:id="@+id/verTodosComentarios_HomeAdapter_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/preto"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginBottom="5dp"
-        />
-
-
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/cinzaClaro"
-        android:layout_marginBottom="1dp"
-        android:layout_marginTop="1dp"
-        />
+        android:layout_height="wrap_content"
+        android:elevation="50dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/publicadaPor_HomeAdapter_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:textColor="@color/textColor_padrao"
+            android:textStyle="bold|italic"
+            />
+
+        <TextView
+            android:id="@+id/verTodosComentarios_HomeAdapter_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/preto"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="@color/cinzaClaro"
+
+            />
+    </LinearLayout>
+
+
+
+
+
 
 
 

@@ -46,13 +46,15 @@
         <activity
             android:name=".activities.ComentariosActivity"
             android:theme="@style/AppThemeComentarioActivity" />
-        <activity android:name=".activities.PostagemActivity" />
+        <activity android:name=".activities.PostagemActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".activities.StartActivity"
-            android:theme="@style/AppThemeLogin" />
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.CadastrarActivity" />
         <activity android:name=".activities.MainActivity">

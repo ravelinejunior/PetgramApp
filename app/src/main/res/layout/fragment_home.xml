@@ -17,22 +17,21 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_HomeFragment_id"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:background="@color/Azulnovo"
             android:minHeight="?attr/actionBarSize"
-            app:titleTextColor="@color/branco"
-            app:subtitleTextColor="@color/branco"
             android:theme="?attr/actionBarTheme"
-            >
+            app:subtitleTextColor="@color/branco"
+            app:titleTextColor="@color/branco">
 
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout_homeFrag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/relativeLayout_homeFrag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
-        </RelativeLayout>
+            </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -54,15 +53,17 @@
                 android:id="@+id/recyclerView_Stories_HomeFragment_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                />
+                android:layout_margin="1dp"
+                android:background="@color/branco"
+                android:elevation="20dp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/cinzaClaro"
-                android:layout_marginBottom="1dp"
                 android:layout_marginTop="1dp"
-                />
+                android:layout_marginBottom="1dp"
+                android:background="@color/cinzaClaro"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_HomeFragment_id"

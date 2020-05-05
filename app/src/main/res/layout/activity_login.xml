@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_principal"
+    android:background="@color/Azulnovo"
     tools:context=".activities.LoginActivity">
 
     <LinearLayout
@@ -46,7 +46,7 @@
             android:layout_marginBottom="10dp"
             android:padding="2dp"
             app:placeholderText="minhasenha123"
-            app:startIconDrawable="@drawable/ic_password_senha_24dp"
+            app:passwordToggleEnabled="true"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -56,6 +56,7 @@
                 android:textColor="@color/branco"
                 android:hint="@string/senha_pet"
                 android:inputType="textPassword"
+                android:paddingStart="15dp"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 

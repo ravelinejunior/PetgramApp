@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Adicionar um nova PetFoto"
+        android:text="@string/adicionar_um_nova_petfoto"
         android:padding="8dp"
         android:textSize="20sp"
         android:textAlignment="center"

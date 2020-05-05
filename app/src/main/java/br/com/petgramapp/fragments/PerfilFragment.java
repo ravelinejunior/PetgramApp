@@ -4,20 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +46,7 @@ public class PerfilFragment extends Fragment {
     private Button botaoEditarPerfilFrament;
     private ImageButton imageButtonMinhasFotos;
     private ImageButton imageButtonSalvarFotos;
+    private ImageButton imageButtonMenuFotos;
     private TextView nomePetUsuarioPerfilFragment;
     private TextView descricaoPetUsuarioPerfilFragment;
     private TextView nomeDonoPetUsuarioPerfilFragment;
@@ -60,17 +59,20 @@ public class PerfilFragment extends Fragment {
     private CircleImageView opcoesImagemView;
 
     //DADOS
-    String idPerfilUsuario;
-    FirebaseUser firebaseUser;
-    DatabaseReference reference;
+    private String idPerfilUsuario;
+    private FirebaseUser firebaseUser;
+    private DatabaseReference reference;
 
     //VIEWS/ADAPTER
     private RecyclerView recyclerViewMinhasFotos;
     private AdapterMinhasFotos adapterMinhasFotos;
-    private List<FotoPostada> fotoPostadaList;
+    private List<FotoPostada> fotoPostadaList = new ArrayList<>();
+
+    private RecyclerView recyclerViewMenu;
+    private AdapterMinhasFotos adapterMenuFotos;
 
     //fotos salvas
-    private List<FotoPostada> fotosSalvasList;
+    private List<FotoPostada> fotosSalvasList = new ArrayList<>();
     private RecyclerView recyclerViewFotosSalvas;
     private AdapterMinhasFotos adapterMinhasFotos_fotosSalvas;
     private List<String> fotosSalvasStrings;
@@ -172,34 +174,56 @@ public class PerfilFragment extends Fragment {
 
 
         //RECYCLER VIEW DE MINHAS FOTOS
-        recyclerViewMinhasFotos = view.findViewById(R.id.recyclerView_minhasFotos_PerfilFragment);
         recyclerViewMinhasFotos.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(),3);
         recyclerViewMinhasFotos.setLayoutManager(linearLayoutManager);
-        fotoPostadaList = new ArrayList<>();
         adapterMinhasFotos = new AdapterMinhasFotos(getContext(),fotoPostadaList);
         recyclerViewMinhasFotos.setAdapter(adapterMinhasFotos);
 
         //RECYCLER VIEW DE FOTOS SALVAS
-        recyclerViewFotosSalvas = view.findViewById(R.id.recyclerView_fotosSalvas_PerfilFragment);
+
         recyclerViewFotosSalvas.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManagerFotosSalvas = new GridLayoutManager(getContext(),3);
         recyclerViewFotosSalvas.setLayoutManager(linearLayoutManagerFotosSalvas);
-        fotosSalvasList = new ArrayList<>();
         adapterMinhasFotos_fotosSalvas = new AdapterMinhasFotos(getContext(),fotosSalvasList);
         recyclerViewFotosSalvas.setAdapter(adapterMinhasFotos_fotosSalvas);
+
+
+        //RECYCLER VIEW DE MINHAS FOTOS MENU
+
+        recyclerViewMenu.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManagerMenu = new LinearLayoutManager(getContext());
+        recyclerViewMenu.setLayoutManager(linearLayoutManagerMenu);
+        adapterMenuFotos = new AdapterMinhasFotos(getContext(),fotoPostadaList);
+        recyclerViewMenu.setAdapter(adapterMenuFotos);
+
+
+
+//PADRAO RECYCLER
         recyclerViewMinhasFotos.setVisibility(View.VISIBLE);
         recyclerViewFotosSalvas.setVisibility(View.GONE);
+        recyclerViewMenu.setVisibility(View.GONE);
 
 
         imageButtonMinhasFotos.setOnClickListener(v -> {
             recyclerViewMinhasFotos.setVisibility(View.VISIBLE);
             recyclerViewFotosSalvas.setVisibility(View.GONE);
+            recyclerViewMenu.setVisibility(View.GONE);
         });
 
         imageButtonSalvarFotos.setOnClickListener(v -> {
+
             recyclerViewMinhasFotos.setVisibility(View.GONE);
+            recyclerViewMenu.setVisibility(View.GONE);
             recyclerViewFotosSalvas.setVisibility(View.VISIBLE);
+
+        });
+
+        imageButtonMenuFotos.setOnClickListener(v -> {
+            recyclerViewMinhasFotos.setVisibility(View.GONE);
+            recyclerViewMenu.setVisibility(View.VISIBLE);
+            recyclerViewFotosSalvas.setVisibility(View.GONE);
+
         });
 
 
@@ -278,6 +302,10 @@ public class PerfilFragment extends Fragment {
         textoQuantidadeSeguidoresPerfilFragment = view.findViewById(R.id.texto_quantidadeSeguidores_PerfilFragment);
         textoQuantidadeSeguindoPerfilFragment = view.findViewById(R.id.texto_quantidadeSeguindo_PerfilFragment);
         opcoesImagemView = view.findViewById(R.id.opcoes_PerfilFramgent_id);
+        imageButtonMenuFotos = view.findViewById(R.id.menuMinhasFotos_PerfilFragment_id);
+        recyclerViewMinhasFotos = view.findViewById(R.id.recyclerView_minhasFotos_PerfilFragment);
+        recyclerViewFotosSalvas = view.findViewById(R.id.recyclerView_fotosSalvas_PerfilFragment);
+        recyclerViewMenu = view.findViewById(R.id.recyclerView_menuFotosSalvas_PerfilFragment);
     }
 
     private void usuarioInfo(){
