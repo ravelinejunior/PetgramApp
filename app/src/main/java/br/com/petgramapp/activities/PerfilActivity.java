@@ -1,5 +1,6 @@
 package br.com.petgramapp.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.TextView;
@@ -107,9 +109,21 @@ public class PerfilActivity extends AppCompatActivity {
           String nomePet = nomePetEdicaoPerfil.getText().toString();
           String nomeDonoPet = nomeDonoEdicaoPerfil.getText().toString();
           String descricaoPerfil = descricaoEdicaoPerfil.getText().toString();
+
               atualizarPerfil(nomePet,nomeDonoPet,descricaoPerfil,v);
 
-              v.setScreenReaderFocusable(true);
+              nomeDonoEdicaoPerfil.clearFocus();
+              nomeDonoEdicaoPerfil.clearComposingText();
+
+              nomePetEdicaoPerfil.clearFocus();
+              nomePetEdicaoPerfil.clearComposingText();
+
+              descricaoEdicaoPerfil.clearFocus();
+              descricaoEdicaoPerfil.clearComposingText();
+
+          InputMethodManager imm = (InputMethodManager) getSystemService(
+                  Activity.INPUT_METHOD_SERVICE);
+          imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
       });
 
@@ -127,7 +141,7 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
 
-    private void atualizarPerfil(String nomePet, String nomeDonoPet, String descricaoPerfil,View view) {
+    private void atualizarPerfil(String nomePet, String nomeDonoPet, String descricaoPerfil, View view) {
         usuariosRef = reference.child("usuarios").child(usuarioFirebase.getUid());
 
         HashMap<String,Object> hashMap = new HashMap<>();

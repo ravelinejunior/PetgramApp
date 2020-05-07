@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cinza"
+    android:background="@color/branco"
     tools:context=".activities.CadastrarActivity">
 
 
@@ -31,7 +31,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:src="@drawable/logodogs"
+                android:src="@drawable/cadastroimage"
+
                 />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -39,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="10dp"
-                android:textColorHint="@color/branco"
+                android:textColorHint="@color/textColor_padrao"
                 app:helperText="Nome do pet (CAMPO OBRIGATÓRIO)"
                 app:startIconDrawable="@drawable/ic_pets_white_24dp">
 
@@ -59,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="10dp"
-                android:textColorHint="@color/branco"
+                android:textColorHint="@color/textColor_padrao"
                 app:helperText="Email do usuario (CAMPO OBRIGATÓRIO)"
                 app:startIconDrawable="@drawable/ic_pets_white_24dp">
 
@@ -79,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="10dp"
-                android:textColorHint="@color/branco"
+                android:textColorHint="@color/textColor_padrao"
                 app:helperText="Idade do pet (OPCIONAL)"
                 app:startIconDrawable="@drawable/ic_pets_white_24dp">
 
@@ -99,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="10dp"
-                android:textColorHint="@color/branco"
+                android:textColorHint="@color/textColor_padrao"
                 app:helperText="Vida, rotina, bagunças, alegrias.(OPCIONAL)"
                 app:startIconDrawable="@drawable/ic_pets_white_24dp">
 
@@ -119,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="10dp"
-                android:textColorHint="@color/branco"
+                android:textColorHint="@color/textColor_padrao"
                 app:helperText="Senha (CAMPO OBRIGATÓRIO)"
                 app:passwordToggleDrawable="@drawable/ic_password_senha_24dp"
                 app:passwordToggleEnabled="true"
@@ -142,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginBottom="10dp"
-                android:textColorHint="@color/branco"
+                android:textColorHint="@color/textColor_padrao"
                 app:helperText="Confirmação de senha (CAMPO OBRIGATÓRIO)"
                 app:passwordToggleDrawable="@drawable/ic_password_senha_24dp"
                 app:passwordToggleEnabled="true"
@@ -162,7 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:progressBackgroundTint="@color/branco"
+                android:progressBackgroundTint="@color/Azulnovo"
                 android:visibility="gone" />
 
             <Button

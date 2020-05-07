@@ -28,39 +28,73 @@
 
         <activity
             android:name=".activities.PostagemCamera"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
         <activity
             android:name=".activities.FotoPostadaActivity"
             android:label="Que petFoto fofa, não acha?"
-            android:roundIcon="@drawable/ic_pets_white_24dp" />
-        <activity android:name=".activities.StoriesActivity" />
-        <activity android:name=".activities.AddStoriesActivity" />
+            android:roundIcon="@drawable/ic_pets_white_24dp"
+            android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".activities.StoriesActivity"
+            android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".activities.AddStoriesActivity"
+            android:screenOrientation="portrait"
+            />
+
         <activity
             android:name=".activities.OpcoesActivity"
-            android:theme="@style/AppThemeComentarioActivity" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeComentarioActivity"
+            />
+
         <activity
             android:name=".activities.SeguidoresActivity"
-            android:theme="@style/AppThemeComentarioActivity" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeComentarioActivity"
+            />
+
         <activity
             android:name=".activities.PerfilActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
+
         <activity
             android:name=".activities.ComentariosActivity"
-            android:theme="@style/AppThemeComentarioActivity" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeComentarioActivity"
+            />
+
         <activity
             android:name=".activities.PostagemActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
+            android:theme="@style/Base.Theme.AppCompat"
+            />
+
         <activity
             android:name=".activities.StartActivity"
-            android:theme="@style/AppThemeComentarioActivity" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeComentarioActivity"
+            />
         <activity android:name=".activities.LoginActivity"
             android:parentActivityName=".launcher.SlideHomeLauncher"
+            android:label="@string/login"
+            android:screenOrientation="portrait"
+
             />
         <activity android:name=".activities.CadastrarActivity"
             android:parentActivityName=".launcher.SlideHomeLauncher"
+            android:label="@string/cadastro"
+            android:screenOrientation="portrait"
             />
 
      <!--   <activity android:name=".activities.MainActivity">
