@@ -25,9 +25,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.PostagemCamera"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            />
+
+        <activity
+            android:name=".activities.PostagemCamera"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".activities.FotoPostadaActivity"
             android:label="Que petFoto fofa, não acha?"
@@ -39,28 +40,42 @@
             android:theme="@style/AppThemeComentarioActivity" />
         <activity
             android:name=".activities.SeguidoresActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:theme="@style/AppThemeComentarioActivity" />
         <activity
             android:name=".activities.PerfilActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".activities.ComentariosActivity"
             android:theme="@style/AppThemeComentarioActivity" />
-        <activity android:name=".activities.PostagemActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            />
+        <activity
+            android:name=".activities.PostagemActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".activities.StartActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.CadastrarActivity" />
-        <activity android:name=".activities.MainActivity">
+            android:theme="@style/AppThemeComentarioActivity" />
+        <activity android:name=".activities.LoginActivity"
+            android:parentActivityName=".launcher.SlideHomeLauncher"
+            />
+        <activity android:name=".activities.CadastrarActivity"
+            android:parentActivityName=".launcher.SlideHomeLauncher"
+            />
+
+     <!--   <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>-->
+
+        <activity
+            android:name=".launcher.SlideHomeLauncher"
+            android:theme="@style/Theme.Intro">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

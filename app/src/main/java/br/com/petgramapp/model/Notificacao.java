@@ -16,6 +16,7 @@ public class Notificacao {
     private String comentarioFeito;
     private String idPostagem;
     private Boolean isPostado;
+    private FotoPostada fotoPostada;
 
     public String getIdUsuario() {
         return idUsuario;
@@ -47,5 +48,13 @@ public class Notificacao {
 
     public void setIsPostado(Boolean isPostado) {
         this.isPostado = isPostado;
+    }
+
+    public FotoPostada getFotoPostada() {
+        return fotoPostada;
+    }
+
+    public void setFotoPostada(FotoPostada fotoPostada) {
+        this.fotoPostada = fotoPostada;
     }
 }

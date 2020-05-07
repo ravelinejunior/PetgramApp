@@ -2,8 +2,10 @@ package br.com.petgramapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -17,6 +19,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 import br.com.petgramapp.R;
@@ -49,7 +53,19 @@ public class AddStoriesActivity extends AppCompatActivity {
         dialog.show();
         if (imagemUri != null){
             StorageReference imageReference = storageReference.child(System.currentTimeMillis()+".jpeg");
-            storageTask = imageReference.putFile(imagemUri);
+            //storageTask = imageReference.putFile(imagemUri);
+
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), imagemUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.WEBP, 20, baos);
+            byte[] data = baos.toByteArray();
+            storageTask = imageReference.putBytes(data);
+
             storageTask.continueWithTask((Continuation) task -> {
                 if (!task.isSuccessful()){
                     throw task.getException();

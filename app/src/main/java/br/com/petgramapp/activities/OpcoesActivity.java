@@ -1,14 +1,13 @@
 package br.com.petgramapp.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -37,10 +36,13 @@ public class OpcoesActivity extends AppCompatActivity {
         sairOpcoes = findViewById(R.id.sair_Opcoes_id);
         configuracaoOpcoes = findViewById(R.id.configuracoes_Opcoes_id);
 
+        toolbarOpcoes.setTitleTextColor(getResources().getColor(R.color.branco));
+
         setSupportActionBar(toolbarOpcoes);
         getSupportActionBar().setTitle(R.string.opcoes);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         toolbarOpcoes.setNavigationOnClickListener(v -> finish());
 
     }

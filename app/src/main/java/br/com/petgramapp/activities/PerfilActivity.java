@@ -1,30 +1,28 @@
 package br.com.petgramapp.activities;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,10 +32,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 import br.com.petgramapp.R;
@@ -135,10 +134,10 @@ public class PerfilActivity extends AppCompatActivity {
         if ((nomeDonoPet != null || !nomeDonoPet.equals("")) ||
                 ((nomePet != null || !nomePet.equals(""))) ||
                 (descricaoPerfil != null || !descricaoPerfil.equals(""))) {
-            //#TODO 1: CRIAR UM NÓ DE NOME DONO DO PET NO BANCO DE DADOS
+
             //hashMap.put("nomeDonoPet",nomeDonoPet);
             hashMap.put("nomePetUsuario", nomePet);
-            hashMap.put("nomeDonoPet", nomeDonoPet); // alterar esse aqui
+            hashMap.put("nomeDonoPet", nomeDonoPet);
             hashMap.put("descricaoPetUsuario", descricaoPerfil);
 
             usuariosRef.updateChildren(hashMap);
@@ -168,7 +167,23 @@ public class PerfilActivity extends AppCompatActivity {
 
             StorageReference arquivoRef = storageReference.
                     child( identificadorUsuario+"."+getFileExtension(imagemFotoUri));
-            uploadFotoTask = arquivoRef.putFile(imagemFotoUri);
+
+
+
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), imagemFotoUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.WEBP, 10, baos);
+            byte[] data = baos.toByteArray();
+
+            uploadFotoTask = arquivoRef.putBytes(data);
+
+            //uploadFotoTask = arquivoRef.putFile(imagemFotoUri);
+
             uploadFotoTask.continueWithTask((Continuation) task -> {
                 if (task.isSuccessful()){
 

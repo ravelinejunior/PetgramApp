@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/branco"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/image_launcher_3"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/catdog" />
+
+    <TextView
+        android:id="@+id/textoTitulo_launcher_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:padding="5dp"
+        android:text="@string/exiba_essas_fofuras_para_o_mundo"
+        android:textAlignment="center"
+        android:textColor="@color/Azulnovo"
+        android:textIsSelectable="true"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textDescricao_launcher_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:padding="5dp"
+        android:text="@string/poste_fotos_de_todos_os_seus"
+        android:textAlignment="center"
+        android:textColor="@color/Azulnovo"
+        android:textIsSelectable="true"
+        android:textSize="20sp" />
+
+</LinearLayout>

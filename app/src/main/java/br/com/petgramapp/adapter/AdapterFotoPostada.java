@@ -1,9 +1,13 @@
 package br.com.petgramapp.adapter;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +17,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,25 +32,30 @@ import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.activities.ComentariosActivity;
-import br.com.petgramapp.activities.FotoPostadaActivity;
 import br.com.petgramapp.activities.SeguidoresActivity;
+import br.com.petgramapp.activities.StartActivity;
 import br.com.petgramapp.fragments.PerfilFragment;
 import br.com.petgramapp.fragments.PostagemUsuarioFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
+import br.com.petgramapp.model.Notificacao;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.ViewHolder> {
     public List<FotoPostada> fotoPostadaList;
+    public static Integer posicao = 0;
     public Context context;
     private FirebaseUser firebaseUser;
+    public List<Notificacao> notificacaoList = new ArrayList<>();
+    public List<String> idPostagensList = new ArrayList<>();
 
     public AdapterFotoPostada(List<FotoPostada> fotoPostadaList, Context c) {
         this.fotoPostadaList = fotoPostadaList;
@@ -62,6 +73,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
     FotoPostada fotoPostada = fotoPostadaList.get(position);
+    posicao = position;
     firebaseUser = UsuarioFirebase.getUsuarioAtual();
 
 
@@ -145,6 +157,15 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
         });
 
+        holder.imagemLikeHome.setOnClickListener(v -> {
+
+            Intent intent = new Intent(context, SeguidoresActivity.class);
+            intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
+            intent.putExtra("titulo","Curtir");
+            context.startActivity(intent);
+
+        });
+
 
         //COMENTARIOS
         holder.comentarioButtonHome.setOnClickListener(v -> {
@@ -169,8 +190,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             editor.putString("idPostagem",fotoPostada.getIdPostagem());
             editor.apply();
 
-
-           ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().
+           ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).
                     replace(R.id.fragment_container_principal_StartAct,new PostagemUsuarioFragment()).commit();
 
 
@@ -181,7 +201,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             editor.putString("idUsuario",fotoPostada.getIdUsuarioPostou());
             editor.apply();
 
-            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().
+            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
                     replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();
         });
 
@@ -190,8 +210,43 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             editor.putString("idUsuario",fotoPostada.getIdUsuarioPostou());
             editor.apply();
 
-            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().
+            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).
                     replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();
+
+        });
+
+        //DELETAR POSTAGEM
+
+        if (!firebaseUser.getUid().equalsIgnoreCase(fotoPostada.getIdUsuarioPostou())){
+            holder.deletarPostagemHome.setVisibility(View.GONE);
+        }else{
+            holder.deletarPostagemHome.setVisibility(View.VISIBLE);
+        }
+
+        holder.deletarPostagemHome.setOnClickListener(v -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Deletar PetPostagem");
+            builder.setMessage("Deseja deletar essa linda PetPostagem?\n\n\n *OBS: Apagando a postagem, você tambem exclui TODAS suas notificações.");
+            builder.setIcon(R.drawable.ic_pets_black_24dp);
+            builder.setPositiveButton(R.string.confirmar, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    deletarPostagem(firebaseUser.getUid(),fotoPostada.getIdPostagem(),notificacaoList.get(position).getIdPostagem());
+                    dialog.dismiss();
+                    Intent intent = new Intent(context, StartActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(intent);
+                }
+            });
+            builder.setNegativeButton(R.string.cancelar, (dialog, which) -> {
+                    Snackbar.make(v,"Ufa, uma postagem fofa dessas deveria ser suuuper vista, não acha?",Snackbar.LENGTH_LONG).
+                    show();
+                    dialog.dismiss();
+            });
+
+            Dialog dialog = builder.create();
+            dialog.show();
 
         });
 
@@ -202,37 +257,35 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         return fotoPostadaList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private void informacoesPublicacao(CircleImageView imagemPerfil,TextView nomeUsuario, TextView publicadoPor, String userId){
+        DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").child(userId);
 
-        public TextView descricaoHome;
-        public TextView nomeUsuarioHome;
-        public TextView qtLikesHome;
-        public TextView comentariosTodosHome;
-        public TextView postadaPorHome;
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Usuario usuario = dataSnapshot.getValue(Usuario.class);
 
-        public ImageView comentarioButtonHome;
-        public LikeButton likeButtonHome;
-        public ImageView salvarButtonHome;
+                if (usuario.getUriCaminhoFotoPetUsuario() != null){
+                    Uri uriFotoPerfil = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
+                   // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                    Glide.with(context).load(uriFotoPerfil).into(imagemPerfil);
+                }else{
+                    //Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                    Glide.with(context).load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                }
 
-        public ImageView imagemPostadaHome;
-        public CircleImageView fotoPerfilHome;
+                nomeUsuario.setText(usuario.getNomePetUsuario());
+                publicadoPor.setText(String.format("@%s", usuario.getNomePetUsuario().replace(" ", "")));
+                publicadoPor.setTextColor(context.getResources().getColor(R.color.escuroAzul));
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
 
-            descricaoHome = itemView.findViewById(R.id.descricao_HomeAdapter_id);
-            nomeUsuarioHome = itemView.findViewById(R.id.nome_perfilUsuario_HomeAdapter_id);
-            qtLikesHome = itemView.findViewById(R.id.quantidadeLikes_HomeAdapter_id);
-            comentariosTodosHome = itemView.findViewById(R.id.verTodosComentarios_HomeAdapter_id);
-            postadaPorHome = itemView.findViewById(R.id.publicadaPor_HomeAdapter_id);
+            }
 
-            comentarioButtonHome = itemView.findViewById(R.id.mensagemButton_HomeAdapter_id);
-            likeButtonHome = itemView.findViewById(R.id.likeButton_HomeAdapter_id);
-            salvarButtonHome = itemView.findViewById(R.id.salvarButton_HomeAdapter_id);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            imagemPostadaHome = itemView.findViewById(R.id.imagemPostada_HomeAdapter_id);
-            fotoPerfilHome = itemView.findViewById(R.id.imagem_perfilUsuario_HomeAdapter_id);
-        }
+            }
+        });
     }
 
     private void getQuantidadeComentarios(String idPostagem,TextView comentariosView){
@@ -326,39 +379,38 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
     }
 
-    private void informacoesPublicacao(CircleImageView imagemPerfil,TextView nomeUsuario, TextView publicadoPor, String userId){
-        DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").child(userId);
+    private void deletarPostagem(String idUsuario,String idPostagem, String idNotificacao){
+           DatabaseReference postsRef = ConfiguracaoFirebase.getReferenciaDatabase()
+                   .child("Posts").child(idPostagem);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Usuario usuario = dataSnapshot.getValue(Usuario.class);
+           postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+               @Override
+               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (usuario.getUriCaminhoFotoPetUsuario() != null){
-                    Uri uriFotoPerfil = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
-                   // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
-                    Glide.with(context).load(uriFotoPerfil).into(imagemPerfil);
-                }else{
-                    //Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
-                    Glide.with(context).load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
-                }
+                   if (idUsuario.equals(firebaseUser.getUid())){
+                       postsRef.removeValue().addOnCompleteListener(task -> {
+                           if (task.isSuccessful()){
+                               //deletaNotificacao(idUsuario,idPostagem);
+                               alteraNotificacao(idUsuario,idNotificacao);
+                               Toast.makeText(context, "Deletado com sucesso.", Toast.LENGTH_SHORT).show();
+                           }
+                       });
+                   }
 
-                nomeUsuario.setText(usuario.getNomePetUsuario());
-                publicadoPor.setText("@"+usuario.getNomePetUsuario());
+               }
 
+               @Override
+               public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+               }
+           });
     }
 
     private void addNovaNotificacao(String idUsuario,String idPostagem){
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+                child(idUsuario);
+        // child(idPostagem).child(idUsuario);
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("idUsuario",firebaseUser.getUid());
         hashMap.put("comentarioFeito","Gostou da sua postagem");
@@ -369,9 +421,48 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
     }
 
+    private void alteraNotificacao(String idUsuario,String idPostagem){
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+                child(idUsuario).child(idPostagem);
+        //    child(idPostagem).child(idUsuario);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario",firebaseUser.getUid());
+        hashMap.put("idPostagem",null);
+        hashMap.put("isPostado",true);
+
+        notificacaoReference.updateChildren(hashMap);
+
+    }
+
+    private void deletaNotificacao(String idUsuario,String idPostagem){
+        DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario).child(idPostagem);
+        notificacaoReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                notificacaoReference.removeValue().addOnCompleteListener(task -> {
+
+                    if (task.isSuccessful()){
+                        Log.i("notificacaoReference","Notificação excluida. Id Postagem = "+idPostagem);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void addNovaNotificacaoSalvar(String idUsuario,String idPostagem){
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+                child(idUsuario);
+            //    child(idPostagem).child(idUsuario);
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("idUsuario",firebaseUser.getUid());
         hashMap.put("comentarioFeito","Salvou sua postagem!");
@@ -380,6 +471,43 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
         notificacaoReference.push().setValue(hashMap);
 
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView descricaoHome;
+        public TextView nomeUsuarioHome;
+        public TextView qtLikesHome;
+        public TextView comentariosTodosHome;
+        public TextView postadaPorHome;
+
+        public ImageView comentarioButtonHome;
+        public ImageView imagemLikeHome;
+        public LikeButton likeButtonHome;
+        public ImageView salvarButtonHome;
+
+        public ImageView imagemPostadaHome;
+        public CircleImageView fotoPerfilHome;
+        public CircleImageView deletarPostagemHome;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            descricaoHome = itemView.findViewById(R.id.descricao_HomeAdapter_id);
+            nomeUsuarioHome = itemView.findViewById(R.id.nome_perfilUsuario_HomeAdapter_id);
+            qtLikesHome = itemView.findViewById(R.id.quantidadeLikes_HomeAdapter_id);
+            comentariosTodosHome = itemView.findViewById(R.id.verTodosComentarios_HomeAdapter_id);
+            postadaPorHome = itemView.findViewById(R.id.publicadaPor_HomeAdapter_id);
+
+            comentarioButtonHome = itemView.findViewById(R.id.mensagemButton_HomeAdapter_id);
+            likeButtonHome = itemView.findViewById(R.id.likeButton_HomeAdapter_id);
+            salvarButtonHome = itemView.findViewById(R.id.salvarButton_HomeAdapter_id);
+            imagemLikeHome = itemView.findViewById(R.id.likeImagem_visualizarLikes);
+
+            imagemPostadaHome = itemView.findViewById(R.id.imagemPostada_HomeAdapter_id);
+            fotoPerfilHome = itemView.findViewById(R.id.imagem_perfilUsuario_HomeAdapter_id);
+            deletarPostagemHome = itemView.findViewById(R.id.deletarPostagem_HomeAdapter);
+        }
     }
 
 

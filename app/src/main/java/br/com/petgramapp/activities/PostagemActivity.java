@@ -82,10 +82,6 @@ public class PostagemActivity extends AppCompatActivity {
     private DatabaseReference firebaseRef;
     ProgressDialog dialog;
 
-    //request code para a ação de onclick de fotos
-    private final static int CODIGO_ABRIR_CAMERA = 100;
-    private final static int CODIGO_ABRIR_GALERIA = 200;
-
     //usuarios
     private String idUsuarioLogado;
     private Usuario usuarioLogado;
@@ -94,6 +90,12 @@ public class PostagemActivity extends AppCompatActivity {
     static
     {
         System.loadLibrary("NativeImageProcessor");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle oldInstanceState) {
+        super.onSaveInstanceState(oldInstanceState);
+        oldInstanceState.clear();
     }
 
     @Override
@@ -216,7 +218,7 @@ public class PostagemActivity extends AppCompatActivity {
 
         //recuperar dados da imagem para salvar no firebaseStorage para depois salvar no firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imagemFiltro.compress(Bitmap.CompressFormat.WEBP,90,baos);
+        imagemFiltro.compress(Bitmap.CompressFormat.WEBP,50,baos);
         byte[] dadosImagemPostada = baos.toByteArray();
 
         //salvando no storage
@@ -318,6 +320,14 @@ public class PostagemActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
+ /*   @Override
+    protected void onSaveInstanceState(Bundle oldInstanceState) {
+        super.onSaveInstanceState(oldInstanceState);
+        oldInstanceState.clear();
+    }*/
+
+
 
     private void uploadFotoPostagem(){
      abrirDialogCarregamento("Sua petFoto está sendo postada! Aguarde...");

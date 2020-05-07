@@ -1,8 +1,5 @@
 package br.com.petgramapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -12,9 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.petgramapp.R;
-import br.com.petgramapp.fragments.PesquisarFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.Stories;
@@ -122,16 +119,13 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
             DatabaseReference storiesRef = ConfiguracaoFirebase.getReferenciaDatabase()
                     .child("Stories").child(idUsuario).child(storiesId.get(count));
 
-          storiesRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-              @Override
-              public void onComplete(@NonNull Task<Void> task) {
+            storiesRef.removeValue().addOnCompleteListener(task -> {
 
-                  if (task.isSuccessful()){
-                      Toast.makeText(StoriesActivity.this, "Deletado.", Toast.LENGTH_SHORT).show();
-                      finish();
-                  }
-
+              if (task.isSuccessful()){
+                  Toast.makeText(StoriesActivity.this, "Deletado.", Toast.LENGTH_SHORT).show();
+                  finish();
               }
+
           });
 
         });
@@ -220,7 +214,8 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(fotoStoriesPerfil);
+                //Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(fotoStoriesPerfil);
+                Glide.with(StoriesActivity.this).load(usuario.getUriCaminhoFotoPetUsuario()).into(fotoStoriesPerfil);
                 nomeUsuarioStories.setText(usuario.getNomePetUsuario());
 
             }

@@ -1,5 +1,19 @@
 package br.com.petgramapp.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -7,22 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +32,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.util.HashMap;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 
 import br.com.petgramapp.R;
@@ -88,6 +90,12 @@ public class PostagemCamera extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle oldInstanceState) {
+        super.onSaveInstanceState(oldInstanceState);
+        oldInstanceState.clear();
+    }
+
     private void abrirDialogCarregamento(String descricao){
         dialog = new ProgressDialog(getContext());
         dialog.setTitle("Aguarde.");
@@ -136,7 +144,22 @@ public class PostagemCamera extends AppCompatActivity {
                     .child("fotoPostada")
                     .child(fotoPostada.getIdPostagem()+".jpeg");
 
-            uploadTaskPostagem = imagemRef.putFile(uriImagemPostagem);
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uriImagemPostagem);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.WEBP, 50, baos);
+            byte[] data = baos.toByteArray();
+
+            //uploadTaskPostagem = imagemRef.putFile(uriImagemPostagem);
+
+            uploadTaskPostagem = imagemRef.putBytes(data);
+
+
 
             uploadTaskPostagem.continueWithTask((Continuation) task -> {
 

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.Objects;
 
 import br.com.petgramapp.R;
@@ -22,7 +23,7 @@ import br.com.petgramapp.activities.PostagemActivity;
 import br.com.petgramapp.activities.PostagemCamera;
 import br.com.petgramapp.helper.Permissao;
 
-public class PostarFragment extends Fragment {
+public class PostarFragment extends Fragment implements Serializable {
 
     //request code para a ação de onclick de fotos
     private final static int CODIGO_ABRIR_GALERIA = 200;
@@ -99,7 +100,10 @@ public class PostarFragment extends Fragment {
 
                     //enviar imagem para tela de filtros
                     Intent i = new Intent(getActivity(), PostagemActivity.class);
-                    i.putExtra("fotoSelecionada",dadosFoto);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("fotoSelecionada",dadosFoto);
+                  //  i.putExtra("fotoSelecionada",dadosFoto);
+                    i.putExtras(bundle);
                     startActivity(i);
 
                 }

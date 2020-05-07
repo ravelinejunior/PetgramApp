@@ -58,6 +58,15 @@
     <string name="c_mera">Câmera</string>
     <string name="galeria">Galeria</string>
     <string name="adicionar_um_nova_petfoto">Adicionar um nova PetFoto</string>
+    <string name="encontre_um_petlover">Encontre um PetLover</string>
+    <string name="encotre_mais_amantes_de_pets_acredite_somos_um_numero_enorme_de_pessoas_que_amam_os_grand_es_e_dos_baixinhos">Encotre mais amantes de Pets. Acredite, somos um numero enorme de pessoas que amam os grandões e dos baixinhos.</string>
+    <string name="description">Description</string>
+    <string name="crie_sua_conta_gr_tis">Crie sua conta grátis!</string>
+    <string name="caso_nao_possua">Caso não possua uma PetConta, clique no botão para se cadastrar. Caso ja possua uma conta, clique em Entrar.</string>
+    <string name="poste_fotos">Poste fotos!</string>
+    <string name="poste_fotos_de_todos_os_seu_pets_e_acompanhe_em_tempo_real_os_amigos_de_seus_pets">Poste fotos de todos os seu pets e acompanhe em tempo real os amigos de seus pets!</string>
+    <string name="exiba_essas_fofuras_para_o_mundo">Exiba essas fofuras para o mundo.</string>
+    <string name="poste_fotos_de_todos_os_seus">Poste fotos de todos os seu pets e acompanhe em tempo real os amigos de seus pets!</string>
 
 
 </resources>

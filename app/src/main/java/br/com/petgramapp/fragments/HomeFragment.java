@@ -46,7 +46,6 @@ public class HomeFragment extends Fragment {
     private ProgressBar progressBarHomeFragment;
     private List<String> listaIdUsuarios = new ArrayList<>();
     private Toolbar toolbar;
-    private Toolbar toolbarHomeDetails;
     private RecyclerView recyclerViewStories;
     private AdapterStories adapterStories;
     private List<Stories> storiesList = new ArrayList<>();
@@ -60,7 +59,6 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         progressBarHomeFragment = view.findViewById(R.id.progressBar_HomeFragment);
         toolbar = view.findViewById(R.id.toolbar_HomeFragment_id);
-        toolbarHomeDetails = view.findViewById(R.id.toolbar_HomeFragment);
 
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
         toolbar.setTitle("Bem vindo "+UsuarioFirebase.getUsuarioAtual().getDisplayName());

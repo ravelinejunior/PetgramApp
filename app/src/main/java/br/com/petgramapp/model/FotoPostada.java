@@ -1,17 +1,14 @@
 package br.com.petgramapp.model;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 
-public class FotoPostada implements Serializable {
+public class FotoPostada {
 
     public FotoPostada() {
 

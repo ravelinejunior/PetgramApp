@@ -10,9 +10,9 @@
 
     <style name="AppThemeComentarioActivity" parent="Theme.AppCompat.Light.DarkActionBar"  >
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/Azulnovo</item>
-        <item name="colorPrimaryDark">@color/preto</item>
-        <item name="colorAccent">@color/preto</item>
+        <item name="colorPrimary">@color/cinzaClaro</item>
+        <item name="colorPrimaryDark">@color/textColor_padrao</item>
+        <item name="colorAccent">@color/Azulnovo</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
