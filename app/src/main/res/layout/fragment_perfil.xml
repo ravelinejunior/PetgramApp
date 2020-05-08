@@ -118,6 +118,7 @@
                             android:id="@+id/postagensPerfilFragment"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="12sp"
                             android:textColor="@color/textColor_padrao"
                             android:text="@string/postagens" />
 
@@ -126,7 +127,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="5dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -143,6 +144,7 @@
                             android:layout_width="wrap_content"
                             android:textColor="@color/textColor_padrao"
                             android:layout_height="wrap_content"
+                            android:textSize="12sp"
                             android:text="@string/seguidores" />
 
                     </LinearLayout>
@@ -166,6 +168,7 @@
                             android:id="@+id/texto_quantidadeSeguindo_PerfilFragment"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="12sp"
                             android:textColor="@color/textColor_padrao"
                             android:text="@string/seguindo" />
 

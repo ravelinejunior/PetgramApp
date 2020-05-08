@@ -1,9 +1,11 @@
 package br.com.petgramapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -77,7 +79,9 @@ public class CadastrarActivity extends AppCompatActivity {
         botaoCadastrarPet.setOnClickListener(v -> {
             progressBarCadastrarPet.setVisibility(View.VISIBLE);
             progressBarCadastrarPet.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
+            InputMethodManager imm = (InputMethodManager) getSystemService(
+                    Activity.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             //receber as strings de cadastro
             String str_nome = nomePet.getText().toString();
             String str_email = emailPet.getText().toString();
@@ -99,6 +103,7 @@ public class CadastrarActivity extends AppCompatActivity {
                             usuario.setIdadePetUsuario(str_idade);
                             usuario.setDescricaoPetUsuario(str_descricao);
                             cadastrarNovoUsuario(usuario);
+
                         }else{
                             Snackbar.make(v,"Favor, digitar sua Pet senha como a senha superior digitada!",Snackbar.LENGTH_SHORT).show();
                             progressBarCadastrarPet.setVisibility(View.GONE);

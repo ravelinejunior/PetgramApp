@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PetgramApp</string>
+    <string name="app_name">Petgram</string>
     <string name="login">Login</string>
     <string name="cadastro">Cadastro</string>
     <string name="cadastrar">Cadastrar</string>
@@ -29,6 +29,8 @@
     <string name="sair">Sair</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notifica_o">Notificação</string>
+    <string name="notificacaomensagem">Você tem uma nova mensagem!</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
     <string name="todos_usu_rios">Todos Usuários</string>
     <string name="pesquisar_usu_rios">Pesquisar Usuários</string>
     <string name="seguir">Seguir</string>

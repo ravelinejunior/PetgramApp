@@ -1,23 +1,18 @@
 package br.com.petgramapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,10 +20,10 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.fragments.HomeFragment;
+import br.com.petgramapp.fragments.NotificacaoFragment;
 import br.com.petgramapp.fragments.PerfilFragment;
 import br.com.petgramapp.fragments.PesquisarFragment;
 import br.com.petgramapp.fragments.PostarFragment;
-import br.com.petgramapp.fragments.NotificacaoFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 
 public class StartActivity extends AppCompatActivity {
@@ -37,7 +32,6 @@ public class StartActivity extends AppCompatActivity {
 
     //navigations
     public BottomNavigationView bottomNavigationViewStart;
-    public Toolbar toolbarStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +59,8 @@ public class StartActivity extends AppCompatActivity {
         }else{
             fragmentTransaction.replace(R.id.fragment_container_principal_StartAct,new HomeFragment()).commit();
         }
+
+
 
 
     }

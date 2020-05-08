@@ -1,11 +1,13 @@
 package br.com.petgramapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -74,6 +76,9 @@ public class LoginActivity extends AppCompatActivity {
                     usuario.setEmailPetUsuario(str_Email);
                     usuario.setSenhaPetUsuario(str_Senha);
                     logarUsuario(usuario);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                            Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 }else{
                     Snackbar.make(v, R.string.digite_sua_senha,Snackbar.LENGTH_SHORT).show();
                     progressBarLoginUsuario.setVisibility(View.GONE);
