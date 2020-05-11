@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -31,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -66,6 +68,9 @@ public class PerfilActivity extends AppCompatActivity {
     DatabaseReference reference;
     DatabaseReference usuariosRef;
     private String identificadorUsuario;
+    private String tokenId;
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -140,19 +145,35 @@ public class PerfilActivity extends AppCompatActivity {
       });
     }
 
+    public String recuperarToken(){
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+            String token = instanceIdResult.getToken();
+            String id = instanceIdResult.getId();
+            tokenId = token;
+            Log.i("instanceIdResult","Token: "+token);
+            Log.i("instanceIdResult","ID: "+id);
+
+
+        });
+
+        return tokenId;
+
+    }
 
     private void atualizarPerfil(String nomePet, String nomeDonoPet, String descricaoPerfil, View view) {
         usuariosRef = reference.child("usuarios").child(usuarioFirebase.getUid());
-
+        recuperarToken();
         HashMap<String,Object> hashMap = new HashMap<>();
         if ((nomeDonoPet != null || !nomeDonoPet.equals("")) ||
-                ((nomePet != null || !nomePet.equals(""))) ||
-                (descricaoPerfil != null || !descricaoPerfil.equals(""))) {
+                (nomePet != null || !nomePet.equals("")) ||
+                (descricaoPerfil != null || !descricaoPerfil.equals(""))){
 
-            //hashMap.put("nomeDonoPet",nomeDonoPet);
             hashMap.put("nomePetUsuario", nomePet);
             hashMap.put("nomeDonoPet", nomeDonoPet);
             hashMap.put("descricaoPetUsuario", descricaoPerfil);
+            hashMap.put("nomePetUsuarioUp",nomePet.toLowerCase());
+            hashMap.put("tokenFoneMessage", tokenId);
 
             usuariosRef.updateChildren(hashMap);
             Snackbar.make(view,"Dados atualizados com sucesso!",Snackbar.LENGTH_SHORT).show();

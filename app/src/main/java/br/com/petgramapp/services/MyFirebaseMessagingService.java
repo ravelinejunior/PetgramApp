@@ -39,8 +39,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         enviarNotificacao(tituloNotificacao,corpoNotificacao);
 
-        Log.i("Notificacao","Titulo: "+tituloNotificacao);
-        Log.i("Notificacao","Corpo: "+corpoNotificacao);
 
     }
     }
@@ -120,5 +118,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
+
+        //token cdunBWO_Z20:APA91bETAqR1jLy3Srd01M1vFaHBzBfUL5GMKrUD5DZzWC03iHQ1OHbE0ROHOOgOYTp6ZWHUUODzi8fG8EEQRlj4JOcDeM2dyJH1ar3faEH_r1Me028y7soTZEoRJ6IG12lOajABtQTN
+        Log.i("onNewToken","onNewToken: "+s);
     }
 }

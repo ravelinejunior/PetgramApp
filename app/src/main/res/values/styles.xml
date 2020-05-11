@@ -12,7 +12,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/cinzaClaro</item>
         <item name="colorPrimaryDark">@color/textColor_padrao</item>
-        <item name="colorAccent">@color/Azulnovo</item>
+        <item name="colorAccent">@color/vermelhocomum</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

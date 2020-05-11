@@ -67,7 +67,8 @@ public class StartActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-      super.onBackPressed();
+      Intent intent = new Intent(this,StartActivity.class);
+      startActivity(intent);
     }
 
 
@@ -131,14 +132,6 @@ public class StartActivity extends AppCompatActivity {
     public void carregarElementos(){
         bottomNavigationViewStart = findViewById(R.id.bottomNavigation_StartAct);
 
-      /*  toolbarStart = findViewById(R.id.toolbar_principal_main_activity);
-        toolbarStart.setTitle("Bem Vindo.");
-        toolbarStart.setTitleTextColor(ContextCompat.getColor(getApplicationContext(),R.color.branco));
-        toolbarStart.setLogo(R.drawable.ic_pets_white_24dp);
-        toolbarStart.setPadding(15,0,0,0);
-
-        setSupportActionBar(toolbarStart);
-*/
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
    }
 

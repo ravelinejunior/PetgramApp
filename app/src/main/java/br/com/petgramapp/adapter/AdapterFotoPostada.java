@@ -80,8 +80,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     //USUARIOS
     Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
 
-        Picasso.get().load(fotoUri).into(holder.imagemPostadaHome);
-        //Glide.with(context).load(fotoUri).into(holder.imagemPostadaHome);
+    Picasso.get().load(fotoUri).noFade().into(holder.imagemPostadaHome);
 
     if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {
         holder.descricaoHome.setVisibility(View.GONE);
@@ -232,7 +231,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             builder.setPositiveButton(R.string.confirmar, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    deletarPostagem(firebaseUser.getUid(),fotoPostada.getIdPostagem(),notificacaoList.get(position).getIdPostagem());
+                    deletarPostagem(firebaseUser.getUid(),fotoPostada.getIdPostagem());
                     dialog.dismiss();
                     Intent intent = new Intent(context, StartActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -379,7 +378,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
     }
 
-    private void deletarPostagem(String idUsuario,String idPostagem, String idNotificacao){
+    private void deletarPostagem(String idUsuario,String idPostagem){
            DatabaseReference postsRef = ConfiguracaoFirebase.getReferenciaDatabase()
                    .child("Posts").child(idPostagem);
 
@@ -390,8 +389,8 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                    if (idUsuario.equals(firebaseUser.getUid())){
                        postsRef.removeValue().addOnCompleteListener(task -> {
                            if (task.isSuccessful()){
-                               //deletaNotificacao(idUsuario,idPostagem);
-                               alteraNotificacao(idUsuario,idNotificacao);
+                               deletaNotificacao(idUsuario,idPostagem);
+                               alteraNotificacao(idUsuario,idPostagem);
                                Toast.makeText(context, "Deletado com sucesso.", Toast.LENGTH_SHORT).show();
                            }
                        });
@@ -437,7 +436,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
     private void deletaNotificacao(String idUsuario,String idPostagem){
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario).child(idPostagem);
+        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
         notificacaoReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

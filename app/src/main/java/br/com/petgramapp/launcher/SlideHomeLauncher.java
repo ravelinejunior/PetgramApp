@@ -6,20 +6,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.activities.CadastrarActivity;
 import br.com.petgramapp.activities.LoginActivity;
+import br.com.petgramapp.activities.StartActivity;
+import br.com.petgramapp.helper.ConfiguracaoFirebase;
 
 public class SlideHomeLauncher extends IntroActivity {
+
+    private FirebaseAuth firebaseAuth;
 
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_slide_home_launcher);
+      verificarUsuarioLogado();
 
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.branco)
@@ -66,5 +72,14 @@ public class SlideHomeLauncher extends IntroActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
+    private void verificarUsuarioLogado(){
+        firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        if(firebaseAuth.getCurrentUser() != null){
+            startActivity(new Intent(this, StartActivity.class));
+            finish();
+        }
+    }
+
 
 }

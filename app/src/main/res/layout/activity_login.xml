@@ -1,32 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_principal"
+    android:fillViewport="true"
+    >
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/branco"
     tools:context=".activities.LoginActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout_geral_Login_act"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:layout_marginTop="48dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.175">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:padding="2dp"
-            android:textColorHint="@color/branco"
+            android:textColorHint="@color/textColor_padrao"
             app:placeholderText="seuEmail@provedor.com.br"
-            app:startIconDrawable="@drawable/ic_email_alterar"
+            app:startIconDrawable="@drawable/ic_pets_black_24dp"
 
             >
 
@@ -36,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
                 android:singleLine="true"
-                android:textColor="@color/branco" />
+                android:textColor="@color/textColor_padrao" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -44,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:padding="2dp"
-            android:textColorHint="@color/branco"
+            android:textColorHint="@color/textColor_padrao"
             app:passwordToggleEnabled="true"
             app:placeholderText="minhasenha123">
 
@@ -56,7 +66,7 @@
                 android:inputType="textPassword"
                 android:paddingStart="15dp"
                 android:singleLine="true"
-                android:textColor="@color/branco" />
+                android:textColor="@color/textColor_padrao" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ProgressBar
@@ -83,14 +93,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:drawableStart="@drawable/ic_pets_white_24dp"
+            android:drawableStart="@drawable/ic_pets_black_24dp"
             android:padding="8dp"
             android:text="@string/recuperar_minha_petsenha"
             android:textAlignment="center"
-            android:textColor="@color/branco"
+            android:textColor="@color/textColor_padrao"
             android:textSize="18sp"
             android:textStyle="bold" />
 
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="96dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/loginimage" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

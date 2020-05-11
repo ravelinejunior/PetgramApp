@@ -80,7 +80,7 @@
             android:elevation="30dp"
             android:longClickable="true"
             android:saveEnabled="true"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_nearme_preto" />
 
 

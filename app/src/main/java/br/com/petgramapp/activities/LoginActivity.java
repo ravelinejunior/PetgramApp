@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             Activity.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                 }else{
                     Snackbar.make(v, R.string.digite_sua_senha,Snackbar.LENGTH_SHORT).show();
                     progressBarLoginUsuario.setVisibility(View.GONE);
@@ -219,5 +220,35 @@ public class LoginActivity extends AppCompatActivity {
         progressBarLoginUsuario = findViewById(R.id.progressBar_Login_act);
         esqueciMinhaSenhaLoginUsuario = findViewById(R.id.recuperarSenha_Cadastro_act);
 
+    }
+
+    @Override
+    public void supportNavigateUpTo(@NonNull Intent upIntent) {
+        //super.supportNavigateUpTo(new Intent(this,SlideHomeLauncher.class));
+        Intent intent = new Intent(this,SlideHomeLauncher.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean navigateUpToFromChild(Activity child, Intent upIntent) {
+        Intent intent = new Intent(this,SlideHomeLauncher.class);
+        startActivity(intent);
+        return true;
+       // return super.navigateUpToFromChild(child, new Intent(this,SlideHomeLauncher.class));
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(this,SlideHomeLauncher.class);
+        startActivity(intent);
+        return true;
+    }
+
+    @Override
+    public boolean onNavigateUp() {
+        Intent intent = new Intent(this,SlideHomeLauncher.class);
+        startActivity(intent);
+        return true;
     }
 }

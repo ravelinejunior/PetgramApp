@@ -78,7 +78,7 @@ public class PesquisarFragment extends Fragment {
     private void pesquisarUsuarios(String s){
 
         Query queryPesquisa = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios")
-                .orderByChild("nomePetUsuario")
+                .orderByChild("nomePetUsuarioUp")
                 .startAt(s)
                 .endAt(s+"\uf8ff");
 
@@ -104,7 +104,7 @@ public class PesquisarFragment extends Fragment {
     }
 
     private void readUsuarios(){
-        Query reference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").orderByChild("nomePetUsuarioUp");
+        Query reference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").orderByChild("nomePetUsuario");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

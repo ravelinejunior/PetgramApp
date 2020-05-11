@@ -35,6 +35,7 @@ public class Usuario implements Serializable {
     private String confirmacaoSenhaPetUsuario;
     private String uriCaminhoFotoPetUsuario;
     private String nomeDonoPet;
+    private String tokenFoneMessage;
     private int fotos = 0;
     private int clientes = random.nextInt(3500);
     private int fas = random.nextInt(3500);
@@ -112,6 +113,14 @@ public class Usuario implements Serializable {
         this.idadePetUsuario = idadePetUsuario;
     }
 
+    public String getTokenFoneMessage() {
+        return tokenFoneMessage;
+    }
+
+    public void setTokenFoneMessage(String tokenFoneMessage) {
+        this.tokenFoneMessage = tokenFoneMessage;
+    }
+
     public String getDescricaoPetUsuario() {
         return descricaoPetUsuario;
     }
@@ -174,7 +183,7 @@ public class Usuario implements Serializable {
         hashMap.put("descricaoPetUsuario",getDescricaoPetUsuario());
         hashMap.put("senhaPetUsuario",getSenhaPetUsuario());
         hashMap.put("uriCaminhoFotoPetUsuario","https://firebasestorage.googleapis.com/v0/b/petgramapp.appspot.com/o/placeholder.png?alt=media&token=4c92c48f-bcf9-4643-a620-6495c29d1e73");
-
+        hashMap.put("tokenFoneMessage",getTokenFoneMessage());
         usuariosRef.setValue(hashMap);
 
         return true;

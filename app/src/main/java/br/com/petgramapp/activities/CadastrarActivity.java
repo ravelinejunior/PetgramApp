@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Objects;
 
@@ -45,6 +47,7 @@ public class CadastrarActivity extends AppCompatActivity {
 
     //firebase
     private FirebaseAuth auth;
+    private String tokenId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,23 @@ public class CadastrarActivity extends AppCompatActivity {
       return CadastrarActivity.this;
     }
 
+
+    public String recuperarToken(){
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+            String token = instanceIdResult.getToken();
+            String id = instanceIdResult.getId();
+            tokenId = token;
+            Log.i("instanceIdResult","Token: "+token);
+            Log.i("instanceIdResult","ID: "+id);
+
+
+        });
+
+        return tokenId;
+
+    }
+
     public void botaoCadastrarUsuario(){
         botaoCadastrarPet.setOnClickListener(v -> {
             progressBarCadastrarPet.setVisibility(View.VISIBLE);
@@ -102,6 +122,7 @@ public class CadastrarActivity extends AppCompatActivity {
                             usuario.setConfirmacaoSenhaPetUsuario(str_confirmaSenha);
                             usuario.setIdadePetUsuario(str_idade);
                             usuario.setDescricaoPetUsuario(str_descricao);
+                            usuario.setTokenFoneMessage(recuperarToken());
                             cadastrarNovoUsuario(usuario);
 
                         }else{

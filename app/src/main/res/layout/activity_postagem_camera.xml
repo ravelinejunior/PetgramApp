@@ -30,8 +30,7 @@
             android:id="@+id/imagemSelecionada_PostagemCamera"
             android:layout_width="match_parent"
             android:layout_height="500dp"
-            android:scaleType="fitXY"
-            />
+            android:scaleType="fitXY" />
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

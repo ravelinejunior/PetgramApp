@@ -1,5 +1,7 @@
 package br.com.petgramapp.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,12 +19,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +35,7 @@ import br.com.petgramapp.R;
 import br.com.petgramapp.activities.OpcoesActivity;
 import br.com.petgramapp.activities.PerfilActivity;
 import br.com.petgramapp.activities.SeguidoresActivity;
+import br.com.petgramapp.adapter.AdapterImagemPerfil;
 import br.com.petgramapp.adapter.AdapterMinhasFotos;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
@@ -57,11 +60,14 @@ public class PerfilFragment extends Fragment {
     private TextView textoQuantidadeSeguidoresPerfilFragment;
     private CircleImageView imagemFotoPerfilUsuarioFragment;
     private CircleImageView opcoesImagemView;
+    private RecyclerView recyclerViewFotoPerfil;
+    private AdapterImagemPerfil adapterImagemPerfil;
 
     //DADOS
     private String idPerfilUsuario;
     private FirebaseUser firebaseUser;
     private DatabaseReference reference;
+    private List<Usuario> usuarioList = new ArrayList<>();
 
     //VIEWS/ADAPTER
     private RecyclerView recyclerViewMinhasFotos;
@@ -145,12 +151,16 @@ public class PerfilFragment extends Fragment {
             startActivity(intent);
         });
 
+        //IMAGEM PERFIL
+
         //MENU OPÇÕES
         opcoesImagemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent i = new Intent(getContext(), OpcoesActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.putExtra("idUsuario",idPerfilUsuario);
                 startActivity(i);
             }
         });
@@ -167,10 +177,14 @@ public class PerfilFragment extends Fragment {
 
         if (idPerfilUsuario.equals(firebaseUser.getUid())){
             botaoEditarPerfilFrament.setText(R.string.editar_petperfil);
+
         }else{
             verificarSegueUsuario();
             imageButtonSalvarFotos.setVisibility(View.GONE);
+            opcoesImagemView.setVisibility(View.GONE);
         }
+
+
 
 
         //RECYCLER VIEW DE MINHAS FOTOS
@@ -226,10 +240,32 @@ public class PerfilFragment extends Fragment {
 
         });
 
+        getUsuario(idPerfilUsuario);
+        imagemFotoPerfilUsuarioFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               exibirFoto();
+            }
+        });
 
         return view;
 
 
+    }
+
+    public void exibirFoto(){
+        RecyclerView recyclerViewFotoPerfil = new RecyclerView(getContext());
+        recyclerViewFotoPerfil.setHasFixedSize(true);
+        adapterImagemPerfil = new AdapterImagemPerfil(getContext(),usuarioList);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        recyclerViewFotoPerfil.setLayoutManager(manager);
+        recyclerViewFotoPerfil.setAdapter(adapterImagemPerfil);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setPositiveButton(R.string.fechar,null);
+        builder.setView(recyclerViewFotoPerfil);
+
+        Dialog dialog = builder.create();
+        dialog.show();
     }
 
     private void carregarMinhasFotos(){
@@ -306,6 +342,9 @@ public class PerfilFragment extends Fragment {
         recyclerViewMinhasFotos = view.findViewById(R.id.recyclerView_minhasFotos_PerfilFragment);
         recyclerViewFotosSalvas = view.findViewById(R.id.recyclerView_fotosSalvas_PerfilFragment);
         recyclerViewMenu = view.findViewById(R.id.recyclerView_menuFotosSalvas_PerfilFragment);
+
+
+
     }
 
     private void usuarioInfo(){
@@ -319,7 +358,8 @@ public class PerfilFragment extends Fragment {
                 }
 
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(imagemFotoPerfilUsuarioFragment);
+                Glide.with(getContext()).load(usuario.getUriCaminhoFotoPetUsuario()).into(imagemFotoPerfilUsuarioFragment);
+               // Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).into(imagemFotoPerfilUsuarioFragment);
                 nomePetUsuarioPerfilFragment.setText(usuario.getNomePetUsuario());
                 nomeDonoPetUsuarioPerfilFragment.setText(usuario.getNomePetUsuario());
                 descricaoPetUsuarioPerfilFragment.setText(usuario.getDescricaoPetUsuario());
@@ -471,6 +511,23 @@ public class PerfilFragment extends Fragment {
 
         notificacaoReference.push().setValue(hashMap);
 
+    }
+
+    private void getUsuario(String idUsuario){
+        DatabaseReference usuarioRef = ConfiguracaoFirebase.getReferenciaDatabase()
+                .child("usuarios").child(idUsuario);
+        usuarioRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Usuario usuario = dataSnapshot.getValue(Usuario.class);
+                usuarioList.add(usuario);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
