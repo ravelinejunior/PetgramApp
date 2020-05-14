@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +31,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -47,9 +51,13 @@ import com.zomato.photofilters.utils.ThumbnailItem;
 import com.zomato.photofilters.utils.ThumbnailsManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import br.com.petgramapp.R;
@@ -81,6 +89,7 @@ public class PostagemActivity extends AppCompatActivity {
     private DatabaseReference usuarioLogadoRef;
     private DatabaseReference firebaseRef;
     ProgressDialog dialog;
+    private double countProgress;
 
     //usuarios
     private String idUsuarioLogado;
@@ -92,10 +101,57 @@ public class PostagemActivity extends AppCompatActivity {
         System.loadLibrary("NativeImageProcessor");
     }
 
+    private byte[] mUploadBytes;
+
     @Override
     protected void onSaveInstanceState(Bundle oldInstanceState) {
         super.onSaveInstanceState(oldInstanceState);
         oldInstanceState.clear();
+    }
+
+    public static byte[] getBytesFromBitmap(Bitmap bitmap,int quality){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,quality,baos);
+        return baos.toByteArray();
+    }
+
+
+    public void carregarElementos(){
+        descricaoInputTextPostagem = findViewById(R.id.descricao_id_input_edittext_Postagem_id);
+        imagemSelecionadaPostagem = findViewById(R.id.imagem_foto_selecionada_Postagem_activity);
+        botaoPostarFoto = findViewById(R.id.botao_PostarFoto_Postagem_id);
+        recyclerViewFiltros = findViewById(R.id.recycler_view_Postagem_id);
+
+        //configurando toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar_PostagemGaleria);
+        toolbar.setTitle("Postar PetFoto");
+        toolbar.setTitleTextColor(ContextCompat.getColor(getApplicationContext(),R.color.branco));
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_voltar_back);
+
+    }
+
+    private void recuperarDadosPostagem(){
+        usuarioLogadoRef = usuariosRef.child(idUsuarioLogado);
+        //assim que função é acionada, setar valor como true
+        abrirDialogCarregamento("Carregando dados, aguarde!");
+        usuarioLogadoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //recuperando valores de usuarios
+                usuarioLogado = dataSnapshot.getValue(Usuario.class);
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -103,6 +159,7 @@ public class PostagemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_postagem);
         carregarElementos();
+        Fresco.initialize(this);
         //CONFIGURAÇÕES INICIAIS
         firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
         usuarioLogado = UsuarioFirebase.getUsuarioLogado();
@@ -169,41 +226,9 @@ public class PostagemActivity extends AppCompatActivity {
         //CropImage.activity().setAspectRatio(1,1).start(PostagemActivity.this);
     }
 
-    public void carregarElementos(){
-        descricaoInputTextPostagem = findViewById(R.id.descricao_id_input_edittext_Postagem_id);
-        imagemSelecionadaPostagem = findViewById(R.id.imagem_foto_selecionada_Postagem_activity);
-        botaoPostarFoto = findViewById(R.id.botao_PostarFoto_Postagem_id);
-        recyclerViewFiltros = findViewById(R.id.recycler_view_Postagem_id);
-
-        //configurando toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar_PostagemGaleria);
-        toolbar.setTitle("Postar PetFoto");
-        toolbar.setTitleTextColor(ContextCompat.getColor(getApplicationContext(),R.color.branco));
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_voltar_back);
-
-    }
-
-    private void recuperarDadosPostagem(){
-        usuarioLogadoRef = usuariosRef.child(idUsuarioLogado);
-        //assim que função é acionada, setar valor como true
-        abrirDialogCarregamento("Carregando dados, aguarde!");
-        usuarioLogadoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //recuperando valores de usuarios
-                usuarioLogado = dataSnapshot.getValue(Usuario.class);
-                dialog.dismiss();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+    public void uploadNewFoto(Uri uri){
+        BackgroundImageResize resize = new BackgroundImageResize(null);
+        resize.execute(uri);
 
     }
 
@@ -213,13 +238,23 @@ public class PostagemActivity extends AppCompatActivity {
         abrirDialogCarregamento("Postando foto, aguarde!");
         FotoPostada fotoPostada = new FotoPostada();
 
+        //DATA POSTAGEM
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        String dataPost = "Publicado em ".concat(currentDate.concat(" às ").concat(currentTime));
+        fotoPostada.setDataPostada(dataPost);
+
         fotoPostada.setIdUsuarioPostou(idUsuarioLogado);
         fotoPostada.setDescricaoImagemPostada(Objects.requireNonNull(descricaoInputTextPostagem.getText()).toString());
 
         //recuperar dados da imagem para salvar no firebaseStorage para depois salvar no firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imagemFiltro.compress(Bitmap.CompressFormat.WEBP,50,baos);
+        imagemFiltro.compress(Bitmap.CompressFormat.WEBP,30,baos);
+
+
         byte[] dadosImagemPostada = baos.toByteArray();
+
+
 
         //salvando no storage
         StorageReference storageReference = ConfiguracaoFirebase.getStorageReference();
@@ -228,11 +263,18 @@ public class PostagemActivity extends AppCompatActivity {
                 .child("fotoPostada")
                 .child(fotoPostada.getIdPostagem()+".jpeg");
 
+
         //passar um array de bytes no putbytes da imagem
         UploadTask uploadTask = imagemRef.putBytes(dadosImagemPostada);
         uploadTask.addOnFailureListener(e -> Toast.makeText(PostagemActivity.this, "Falha ao executar o comando para fazer upload da imagem.", Toast.LENGTH_SHORT).show()).
                 addOnProgressListener(taskSnapshot -> {
 
+                    double progresso = (50*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                        if (progresso > (countProgress+15)){
+                            countProgress = (50*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                        }
+
+                    Toast.makeText(this, countProgress+"", Toast.LENGTH_SHORT).show();
                         }
                 ).addOnSuccessListener(taskSnapshot -> {
             //recuperar local da foto
@@ -250,6 +292,7 @@ public class PostagemActivity extends AppCompatActivity {
                 fotoPostada.setIdPostagem(postId);*/
                 fotoPostada.setUsuario(usuarioLogado);
 
+
                 //salvando a foto no banco de dados
                 if (fotoPostada.salvarFotoPostada()){
                     //caso foto tenha sido postada com sucesso, atualizar numero de fotos postada
@@ -263,6 +306,13 @@ public class PostagemActivity extends AppCompatActivity {
             });
 
         });
+    }
+
+    public void botaoPostarFotoAcionar(){
+
+        //botaoPostarFoto.setOnClickListener(v -> uploadFotoPostagem());
+       // botaoPostarFoto.setOnClickListener(v -> postarFoto());
+        botaoPostarFoto.setOnClickListener(v ->  uploadNewFoto(uriImagemPostagem));
     }
 
     private void recuperarFiltros(){
@@ -299,9 +349,45 @@ public class PostagemActivity extends AppCompatActivity {
         return PostagemActivity.this;
     }
 
-    public void botaoPostarFotoAcionar(){
-        //botaoPostarFoto.setOnClickListener(v -> uploadFotoPostagem());
-        botaoPostarFoto.setOnClickListener(v -> postarFoto());
+    public class BackgroundImageResize extends AsyncTask<Uri,Integer,byte[]> {
+
+        Bitmap bitmap;
+
+        public BackgroundImageResize(Bitmap bitmap) {
+            if (bitmap != null){
+                this.bitmap = bitmap;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(getContext(), "Comprimindo imagem.", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected byte[] doInBackground(Uri... uris) {
+            if (bitmap == null){
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(),uris[0]);
+                }catch (IOException e){
+                    Log.e("doInBackground","doInBackground "+e.getLocalizedMessage());
+                }
+            }
+
+            byte[] bytes = null;
+            bytes = getBytesFromBitmap(bitmap, 50);
+            return bytes;
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+            mUploadBytes = bytes;
+
+            postarFoto();
+
+        }
     }
 
 

@@ -34,6 +34,9 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import br.com.petgramapp.R;
@@ -65,6 +68,8 @@ public class PostagemCamera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_postagem_camera);
         carregarElementos();
+
+
 
         //CONFIGURAÇÕES INICIAIS
         firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
@@ -139,6 +144,12 @@ public class PostagemCamera extends AppCompatActivity {
         fotoPostada.setIdUsuarioPostou(idUsuarioLogado);
         fotoPostada.setDescricaoImagemPostada(Objects.requireNonNull(descricaoInputTextPostagem.getText()).toString());
 
+        //DATA POSTAGEM
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        String dataPost = "Publicado em ".concat(currentDate.concat(" às ").concat(currentTime));
+        fotoPostada.setDataPostada(dataPost);
+
         if (uriImagemPostagem != null){
             StorageReference imagemRef = ConfiguracaoFirebase.getStorageReference().child("Imagens")
                     .child("fotoPostada")
@@ -152,14 +163,13 @@ public class PostagemCamera extends AppCompatActivity {
             }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.WEBP, 50, baos);
+            bmp.isMutable();
+            bmp.compress(Bitmap.CompressFormat.WEBP, 20, baos);
             byte[] data = baos.toByteArray();
 
             //uploadTaskPostagem = imagemRef.putFile(uriImagemPostagem);
 
             uploadTaskPostagem = imagemRef.putBytes(data);
-
-
 
             uploadTaskPostagem.continueWithTask((Continuation) task -> {
 

@@ -34,6 +34,7 @@ public class FotoPostada {
     private String idPostagem;
     private String idUsuarioPostou;
     private String imagemPostada;
+    private String dataPostada;
     private String descricaoImagemPostada;
     private Usuario usuario;
 
@@ -77,6 +78,14 @@ public class FotoPostada {
         this.usuario = usuario;
     }
 
+    public String getDataPostada() {
+        return dataPostada;
+    }
+
+    public void setDataPostada(String dataPostada) {
+        this.dataPostada = dataPostada;
+    }
+
     //utilizar estratégia FenOut de espalhamento
     public boolean salvarFotoPostada() {
 
@@ -100,6 +109,8 @@ public class FotoPostada {
         objeto.put("/Posts"+combinacaodeId+"/idPostagem",getIdPostagem());
         objeto.put("/Posts"+combinacaodeId+"/idUsuarioPostou",getIdUsuarioPostou());
         objeto.put("/Posts"+combinacaodeId+"/descricaoImagemPostada",getDescricaoImagemPostada());
+        objeto.put("/Posts"+combinacaodeId+"/descricaoImagemPostada",getDescricaoImagemPostada());
+        objeto.put("/Posts"+combinacaodeId+"/dataPostada",getDataPostada());
 
         objeto.put("/Posts"+combinacaodeId+"/usuario/nomePetUsuario",getUsuario().getNomePetUsuario());
         objeto.put("/Posts"+combinacaodeId+"/usuario/emailPetUsuario",getUsuario().getEmailPetUsuario());

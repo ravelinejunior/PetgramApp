@@ -30,6 +30,7 @@ public class PostarFragment extends Fragment implements Serializable {
     private final static int CODIGO_ABRIR_CAMERA = 100;
     private Button botaoGaleria;
     private Button botaoCamera;
+    private byte[] mUploadBytes;
 
     //lista de permissões
     private final String[] listaPermissoesNecessarias = new String[]{
@@ -77,6 +78,8 @@ public class PostarFragment extends Fragment implements Serializable {
         return view;
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -95,7 +98,8 @@ public class PostarFragment extends Fragment implements Serializable {
 
                     //converter imagem em byte array
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    imagem.compress(Bitmap.CompressFormat.WEBP,50,baos);
+                    imagem.compress(Bitmap.CompressFormat.WEBP,30,baos);
+                    imagem.isMutable();
                     byte[] dadosFoto = baos.toByteArray();
 
                     //enviar imagem para tela de filtros

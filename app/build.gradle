@@ -47,6 +47,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
     //design libraries
+    implementation 'com.github.ar-android:AQuery:1.0.3'
     implementation "com.google.android.material:material:1.2.0-alpha06"
     implementation 'com.android.support:support-v4:29.0.0'
     implementation 'com.android.support:cardview-v7:29.0.0'
@@ -63,6 +64,8 @@ dependencies {
     implementation 'com.github.shts:StoriesProgressView:3.0.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.facebook.fresco:fresco:2.2.0'
+
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'

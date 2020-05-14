@@ -21,6 +21,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
+import com.bumptech.glide.load.engine.cache.LruResourceCache;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,10 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.squareup.picasso.Picasso;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,7 +50,6 @@ import br.com.petgramapp.fragments.PostagemUsuarioFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
-import br.com.petgramapp.model.Notificacao;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -54,8 +58,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     public static Integer posicao = 0;
     public Context context;
     private FirebaseUser firebaseUser;
-    public List<Notificacao> notificacaoList = new ArrayList<>();
-    public List<String> idPostagensList = new ArrayList<>();
+
 
     public AdapterFotoPostada(List<FotoPostada> fotoPostadaList, Context c) {
         this.fotoPostadaList = fotoPostadaList;
@@ -66,28 +69,59 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.adapter_homefragment_post,parent,false);
+
         return new AdapterFotoPostada.ViewHolder(view);
+    }
+
+
+    public void applyOptions(Context context, GlideBuilder builder) {
+        int bitmapPoolSizeBytes = 1024 * 1024 * 0; // 0mb
+        int memoryCacheSizeBytes = 1024 * 1024 * 0; // 0mb
+        builder.setMemoryCache(new LruResourceCache(memoryCacheSizeBytes));
+        builder.setBitmapPool(new LruBitmapPool(bitmapPoolSizeBytes));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
     FotoPostada fotoPostada = fotoPostadaList.get(position);
     posicao = position;
     firebaseUser = UsuarioFirebase.getUsuarioAtual();
 
+        RequestOptions reqOpt = RequestOptions
+                .fitCenterTransform()
+                .transform(new RoundedCorners(5))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .autoClone()
+                .placeholder(R.drawable.ic_nearme_preto)// It will cache your image after loaded for first time
+                .override(holder.imagemPostadaHome.getWidth(),holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
+
+    applyOptions(context,new GlideBuilder());
 
     //USUARIOS
     Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
 
-    Picasso.get().load(fotoUri).noFade().into(holder.imagemPostadaHome);
+//        Picasso picasso =  new Picasso.Builder(context).downloader(new OkHttp3Downloader(context.getCacheDir(), 250000000)).build();
 
-    if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {
+        //picasso.get().load(fotoUri).into(holder.imagemPostadaHome);
+        Glide.with(context).load(fotoUri).apply(reqOpt).priority(Priority.IMMEDIATE).into(holder.imagemPostadaHome);
+
+
+        if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {
         holder.descricaoHome.setVisibility(View.GONE);
     } else {
         holder.descricaoHome.setVisibility(View.VISIBLE);
         holder.descricaoHome.setText(fotoPostada.getDescricaoImagemPostada());
     }
+
+    if (fotoPostada.getDataPostada()!= null){
+        if (fotoPostada.getDataPostada().equalsIgnoreCase("") || fotoPostada.getDataPostada() == null) {
+            holder.dataPostada.setVisibility(View.GONE);
+        } else {
+            holder.dataPostada.setVisibility(View.VISIBLE);
+            holder.dataPostada.setText(fotoPostada.getDataPostada());
+        }
+    }
+
 
     informacoesPublicacao(holder.fotoPerfilHome, holder.nomeUsuarioHome, holder.postadaPorHome, fotoPostada.getIdUsuarioPostou());
 
@@ -256,6 +290,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         return fotoPostadaList.size();
     }
 
+
     private void informacoesPublicacao(CircleImageView imagemPerfil,TextView nomeUsuario, TextView publicadoPor, String userId){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").child(userId);
 
@@ -267,7 +302,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                 if (usuario.getUriCaminhoFotoPetUsuario() != null){
                     Uri uriFotoPerfil = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
                    // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
-                    Glide.with(context).load(uriFotoPerfil).into(imagemPerfil);
+                    Glide.with(context).load(uriFotoPerfil).priority(Priority.IMMEDIATE).into(imagemPerfil);
                 }else{
                     //Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                     Glide.with(context).load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
@@ -323,6 +358,8 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         });
 
     }
+
+
 
     private void fotoSalvar(String idPostagem, ImageView imagemSalva){
         firebaseUser = UsuarioFirebase.getUsuarioAtual();
@@ -479,6 +516,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         public TextView qtLikesHome;
         public TextView comentariosTodosHome;
         public TextView postadaPorHome;
+        public TextView dataPostada;
 
         public ImageView comentarioButtonHome;
         public ImageView imagemLikeHome;
@@ -488,6 +526,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         public ImageView imagemPostadaHome;
         public CircleImageView fotoPerfilHome;
         public CircleImageView deletarPostagemHome;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -503,9 +542,11 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             salvarButtonHome = itemView.findViewById(R.id.salvarButton_HomeAdapter_id);
             imagemLikeHome = itemView.findViewById(R.id.likeImagem_visualizarLikes);
 
+
             imagemPostadaHome = itemView.findViewById(R.id.imagemPostada_HomeAdapter_id);
             fotoPerfilHome = itemView.findViewById(R.id.imagem_perfilUsuario_HomeAdapter_id);
             deletarPostagemHome = itemView.findViewById(R.id.deletarPostagem_HomeAdapter);
+            dataPostada = itemView.findViewById(R.id.dataPostagem_HomeAdapter);
         }
     }
 

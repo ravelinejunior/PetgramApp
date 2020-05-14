@@ -68,25 +68,35 @@ public class HomeFragment extends Fragment {
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Bem vindo "+UsuarioFirebase.getUsuarioAtual().getDisplayName());
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
 
         //FEED
         RecyclerView recyclerViewHomeFragment = view.findViewById(R.id.recyclerView_HomeFragment_id);
         recyclerViewHomeFragment.setHasFixedSize(true);
+        recyclerViewHomeFragment.setNestedScrollingEnabled(false);
 
         //inverter ordem das postagem (a mais atual)
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext());
         linearLayout.setReverseLayout(true);
         linearLayout.setStackFromEnd(true);
         recyclerViewHomeFragment.setLayoutManager(linearLayout);
+        recyclerViewHomeFragment.setItemViewCacheSize(20);
+        recyclerViewHomeFragment.setDrawingCacheEnabled(true);
+        recyclerViewHomeFragment.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         fotoPostadaList = new ArrayList<>();
         adapterFotoPostada = new AdapterFotoPostada(fotoPostadaList, getContext());
 
         recyclerViewHomeFragment.setAdapter(adapterFotoPostada);
+        recyclerViewHomeFragment.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewHomeFragment.setAdapter(adapterFotoPostada);
+            }
+        },50);
+
+        recyclerViewHomeFragment.smoothScrollToPosition(adapterFotoPostada.getItemCount());
         receberPostagens();
 
         //STORIES
@@ -122,6 +132,8 @@ public class HomeFragment extends Fragment {
                     FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
 
                     fotoPostadaList.add(fotoPostada);
+
+
 
                 }
 

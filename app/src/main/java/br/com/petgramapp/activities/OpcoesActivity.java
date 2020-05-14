@@ -2,6 +2,7 @@ package br.com.petgramapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +20,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
@@ -55,8 +60,20 @@ public class OpcoesActivity extends AppCompatActivity {
         if (bundle != null){
             idUsuario = bundle.getString("idUsuario");
         }
+        Time now = new Time();
+        now.setToNow();
+
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+        String data = currentDate.concat(" ").concat(currentTime);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+        String currentDateandTime = sdf.format(new Date());
 
         Log.i("idUsuario",idUsuario);
+        Log.i("idUsuario",data);
+        Log.i("idUsuario",currentDateandTime);
+
 
     }
 
