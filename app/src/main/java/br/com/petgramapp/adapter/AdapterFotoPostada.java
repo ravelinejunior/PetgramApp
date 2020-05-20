@@ -26,7 +26,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
@@ -81,18 +80,18 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         builder.setBitmapPool(new LruBitmapPool(bitmapPoolSizeBytes));
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     FotoPostada fotoPostada = fotoPostadaList.get(position);
     posicao = position;
     firebaseUser = UsuarioFirebase.getUsuarioAtual();
 
+
         RequestOptions reqOpt = RequestOptions
                 .fitCenterTransform()
-                .transform(new RoundedCorners(5))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .autoClone()
-                .placeholder(R.drawable.ic_nearme_preto)// It will cache your image after loaded for first time
+                .disallowHardwareConfig()
                 .override(holder.imagemPostadaHome.getWidth(),holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
 
     applyOptions(context,new GlideBuilder());
@@ -103,7 +102,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 //        Picasso picasso =  new Picasso.Builder(context).downloader(new OkHttp3Downloader(context.getCacheDir(), 250000000)).build();
 
         //picasso.get().load(fotoUri).into(holder.imagemPostadaHome);
-        Glide.with(context).load(fotoUri).apply(reqOpt).priority(Priority.IMMEDIATE).into(holder.imagemPostadaHome);
+        Glide.with(context).load(fotoUri).thumbnail(0.1f).apply(reqOpt).priority(Priority.IMMEDIATE).into(holder.imagemPostadaHome);
 
 
         if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {

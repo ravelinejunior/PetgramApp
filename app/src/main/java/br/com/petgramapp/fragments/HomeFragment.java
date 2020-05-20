@@ -45,11 +45,13 @@ public class HomeFragment extends Fragment {
     private List<FotoPostada> fotoPostadaList;
     private ProgressBar progressBarHomeFragment;
     private List<String> listaIdUsuarios = new ArrayList<>();
+    private List<String> listaSeguidores = new ArrayList<>();
     private Toolbar toolbar;
     private RecyclerView recyclerViewStories;
     private AdapterStories adapterStories;
     private List<Stories> storiesList = new ArrayList<>();
     FirebaseAuth firebaseAuth;
+
 
 
     @Override
@@ -88,7 +90,7 @@ public class HomeFragment extends Fragment {
         fotoPostadaList = new ArrayList<>();
         adapterFotoPostada = new AdapterFotoPostada(fotoPostadaList, getContext());
 
-        recyclerViewHomeFragment.setAdapter(adapterFotoPostada);
+ /*       recyclerViewHomeFragment.setAdapter(adapterFotoPostada);*/
         recyclerViewHomeFragment.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -96,8 +98,9 @@ public class HomeFragment extends Fragment {
             }
         },50);
 
-        recyclerViewHomeFragment.smoothScrollToPosition(adapterFotoPostada.getItemCount());
-        receberPostagens();
+      //  receberPostagens();
+
+        checarUsuariosSeguidores();
 
         //STORIES
         recyclerViewStories = view.findViewById(R.id.recyclerView_Stories_HomeFragment_id);
@@ -112,6 +115,8 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -120,8 +125,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void receberPostagens() {
+
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+       databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -135,6 +142,37 @@ public class HomeFragment extends Fragment {
 
 
 
+                }
+
+                adapterFotoPostada.notifyDataSetChanged();
+                progressBarHomeFragment.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void receberPostagensSeguidores() {
+
+        DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                fotoPostadaList.clear();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
+                    for (String id:listaSeguidores){
+                        if (fotoPostada.getIdUsuarioPostou().equals(id)){
+                            fotoPostadaList.add(fotoPostada);
+                        }
+                    }
                 }
 
                 adapterFotoPostada.notifyDataSetChanged();
@@ -207,19 +245,19 @@ public class HomeFragment extends Fragment {
     public void checarUsuariosSeguidores() {
 
         DatabaseReference usuariosRef = ConfiguracaoFirebase.getReferenciaDatabase().child("Seguir")
-                .child(UsuarioFirebase.getIdentificadorUsuario())
+                .child(firebaseAuth.getCurrentUser().getUid())
                 .child("seguindo");
 
         usuariosRef.addValueEventListener(new ValueEventListener() {
             @Override
 
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listaIdUsuarios.clear();
+                listaSeguidores.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    listaIdUsuarios.add(dataSnapshot1.getKey());
+                    listaSeguidores.add(dataSnapshot1.getKey());
                 }
                 adapterFotoPostada.notifyDataSetChanged();
-                receberPostagens();
+                receberPostagensSeguidores();
             }
 
             @Override

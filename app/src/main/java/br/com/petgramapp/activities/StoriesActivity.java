@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -194,7 +195,7 @@ public class StoriesActivity extends AppCompatActivity implements StoriesProgres
                 storiesProgressView.setStoriesListener(StoriesActivity.this);
                 storiesProgressView.startStories(count);
               //  Picasso.get().load(imagens.get(count)).into(imagemStories);
-                Glide.with(getApplicationContext()).load(imagens.get(count)).into(imagemStories);
+                Glide.with(getApplicationContext()).load(imagens.get(count)).priority(Priority.IMMEDIATE).into(imagemStories);
 
                 addVisualizacao(storiesId.get(count));
                 visualicoesNumero(storiesId.get(count));

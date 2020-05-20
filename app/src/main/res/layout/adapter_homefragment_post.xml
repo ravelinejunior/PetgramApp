@@ -80,7 +80,7 @@
         <ImageView
             android:id="@+id/imagemPostada_HomeAdapter_id"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="450dp"
             android:background="@color/branco"
             android:elevation="10dp"
             android:longClickable="true"
@@ -97,7 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+       >
 
 
 
