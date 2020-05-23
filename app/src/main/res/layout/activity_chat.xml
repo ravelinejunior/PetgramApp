@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".activities.ComentariosActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_ChatActivity_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_mensagem_Chat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/relativeLayout_fundo_id"
+            android:layout_below="@id/toolbar_ChatActivity_id"
+            android:background="@color/branco_azulado"
+            />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout_fundo_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="4dp"
+            >
+
+            <EditText
+                android:id="@+id/mensagem_Digitada_Chat"
+                android:layout_width="358dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@id/enviarBotao_Mensagem_Chat"
+                android:background="@drawable/bg_visualizar_comentario"
+                android:gravity="center_vertical"
+                android:hint="@string/digite_um_comentario"
+                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:paddingBottom="5dp"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageButton
+                android:id="@+id/enviarBotao_Mensagem_Chat"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/shape_botao_perfil_fragment"
+                android:src="@drawable/ic_enviar_comentario"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ScrollView>

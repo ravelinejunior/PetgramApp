@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -70,6 +71,7 @@ public class PerfilActivity extends AppCompatActivity {
     private String identificadorUsuario;
     private String tokenId;
 
+    FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
 
 
@@ -176,6 +178,20 @@ public class PerfilActivity extends AppCompatActivity {
             hashMap.put("tokenFoneMessage", tokenId);
 
             usuariosRef.updateChildren(hashMap);
+
+            HashMap map = new HashMap();
+            map.put("nomePetUsuario", nomePet);
+            map.put("id", identificadorUsuario);
+            map.put("nomeDonoPet", nomeDonoPet);
+            map.put("descricaoPetUsuario", descricaoPerfil);
+            map.put("nomePetUsuarioUp",nomePet.toLowerCase());
+            map.put("emailPetUsuario",usuarioFirebase.getEmail());
+            map.put("tokenFoneMessage", tokenId);
+
+            firebaseFirestore.collection("Usuarios")
+                    .document(identificadorUsuario)
+                    .set(map);
+
             Snackbar.make(view,"Dados atualizados com sucesso!",Snackbar.LENGTH_SHORT).show();
         }else{
             Toast.makeText(this, "Nada a atualizar.", Toast.LENGTH_SHORT).show();
@@ -236,6 +252,13 @@ public class PerfilActivity extends AppCompatActivity {
                     HashMap<String,Object> hashMap = new HashMap<>();
                     hashMap.put("uriCaminhoFotoPetUsuario",""+urlResultado);
                     usuariosRef.updateChildren(hashMap);
+
+                    firebaseFirestore.collection("Usuarios")
+                            .document(identificadorUsuario)
+                            .update("uriCaminhoFotoPetUsuario",urlResultado);
+
+
+
                     dialog.dismiss();
                     startActivity(new Intent(this,PerfilActivity.class));
                     finish();

@@ -31,7 +31,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -159,7 +158,6 @@ public class PostagemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_postagem);
         carregarElementos();
-        Fresco.initialize(this);
         //CONFIGURAÇÕES INICIAIS
         firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
         usuarioLogado = UsuarioFirebase.getUsuarioLogado();

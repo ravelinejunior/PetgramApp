@@ -7,8 +7,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-
 import br.com.petgramapp.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Fresco.initialize(this);
     }
 
     public void abrirTelaCadastro(View view){

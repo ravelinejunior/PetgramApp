@@ -125,6 +125,7 @@ public class CadastrarActivity extends AppCompatActivity {
                             usuario.setTokenFoneMessage(recuperarToken());
                             cadastrarNovoUsuario(usuario);
 
+
                         }else{
                             Snackbar.make(v,"Favor, digitar sua Pet senha como a senha superior digitada!",Snackbar.LENGTH_SHORT).show();
                             progressBarCadastrarPet.setVisibility(View.GONE);
@@ -157,6 +158,7 @@ public class CadastrarActivity extends AppCompatActivity {
                             String idUsuario = task.getResult().getUser().getUid();
                             usuario.setId(idUsuario);
                             usuario.salvarUsuario();
+                            usuario.salvarUsuarioFirestore();
                             progressBarCadastrarPet.setVisibility(View.GONE);
                             Intent intent = new Intent(getContext(),LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

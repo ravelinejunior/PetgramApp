@@ -70,6 +70,9 @@
     <string name="exiba_essas_fofuras_para_o_mundo">Exiba essas fofuras para o mundo.</string>
     <string name="poste_fotos_de_todos_os_seus">Poste fotos de todos os seu pets e acompanhe em tempo real os amigos de seus pets!</string>
     <string name="fechar">Fechar</string>
+    <string name="enviar">Enviar</string>
+    <string name="petmensagem">PetMensagem</string>
+    <string name="conversas">Conversas</string>
 
 
 </resources>

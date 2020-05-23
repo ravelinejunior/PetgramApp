@@ -55,7 +55,6 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.heinrichreimersoftware:material-intro:2.0.0'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'info.androidhive:imagefilters:1.0.7'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
@@ -64,7 +63,7 @@ dependencies {
     implementation 'com.github.shts:StoriesProgressView:3.0.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    implementation 'com.facebook.fresco:fresco:2.2.0'
+    implementation "com.xwray:groupie:2.3.0"
 
 
     //retrofit

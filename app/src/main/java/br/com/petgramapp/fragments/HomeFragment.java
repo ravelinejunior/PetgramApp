@@ -25,12 +25,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.activities.ConversasActivity;
 import br.com.petgramapp.activities.LoginActivity;
 import br.com.petgramapp.adapter.AdapterFotoPostada;
 import br.com.petgramapp.adapter.AdapterStories;
@@ -157,9 +159,11 @@ public class HomeFragment extends Fragment {
 
     private void receberPostagensSeguidores() {
 
-        DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
+        Query query = databaseReference;
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -185,6 +189,32 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+       /* databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                fotoPostadaList.clear();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
+                    for (String id:listaSeguidores){
+                        if (fotoPostada.getIdUsuarioPostou().equals(id)){
+                            fotoPostadaList.add(fotoPostada);
+                        }
+                    }
+                }
+
+                adapterFotoPostada.notifyDataSetChanged();
+                progressBarHomeFragment.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }*/
 
     private void readStories() {
         DatabaseReference usuariosReferencia = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios");
@@ -330,6 +360,10 @@ public class HomeFragment extends Fragment {
 
         if (item.getItemId() == R.id.item_sair_MenuSair) {
             deslogarUsuario();
+        }else if (item.getItemId() == R.id.chat_MenuSair){
+            Intent intent = new Intent(getContext(), ConversasActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
 

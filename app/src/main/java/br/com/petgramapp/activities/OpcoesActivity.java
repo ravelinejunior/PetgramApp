@@ -1,5 +1,6 @@
 package br.com.petgramapp.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -81,9 +82,11 @@ public class OpcoesActivity extends AppCompatActivity {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
             String token = instanceIdResult.getToken();
             String id = instanceIdResult.getId();
-
             Log.i("instanceIdResult","Token: "+token);
             Log.i("instanceIdResult","ID: "+id);
+
+            Intent i = new Intent(this,ContatosActivity.class);
+            startActivity(i);
         });
     }
 
@@ -198,9 +201,18 @@ public class OpcoesActivity extends AppCompatActivity {
     public void selecionarOpcoes(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("O que fazer.");
-        builder.setPositiveButton("Recuperar Token", (dialog, which) -> {
+        builder.setPositiveButton("Contatos", (dialog, which) -> {
             recuperarToken();
             dialog.dismiss();
+        });
+
+        builder.setNeutralButton("Conversas", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(OpcoesActivity.this,ConversasActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
         });
 
         builder.setNegativeButton("Enviar Notificação", (dialog, which) -> {
