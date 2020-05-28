@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.activities.ChatJamActivity;
 import br.com.petgramapp.activities.ConversasActivity;
 import br.com.petgramapp.activities.LoginActivity;
 import br.com.petgramapp.adapter.AdapterFotoPostada;
@@ -362,6 +363,10 @@ public class HomeFragment extends Fragment {
             deslogarUsuario();
         }else if (item.getItemId() == R.id.chat_MenuSair){
             Intent intent = new Intent(getContext(), ConversasActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }else if (item.getItemId() == R.id.chatNovo_Jam){
+            Intent intent = new Intent(getContext(), ChatJamActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }

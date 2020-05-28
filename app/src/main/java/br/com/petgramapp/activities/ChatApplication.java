@@ -21,6 +21,7 @@ public class ChatApplication extends Application implements Application.Activity
         firebaseFirestore =ConfiguracaoFirebase.getFirebaseFirestore();
         firebaseUser = UsuarioFirebase.getUsuarioAtual();
         String idUsuario = firebaseUser.getUid();
+
         if (idUsuario != null){
             firebaseFirestore.collection("Usuarios")
                     .document(idUsuario)

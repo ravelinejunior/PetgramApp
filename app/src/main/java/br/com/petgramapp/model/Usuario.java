@@ -195,7 +195,6 @@ public class Usuario implements Parcelable {
     public String getSenhaPetUsuario() {
         return senhaPetUsuario;
     }
-
     public void setSenhaPetUsuario(String senhaPetUsuario) {
         this.senhaPetUsuario = senhaPetUsuario;
     }

@@ -66,7 +66,7 @@ public class Mensagem {
         this.timestamp = timestamp;
     }
 
-    public void enviarMensagem(String mensagemQuemEnviouId,String mensagemQuemRecebeId,Usuario usuario,Mensagem mensagem){
+    public void enviarMensagem(String mensagemQuemEnviouId,String mensagemQuemRecebeId,Usuario usuario,Mensagem mensagem,Usuario usuLogado ){
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
         CollectionReference mensagemCollection = firebaseFirestore
                 .collection("Chat")
@@ -98,8 +98,9 @@ public class Mensagem {
                         .set(contato);
 
                 if (!usuario.isOnline()){
+
                     NotificacaoChat notificacaoChat = new NotificacaoChat();
-                    notificacaoChat.setFromName(usuario.getNomePetUsuario());
+                    notificacaoChat.setFromName(usuLogado.getNomePetUsuario());
                     notificacaoChat.setIdEnviadoDe(mensagem.getIdEnviadoDe());
                     notificacaoChat.setIdEnviadoPara(mensagem.getIdEnviadoPara());
                     notificacaoChat.setTimestamp(mensagem.getTimestamp());
@@ -143,9 +144,9 @@ public class Mensagem {
 
 
                 firebaseFirestore.collection("LastMensagens")
-                        .document(idEnviadoPara)
+                        .document(getIdEnviadoPara())
                         .collection("contatos")
-                        .document(idEnviadoDe)
+                        .document(getIdEnviadoDe())
                         .set(contato);
             }
         }).addOnFailureListener(new OnFailureListener() {

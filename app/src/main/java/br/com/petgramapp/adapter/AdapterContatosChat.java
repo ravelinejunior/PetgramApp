@@ -25,7 +25,6 @@ public class AdapterContatosChat extends Item<ViewHolder> {
 
 
     public AdapterContatosChat( Usuario usuario) {
-
         this.usuario = usuario;
     }
 

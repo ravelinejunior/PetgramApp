@@ -15,20 +15,28 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
 import java.util.Random;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.activities.ConversasActivity;
 import br.com.petgramapp.activities.StartActivity;
+import br.com.petgramapp.helper.ConfiguracaoFirebase;
+import br.com.petgramapp.model.Usuario;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    private FirebaseFirestore firebaseFirestore;
     @Override
     public void onMessageReceived(@NonNull RemoteMessage notificacao) {
 
 
-      /*  super.onMessageReceived(notificacao);
+     /*   super.onMessageReceived(notificacao);
         Log.i("Notificacao","Notificação recebida");
         showNotification(notificacao.getNotification().getTitle(),notificacao.getNotification().getBody(),notificacao.getNotification().getImageUrl());
 */
@@ -41,6 +49,53 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     }
+
+    //mensagens e notificações de conversas
+        Map<String,String> data = notificacao.getData();
+        if (data == null || data.get("sender") == null) return; // finaliza a aplicação caso nao tenha notificação
+        Uri uriSom = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+       // final Intent ii = new Intent(this, ChatActivity.class);
+        final Intent ii = new Intent(this, ConversasActivity.class);
+        firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
+        firebaseFirestore.collection("Usuarios")
+                .document(data.get("sender"))
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Usuario usuarioSender = documentSnapshot.toObject(Usuario.class);
+                        ii.putExtra("users",usuarioSender);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,ii,0);
+                        Log.i("UsuarioRec","Token:"+usuarioSender.getToken());
+                        Log.i("UsuarioRec","id:"+usuarioSender.getId());
+                        Log.i("UsuarioRec","nome:"+usuarioSender.getNomePetUsuario());
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                        String ID_CHANNEL = "notification_channel";
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                            NotificationChannel notificationChannel = new NotificationChannel(ID_CHANNEL,"My Notifications",NotificationManager.IMPORTANCE_DEFAULT);
+                            notificationChannel.setDescription("Notificações");
+                            notificationChannel.enableLights(true);
+                            notificationChannel.setVibrationPattern(new long[]{300,400,500,400,300});
+                            notificationChannel.setLightColor(Color.RED);
+
+                            notificationManager.createNotificationChannel(notificationChannel);
+
+                        }
+
+                        NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(getApplicationContext(), ID_CHANNEL);
+                        notificationCompat.setAutoCancel(true);
+                        notificationCompat.setSound(uriSom);
+                        notificationCompat.setSmallIcon(R.mipmap.launcherpet_round);
+                        notificationCompat.setContentTitle(data.get("title"));
+                        notificationCompat.setContentText(data.get("body"));
+                        notificationCompat.setContentIntent(pendingIntent);
+
+                    notificationManager.notify(1,notificationCompat.build());
+
+                    }
+                });
+
     }
 
     private void showNotification(String title, String body, Uri imageUrl) {

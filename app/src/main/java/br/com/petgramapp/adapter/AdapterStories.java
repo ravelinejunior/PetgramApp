@@ -18,7 +18,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -121,6 +120,7 @@ public class AdapterStories extends RecyclerView.Adapter<AdapterStories.MyViewHo
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                Usuario usuario = dataSnapshot.getValue(Usuario.class);
                //Picasso.get().load(usuario.getUriCaminhoFotoPetUsuario()).noFade().into(viewHolder.imagemPerfilStories);
+
                 Glide.with(contexto).load(usuario.getUriCaminhoFotoPetUsuario()).into(viewHolder.imagemPerfilStories);
 
                 if(posicao != 0){

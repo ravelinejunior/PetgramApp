@@ -10,6 +10,11 @@
         app:showAsAction="ifRoom"
         />
 
+    <item android:id="@+id/chatNovo_Jam"
+        android:title="@string/chat_jam"
+        app:showAsAction="never"
+        />
+
     <item android:id="@+id/item_sair_MenuSair"
         android:title="@string/sair"
         />

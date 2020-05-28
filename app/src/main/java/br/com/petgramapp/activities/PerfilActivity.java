@@ -258,13 +258,12 @@ public class PerfilActivity extends AppCompatActivity {
                             .update("uriCaminhoFotoPetUsuario",urlResultado);
 
 
-
                     dialog.dismiss();
                     startActivity(new Intent(this,PerfilActivity.class));
                     finish();
                 }else{
                     dialog.dismiss();
-                    Toast.makeText(this, "Erro ao alterar sua petFoto. Verifique sua conexão com a internet!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Nenhuma imagem selecionada!", Toast.LENGTH_LONG).show();
                 }
             }).addOnFailureListener(e -> {
                 Toast.makeText(this, ""+e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -282,7 +281,7 @@ public class PerfilActivity extends AppCompatActivity {
             imagemFotoUri = activityResult.getUri();
             uploadImagemPerfil();
         }else{
-            Toast.makeText(this, "Algo deu errado! Tente mais tarde ou verifique sua internet;", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Eita", Toast.LENGTH_LONG).show();
         }
     }
     public Context getContext(){

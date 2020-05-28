@@ -55,7 +55,7 @@ public class ChatActivity extends AppCompatActivity {
         ImageButton botaoEnviarMensagem = findViewById(R.id.enviarBotao_Mensagem_Chat);
         mensagemDigitada = findViewById(R.id.mensagem_Digitada_Chat);
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
-        usuarioCollection = firebaseFirestore.collection("Usuarios");
+
 
         usuario = getIntent().getExtras().getParcelable("users");
         if (usuario != null){
@@ -69,7 +69,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //recuperar dados usuario logado
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
-        usuarioCollection.document(firebaseUser.getUid())
+        firebaseFirestore.collection("Usuarios").document(firebaseUser.getUid())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -144,7 +144,7 @@ public class ChatActivity extends AppCompatActivity {
         mensagemObj.setMensagem(mensagem);
 
         if (!mensagemObj.getMensagem().isEmpty()){
-            mensagemObj.enviarMensagem(enviadoDeId,enviadoParaId,usuario,mensagemObj);
+            mensagemObj.enviarMensagem(enviadoDeId,enviadoParaId,usuario,mensagemObj,usuarioLogado);
 
         }
     }
