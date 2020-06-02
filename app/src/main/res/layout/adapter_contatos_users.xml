@@ -8,9 +8,11 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
+        android:layout_marginStart="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:elevation="10dp"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -63,7 +65,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="5dp"
-        android:background="#76171111" />
+        android:background="#31171111" />
 
 
 

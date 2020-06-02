@@ -68,7 +68,11 @@ public class ContatosFragmentJam extends Fragment {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getContext(), TalksJamActivity.class);
+                Usuario usuarioSelecionado = usuarioList.get(position);
+                Usuario usuarioLogado = UsuarioFirebase.getUsuarioLogado();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("chatContato",usuarioSelecionado);
+                intent.putExtra("chatUsuarioLogado",usuarioLogado);
                 startActivity(intent);
             }
 

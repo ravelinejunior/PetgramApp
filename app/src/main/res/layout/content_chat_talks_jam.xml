@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/branco_azulado"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_Content_ChatTalksJam"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_edit_text"
+                android:orientation="horizontal"
+
+                android:outlineAmbientShadowColor="@color/preto">
+
+
+                <EditText
+                    android:id="@+id/mensagemDigitada_Content_TalksJam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+
+                    android:layout_weight="1"
+                    android:hint="@string/notificacaomensagem"
+                    android:maxLines="30"
+                    android:padding="10dp"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/camera_Content_TalksJam"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginEnd="5dp"
+                    app:srcCompat="@drawable/ic_foto_preto" />
+
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_ContentTalks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/Azulnovo"
+                android:clickable="true"
+                android:elevation="5dp"
+                android:focusable="true"
+                android:onClick="enviarMensagem"
+                android:outlineAmbientShadowColor="@color/preto"
+
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_send_branco" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

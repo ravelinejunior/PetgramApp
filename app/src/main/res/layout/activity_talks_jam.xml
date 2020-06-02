@@ -13,22 +13,36 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_TalksJam"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imagemPerfil_Toolbar_TalksJam"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_pessoa_usuario"
+                />
+
+            <TextView
+                android:id="@+id/nomeUsuario_Toolbar_TalksJam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:padding="10dp"
+                android:text="@string/nome_usuario_digitado"
+                android:textColor="@color/branco"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_talks_jam" />
+    <include layout="@layout/content_chat_talks_jam" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_pets_white_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

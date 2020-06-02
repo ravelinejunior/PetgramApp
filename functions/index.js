@@ -14,7 +14,7 @@ exports.pushes = functions.firestore
         data:{
             title: document.fromName,
             body: document.mensagem,
-            sender: document.idEnviadoDe
+            sender: document.id
         },
         token: registrationToken
     }

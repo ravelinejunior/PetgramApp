@@ -115,6 +115,7 @@ public class CadastrarActivity extends AppCompatActivity {
                 if (!str_email.isEmpty()){
                     if (!str_senha.isEmpty()){
                         if (!str_confirmaSenha.isEmpty() && str_confirmaSenha.equalsIgnoreCase(str_senha)){
+                            String token = FirebaseInstanceId.getInstance().getToken();
                             usuario = new Usuario();
                             usuario.setNomePetUsuario(str_nome);
                             usuario.setEmailPetUsuario(str_email);
@@ -122,7 +123,7 @@ public class CadastrarActivity extends AppCompatActivity {
                             usuario.setConfirmacaoSenhaPetUsuario(str_confirmaSenha);
                             usuario.setIdadePetUsuario(str_idade);
                             usuario.setDescricaoPetUsuario(str_descricao);
-                            usuario.setTokenFoneMessage(recuperarToken());
+                            usuario.setTokenFoneMessage(token);
                             cadastrarNovoUsuario(usuario);
 
 

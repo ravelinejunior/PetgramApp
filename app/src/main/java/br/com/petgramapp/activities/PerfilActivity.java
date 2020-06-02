@@ -165,7 +165,6 @@ public class PerfilActivity extends AppCompatActivity {
 
     private void atualizarPerfil(String nomePet, String nomeDonoPet, String descricaoPerfil, View view) {
         usuariosRef = reference.child("usuarios").child(usuarioFirebase.getUid());
-        recuperarToken();
         HashMap<String,Object> hashMap = new HashMap<>();
         if ((nomeDonoPet != null || !nomeDonoPet.equals("")) ||
                 (nomePet != null || !nomePet.equals("")) ||
@@ -178,7 +177,7 @@ public class PerfilActivity extends AppCompatActivity {
             hashMap.put("tokenFoneMessage", tokenId);
 
             usuariosRef.updateChildren(hashMap);
-
+            String token = FirebaseInstanceId.getInstance().getToken();
             HashMap map = new HashMap();
             map.put("nomePetUsuario", nomePet);
             map.put("id", identificadorUsuario);
@@ -187,10 +186,11 @@ public class PerfilActivity extends AppCompatActivity {
             map.put("nomePetUsuarioUp",nomePet.toLowerCase());
             map.put("emailPetUsuario",usuarioFirebase.getEmail());
             map.put("tokenFoneMessage", tokenId);
+            map.put("token", token);
 
             firebaseFirestore.collection("Usuarios")
                     .document(identificadorUsuario)
-                    .set(map);
+                    .update(map);
 
             Snackbar.make(view,"Dados atualizados com sucesso!",Snackbar.LENGTH_SHORT).show();
         }else{

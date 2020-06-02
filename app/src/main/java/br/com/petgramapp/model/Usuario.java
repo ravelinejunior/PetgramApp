@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Exclude;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
@@ -35,7 +34,7 @@ public class Usuario implements Parcelable {
     private String emailPetUsuario;
     private String idadePetUsuario;
     private String descricaoPetUsuario;
-    private String sexoPetUsuario;
+ //   private String sexoPetUsuario;
     private String senhaPetUsuario;
     private String confirmacaoSenhaPetUsuario;
     private String uriCaminhoFotoPetUsuario;
@@ -65,7 +64,7 @@ public class Usuario implements Parcelable {
         emailPetUsuario = in.readString();
         idadePetUsuario = in.readString();
         descricaoPetUsuario = in.readString();
-        sexoPetUsuario = in.readString();
+    //    sexoPetUsuario = in.readString();
         senhaPetUsuario = in.readString();
         confirmacaoSenhaPetUsuario = in.readString();
         uriCaminhoFotoPetUsuario = in.readString();
@@ -182,19 +181,22 @@ public class Usuario implements Parcelable {
     public void setDescricaoPetUsuario(String descricaoPetUsuario) {
         this.descricaoPetUsuario = descricaoPetUsuario;
     }
+/*
 
     public String getSexoPetUsuario() {
         return sexoPetUsuario.toLowerCase();
     }
+*/
 
-    public void setSexoPetUsuario(String sexoPetUsuario) {
+  /*  public void setSexoPetUsuario(String sexoPetUsuario) {
         this.sexoPetUsuario = sexoPetUsuario.toLowerCase();
     }
+*/
 
-    @Exclude
     public String getSenhaPetUsuario() {
         return senhaPetUsuario;
     }
+
     public void setSenhaPetUsuario(String senhaPetUsuario) {
         this.senhaPetUsuario = senhaPetUsuario;
     }
@@ -274,7 +276,7 @@ public class Usuario implements Parcelable {
         dest.writeString(emailPetUsuario);
         dest.writeString(idadePetUsuario);
         dest.writeString(descricaoPetUsuario);
-        dest.writeString(sexoPetUsuario);
+     //   dest.writeString(sexoPetUsuario);
         dest.writeString(senhaPetUsuario);
         dest.writeString(confirmacaoSenhaPetUsuario);
         dest.writeString(uriCaminhoFotoPetUsuario);

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Random;
 
 import br.com.petgramapp.R;
-import br.com.petgramapp.activities.ConversasActivity;
+import br.com.petgramapp.activities.ChatJamActivity;
 import br.com.petgramapp.activities.StartActivity;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.model.Usuario;
@@ -55,7 +55,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (data == null || data.get("sender") == null) return; // finaliza a aplicação caso nao tenha notificação
         Uri uriSom = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
        // final Intent ii = new Intent(this, ChatActivity.class);
-        final Intent ii = new Intent(this, ConversasActivity.class);
+        final Intent ii = new Intent(this, ChatJamActivity.class);
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
         firebaseFirestore.collection("Usuarios")
                 .document(data.get("sender"))

@@ -32,7 +32,9 @@
         <activity
             android:name=".activities.TalksJamActivity"
             android:label="@string/title_activity_talks_jam"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar">
+
 
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"

@@ -3,6 +3,7 @@ package br.com.petgramapp.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +16,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -23,10 +26,12 @@ import br.com.petgramapp.R;
 import br.com.petgramapp.fragments.ContatosFragmentJam;
 import br.com.petgramapp.fragments.ConversasFragmentJam;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
+import br.com.petgramapp.helper.UsuarioFirebase;
 
 public class ChatJamActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,7 @@ public class ChatJamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_jam);
         carregarElementos();
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
         //configuração de abas
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
@@ -50,6 +56,21 @@ public class ChatJamActivity extends AppCompatActivity {
 
         SmartTabLayout smartTabLayout = findViewById(R.id.smartTabLayout);
         smartTabLayout.setViewPager(viewPager);
+
+        updateToken();
+    }
+
+    private void updateToken() {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        String idUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        Log.i("TokenUser",token);
+
+        if (idUsuario != null){
+            firebaseFirestore.collection("Usuarios")
+                    .document(idUsuario)
+                    .update("token",token);
+
+        }
     }
 
     @Override
