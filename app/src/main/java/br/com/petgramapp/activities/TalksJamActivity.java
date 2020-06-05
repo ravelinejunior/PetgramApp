@@ -23,7 +23,6 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -61,7 +60,6 @@ public class TalksJamActivity extends AppCompatActivity {
 
     public static String idUsuarioDestinatario;
     public  Usuario usuarioLogado;
-    FirebaseAuth auth;
     List<DocumentChange> documentChangeList = new ArrayList<>();
     private TextView nomeUsuarioTalks;
     private CircleImageView imagemPerfilTalks;
@@ -83,7 +81,6 @@ public class TalksJamActivity extends AppCompatActivity {
     //identificador de mensagens por usuario
     private String idUsuarioRemetente;
     private ProgressDialog dialog;
-    private String dataPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,14 +93,8 @@ public class TalksJamActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         carregarElementos();
 
-        //DATA POSTAGEM
-        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-        dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
 
         storageReference = ConfiguracaoFirebase.getStorageReference();
-
-        auth = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
         ChatApplication application = (ChatApplication) getApplication();
         getApplication().registerActivityLifecycleCallbacks(application);
@@ -174,13 +165,17 @@ public class TalksJamActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+      super.onBackPressed();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         eventListener.remove();
     }
 
     private void readMensagens(){
-
 
         mensagemJamList.clear();
 
@@ -191,27 +186,21 @@ public class TalksJamActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) return;
 
-            documentChangeList = queryDocumentSnapshots.getDocumentChanges();
-            if (documentChangeList != null){
-                for (DocumentChange doc : documentChangeList){
-                    if (doc.getType() == DocumentChange.Type.ADDED){
-                        MensagemJam mensagemJam = doc.getDocument().toObject(MensagemJam.class);
-                        mensagemJamList.add(mensagemJam);
+                List<DocumentChange> documentChanges = queryDocumentSnapshots.getDocumentChanges();
+                if (documentChanges != null){
+                    for (DocumentChange doc: documentChanges){
+                        if (doc.getType() == DocumentChange.Type.ADDED || doc.getType() == DocumentChange.Type.MODIFIED ||
+                            doc.getType() == DocumentChange.Type.REMOVED){
+                            MensagemJam mensagemJam = doc.getDocument().toObject(MensagemJam.class);
+                            mensagemJamList.add(mensagemJam);
+                            adapterMensagensJam.notifyDataSetChanged();
 
+                        }
                     }
                 }
-
-                adapterMensagensJam.notifyDataSetChanged();
-
-            }
-
             }
 
         });
-
-
-
-
 
     }
 
@@ -243,16 +232,17 @@ public class TalksJamActivity extends AppCompatActivity {
             mensagemJam.setMensagem(mensagemDigitada);
             mensagemJam.setDataEnvio(dataPost);
             mensagemJam.setDataRecebido(dataGet);
+            mensagemJam.setImagemEnviada("");
             mensagemJam.setTimeStamp(System.currentTimeMillis());
 
-            if (!usuarioSelecionado.isOnline()){
+          //  if (!usuarioSelecionado.isOnline()){
 
                 NotificacoesJam notificacoesJam = new NotificacoesJam();
 
-                notificacoesJam.setFromName("Nova mensagem");
+                notificacoesJam.setFromName(usuarioLogado.getNomePetUsuario());
                 notificacoesJam.setId(idUsuarioRemetente);
                 notificacoesJam.setDataEnvio(dataPost);
-                notificacoesJam.setDataRecebido(dataGet);
+                notificacoesJam.setDataRecebido(dataPost);
                 notificacoesJam.setTimeStamp(System.currentTimeMillis());
                 notificacoesJam.setMensagem(mensagemDigitada);
 
@@ -260,7 +250,7 @@ public class TalksJamActivity extends AppCompatActivity {
                         .document(usuarioSelecionado.getToken())
                         .set(notificacoesJam);
 
-            }
+          //  }
 
             //para o remetente
             salvarMensagem(idUsuarioRemetente,idUsuarioDestinatario,mensagemJam);
@@ -271,7 +261,6 @@ public class TalksJamActivity extends AppCompatActivity {
             //para o remetente
             salvarConversa(mensagemJam);
 
-
         }else{
             Snackbar.make(view,"Por gentileza, digitar uma mensagem.",Snackbar.LENGTH_SHORT).show();
         }
@@ -279,10 +268,11 @@ public class TalksJamActivity extends AppCompatActivity {
 
     public void salvarMensagem(String idUsuRemetente,String idUsuDesti,MensagemJam mensagem){
 
-            mensagemRef = firebaseFirestore.collection("Mensagens");
+            firebaseFirestore.collection("Mensagens");
 
-                    mensagemRef.document(idUsuRemetente)
-                    .collection(idUsuDesti).
+                   firebaseFirestore.collection("Mensagens")
+                           .document(idUsuRemetente)
+                            .collection(idUsuDesti).
                             add(mensagem);
 
               mensagemDigitadaTalks.setText("");
@@ -302,9 +292,9 @@ public class TalksJamActivity extends AppCompatActivity {
     }
 
     private void uploadImagemEnviada(){
+
         abrirDialogCarregamento("Sua petFoto está sendo postada! Aguarde...");
         MensagemJam mensagemJam = new MensagemJam();
-        mensagemJam.setDataEnvio(dataPost);
 
         if (imagemFotoUri != null){
             StorageReference imagemRef = ConfiguracaoFirebase.getStorageReference().child("Imagens")
@@ -339,9 +329,17 @@ public class TalksJamActivity extends AppCompatActivity {
                     Uri downloadUriImagem = task.getResult();
 
                     imagemUrlPostagem = downloadUriImagem.toString();
+
+                    //DATA POSTAGEM
+                    String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+                    String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+                    String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
+                    mensagemJam.setDataEnvio(dataPost);
+                    mensagemJam.setDataRecebido(dataPost);
                     mensagemJam.setImagemEnviada(imagemUrlPostagem);
                     mensagemJam.setId(idUsuarioRemetente);
                     mensagemJam.setMensagem("imagem.jpeg");
+                    //mensagemJam.setMensagem(null);
                     mensagemJam.setTimeStamp(System.currentTimeMillis());
 
                     //para remetente
@@ -352,6 +350,23 @@ public class TalksJamActivity extends AppCompatActivity {
 
                     //SALVAR CONVERSA
                     salvarConversa(mensagemJam);
+
+                   // if (!usuarioSelecionado.isOnline()){
+
+                        NotificacoesJam notificacoesJam = new NotificacoesJam();
+
+                        notificacoesJam.setFromName(usuarioLogado.getNomePetUsuario());
+                        notificacoesJam.setId(idUsuarioRemetente);
+                        notificacoesJam.setDataEnvio(dataPost);
+                        notificacoesJam.setDataRecebido(dataPost);
+                        notificacoesJam.setTimeStamp(System.currentTimeMillis());
+                        notificacoesJam.setMensagem(mensagemJam.getMensagem());
+
+                        firebaseFirestore.collection("Notificacoes")
+                                .document(usuarioSelecionado.getToken())
+                                .set(notificacoesJam);
+
+                   // }
 
                     Toast.makeText(this, "Imagem enviada com sucesso.", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
@@ -372,7 +387,10 @@ public class TalksJamActivity extends AppCompatActivity {
     }
 
     private void salvarConversa(MensagemJam mensagem) {
-
+        //DATA POSTAGEM
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
         Conversas conversasRemetente = new Conversas();
 
         conversasRemetente.setIdRemetente(idUsuarioRemetente);
@@ -383,7 +401,7 @@ public class TalksJamActivity extends AppCompatActivity {
         conversasRemetente.setUsuario(usuarioSelecionado);
 
         conversasRemetente.salvarConversa();
-        conversasRemetente.salvarConversaOutroUsuario();
+        conversasRemetente.salvarConversaOutroUsuario(usuarioLogado);
 
 
     }

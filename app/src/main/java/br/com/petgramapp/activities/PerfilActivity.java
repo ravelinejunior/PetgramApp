@@ -43,6 +43,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
@@ -178,7 +179,7 @@ public class PerfilActivity extends AppCompatActivity {
 
             usuariosRef.updateChildren(hashMap);
             String token = FirebaseInstanceId.getInstance().getToken();
-            HashMap map = new HashMap();
+            Map<String,Object> map = new HashMap<>();
             map.put("nomePetUsuario", nomePet);
             map.put("id", identificadorUsuario);
             map.put("nomeDonoPet", nomeDonoPet);
@@ -187,6 +188,10 @@ public class PerfilActivity extends AppCompatActivity {
             map.put("emailPetUsuario",usuarioFirebase.getEmail());
             map.put("tokenFoneMessage", tokenId);
             map.put("token", token);
+
+         /*   firebaseFirestore.collection("Usuarios")
+                    .document(identificadorUsuario)
+                    .set(map);*/
 
             firebaseFirestore.collection("Usuarios")
                     .document(identificadorUsuario)

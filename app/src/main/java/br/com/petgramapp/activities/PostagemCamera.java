@@ -69,8 +69,6 @@ public class PostagemCamera extends AppCompatActivity {
         setContentView(R.layout.activity_postagem_camera);
         carregarElementos();
 
-
-
         //CONFIGURAÇÕES INICIAIS
         firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
         usuarioLogado = UsuarioFirebase.getUsuarioLogado();

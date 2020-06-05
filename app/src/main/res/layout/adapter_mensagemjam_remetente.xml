@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout_adapterMensagem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/shape_conversa_mensagemjam"
+        android:elevation="5dp"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/imagem_MensagemTalks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp" />
+
+        <TextView
+            android:id="@+id/mensagemDigitada_AdapterMensagem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@color/branco"
+            android:textSize="16sp"
+     />
+
+        <TextView
+            android:id="@+id/horaMensagem_id_Mensagem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/notificacaomensagem"
+            android:textColor="@color/branco"
+            android:textSize="10sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+</RelativeLayout>

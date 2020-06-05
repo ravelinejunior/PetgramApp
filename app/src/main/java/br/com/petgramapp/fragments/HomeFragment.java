@@ -100,9 +100,9 @@ public class HomeFragment extends Fragment {
             }
         },50);
 
-        receberPostagens();
+        //receberPostagens();
 
-       // checarUsuariosSeguidores();
+       checarUsuariosSeguidores();
 
         //STORIES
         recyclerViewStories = view.findViewById(R.id.recyclerView_Stories_HomeFragment_id);
@@ -170,7 +170,6 @@ public class HomeFragment extends Fragment {
                 fotoPostadaList.clear();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
                     FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
                     for (String id:listaSeguidores){
                         if (fotoPostada.getIdUsuarioPostou().equals(id)){

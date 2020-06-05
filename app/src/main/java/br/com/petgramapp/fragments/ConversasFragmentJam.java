@@ -34,14 +34,14 @@ import br.com.petgramapp.model.Usuario;
 public class ConversasFragmentJam extends Fragment {
     Query query;
     private List<Conversas> conversasList = new ArrayList<>();
-    private Usuario usuarioSelecionado;
     private AdapterConversasJam adapterConversasJam;
     private RecyclerView recyclerViewConversasJam;
     private FirebaseFirestore firebaseFirestore;
     private String idUsuarioRemetente;
-    private String idUsuarioDestinatario;
     private CollectionReference reference;
     private Task<QuerySnapshot> eventListener;
+    private CollectionReference usuarioCollection;
+    private List<Usuario> usuarioList = new ArrayList<>();
 
     public ConversasFragmentJam() {
         // Required empty public constructor
@@ -73,9 +73,10 @@ public class ConversasFragmentJam extends Fragment {
             @Override
             public void onItemClick(int position) {
                 Conversas conversas = conversasList.get(position);
-
                 Intent i = new Intent(getActivity(), TalksJamActivity.class);
+                Usuario usuarioLogado = usuarioList.get(0);
                 i.putExtra("chatContato",conversas.getUsuario());
+                i.putExtra("chatUsuarioLogado",usuarioLogado);
                 startActivity(i);
             }
 
@@ -100,6 +101,7 @@ public class ConversasFragmentJam extends Fragment {
     public void onStart() {
         super.onStart();
         readConversas();
+        recuperarContatoAtual();
     }
 
     @Override
@@ -111,32 +113,10 @@ public class ConversasFragmentJam extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     private void readConversas(){
-      /*  eventListener = query.orderBy("timeStamp", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) return;
 
-                        conversasList.clear();
-
-                        for (DocumentSnapshot ds: queryDocumentSnapshots){
-                            Conversas conversas = ds.toObject(Conversas.class);
-
-                            if (conversas.getUsuario().getId().equals(UsuarioFirebase.getIdentificadorUsuario()))
-                                continue;
-
-                            conversasList.add(conversas);
-                        }
-
-                        adapterConversasJam.notifyDataSetChanged();
-
-                    }
-
-                });*/
       conversasList.clear();
       eventListener = reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
           @Override
@@ -163,6 +143,23 @@ public class ConversasFragmentJam extends Fragment {
 
       });
 
+
+
+    }
+
+    public void recuperarContatoAtual(){
+        usuarioCollection = firebaseFirestore.collection("Usuarios");
+        usuarioCollection.document(UsuarioFirebase.getIdentificadorUsuario())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                usuarioList.clear();
+
+                Usuario usuario = documentSnapshot.toObject(Usuario.class);
+                usuarioList.add(usuario);
+            }
+
+        });
     }
 
 

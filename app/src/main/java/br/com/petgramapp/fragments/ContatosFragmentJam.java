@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -37,6 +38,7 @@ public class ContatosFragmentJam extends Fragment {
     private RecyclerView recyclerViewListaContatos;
     private AdapterContatosJam adapterContatosJam;
     private List<Usuario> usuarioList = new ArrayList<>();
+    private List<Usuario> usuarioUnicoList = new ArrayList<>();
     private FirebaseFirestore firebaseFirestore;
     private CollectionReference usuarioCollection;
     private ListenerRegistration eventListener;
@@ -69,7 +71,7 @@ public class ContatosFragmentJam extends Fragment {
             public void onItemClick(int position) {
                 Intent intent = new Intent(getContext(), TalksJamActivity.class);
                 Usuario usuarioSelecionado = usuarioList.get(position);
-                Usuario usuarioLogado = UsuarioFirebase.getUsuarioLogado();
+                Usuario usuarioLogado = usuarioUnicoList.get(0);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("chatContato",usuarioSelecionado);
                 intent.putExtra("chatUsuarioLogado",usuarioLogado);
@@ -94,6 +96,7 @@ public class ContatosFragmentJam extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        recuperarContatoAtual();
         recuperarContatos();
     }
 
@@ -125,5 +128,20 @@ public class ContatosFragmentJam extends Fragment {
 
             }
         });
+    }
+
+    public void recuperarContatoAtual(){
+
+       usuarioCollection.document(UsuarioFirebase.getIdentificadorUsuario())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        usuarioUnicoList.clear();
+
+                            Usuario usuario = documentSnapshot.toObject(Usuario.class);
+                            usuarioUnicoList.add(usuario);
+                        }
+
+                });
     }
 }
