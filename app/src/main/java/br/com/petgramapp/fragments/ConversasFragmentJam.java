@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +43,9 @@ public class ConversasFragmentJam extends Fragment {
     private Task<QuerySnapshot> eventListener;
     private CollectionReference usuarioCollection;
     private List<Usuario> usuarioList = new ArrayList<>();
+    List<Conversas> conversasLista = new ArrayList<>();
+    private ProgressBar progressBarConversasJam;
+
 
     public ConversasFragmentJam() {
         // Required empty public constructor
@@ -55,6 +59,7 @@ public class ConversasFragmentJam extends Fragment {
         recyclerViewConversasJam = view.findViewById(R.id.recyclerView_ConversasJam);
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
         idUsuarioRemetente = UsuarioFirebase.getIdentificadorUsuario();
+        progressBarConversasJam = view.findViewById(R.id.progressBar_FragmentConversasJam);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setMeasurementCacheEnabled(true);
@@ -72,12 +77,23 @@ public class ConversasFragmentJam extends Fragment {
                 getContext(), recyclerViewConversasJam, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Conversas conversas = conversasList.get(position);
-                Intent i = new Intent(getActivity(), TalksJamActivity.class);
-                Usuario usuarioLogado = usuarioList.get(0);
-                i.putExtra("chatContato",conversas.getUsuario());
-                i.putExtra("chatUsuarioLogado",usuarioLogado);
-                startActivity(i);
+                if (conversasLista.size() > 0){
+                    Conversas conversas = conversasLista.get(position);
+                    Intent i = new Intent(getActivity(), TalksJamActivity.class);
+                    Usuario usuarioLogado = usuarioList.get(0);
+                    i.putExtra("chatContato",conversas.getUsuario());
+                    i.putExtra("chatUsuarioLogado",usuarioLogado);
+                    startActivity(i);
+                    conversasLista.clear();
+                }else{
+                    Conversas conversas = conversasList.get(position);
+                    Intent i = new Intent(getActivity(), TalksJamActivity.class);
+                    Usuario usuarioLogado = usuarioList.get(0);
+                    i.putExtra("chatContato",conversas.getUsuario());
+                    i.putExtra("chatUsuarioLogado",usuarioLogado);
+                    startActivity(i);
+                }
+
             }
 
             @Override
@@ -93,6 +109,7 @@ public class ConversasFragmentJam extends Fragment {
         ));
 
         query = reference;
+
 
         return view;
     }
@@ -115,7 +132,28 @@ public class ConversasFragmentJam extends Fragment {
         super.onResume();
     }
 
-    private void readConversas(){
+    public void pesquisarConversas(String texto){
+      //  Log.d("queryTextPesquisa",texto.toString());
+        conversasLista = new ArrayList<>();
+        for (Conversas conversas: conversasList){
+
+            String nomeUsuario = conversas.getUsuario().getNomePetUsuario().toLowerCase();
+            String ultimaMensagem = conversas.getUltimaMensagem().toLowerCase();
+
+            if (nomeUsuario.contains(texto) || ultimaMensagem.contains(texto)){
+                conversasLista.add(conversas);
+            }
+
+        }
+
+        adapterConversasJam = new AdapterConversasJam(getContext(),conversasLista);
+        recyclerViewConversasJam.setAdapter(adapterConversasJam);
+        adapterConversasJam.notifyDataSetChanged();
+
+
+    }
+
+    public void readConversas(){
 
       conversasList.clear();
       eventListener = reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -136,6 +174,7 @@ public class ConversasFragmentJam extends Fragment {
                       }
 
                       adapterConversasJam.notifyDataSetChanged();
+                      progressBarConversasJam.setVisibility(View.GONE);
                   }
               });
 
@@ -143,8 +182,13 @@ public class ConversasFragmentJam extends Fragment {
 
       });
 
+    }
 
-
+    public void reloadConversas(){
+        conversasLista.clear();
+        adapterConversasJam = new AdapterConversasJam(getContext(),conversasList);
+        recyclerViewConversasJam.setAdapter(adapterConversasJam);
+        adapterConversasJam.notifyDataSetChanged();
     }
 
     public void recuperarContatoAtual(){

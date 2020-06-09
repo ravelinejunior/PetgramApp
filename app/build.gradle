@@ -91,6 +91,7 @@ dependencies {
     //Optional: see how to use the utility.
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
     implementation 'android.arch.paging:runtime:2.1.1'
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'

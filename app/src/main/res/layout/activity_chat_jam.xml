@@ -13,9 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Azulnovo"
-        android:elevation="5dp"
         android:theme="?attr/actionBarTheme"
+       />
+
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_viewPrincipal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
         />
+
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/smartTabLayout"

@@ -3,6 +3,8 @@ package br.com.petgramapp.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +20,12 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+
+import java.util.ArrayList;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.fragments.ContatosFragmentJam;
@@ -32,6 +37,8 @@ public class ChatJamActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
+    private MaterialSearchView conversasSearchView;
+    private MaterialSearchView contatosSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +56,98 @@ public class ChatJamActivity extends AppCompatActivity {
                             .add("Contatos", ContatosFragmentJam.class)
                 .create()
 
+
         );
 
         ViewPager viewPager = findViewById(R.id.viewPagerTab);
         viewPager.setAdapter(adapter);
 
+
+
         SmartTabLayout smartTabLayout = findViewById(R.id.smartTabLayout);
         smartTabLayout.setViewPager(viewPager);
+
+        //CONFIGURAÇÃO DE VOZ DO SEARCH VIEW
+        conversasSearchView.setVoiceSearch(true);
+        conversasSearchView.setVoiceIcon(getResources().getDrawable(R.drawable.ic_action_voice_search));
+
+        //configuração do search view para conversas
+        conversasSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
+                if (query != null && !query.isEmpty()){
+                    fragmentJam.pesquisarConversas(query.toLowerCase());
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+               // Log.d("queryText",newText.toString());
+                ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
+                if (newText != null && !newText.isEmpty()){
+                    fragmentJam.pesquisarConversas(newText.toLowerCase());
+                }
+                return true;
+            }
+        });
+
+
+        conversasSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
+                fragmentJam.reloadConversas();
+            }
+        });
+
+/*
+        //CONFIGURAÇÃO DO SEARCH VIEW PARA USUARIOS
+        contatosSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
+
+                if (query != null && !query.isEmpty()){
+                    contatosFragmentJam.getContatosJam(query.toLowerCase());
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
+
+                if (newText != null && !newText.isEmpty()){
+                    contatosFragmentJam.getContatosJam(newText.toLowerCase());
+                }
+
+                return true;
+            }
+        });
+
+        contatosSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
+                contatosFragmentJam.reloadContatosJam();
+            }
+        });
+
+    */
 
         updateToken();
     }
@@ -78,6 +170,14 @@ public class ChatJamActivity extends AppCompatActivity {
 
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_pesquisa_jam,menu);
+
+        //CONFIGURAÇÃO DO MENU PESQUISA
+        MenuItem item = menu.findItem(R.id.action_search_MenuJam);
+        contatosSearchView.setMenuItem(item);
+        contatosSearchView.setVoiceIcon(getDrawable(R.drawable.ic_action_voice_search));
+
+        conversasSearchView.setMenuItem(item);
+        conversasSearchView.setVoiceIcon(getDrawable(R.drawable.ic_action_voice_search));
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -101,6 +201,9 @@ public class ChatJamActivity extends AppCompatActivity {
         toolbar.setTitle("Pet Talks");
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
+        contatosSearchView = findViewById(R.id.search_viewPrincipal);
+        conversasSearchView = findViewById(R.id.search_viewPrincipal);
+
 
     }
 
@@ -126,5 +229,31 @@ public class ChatJamActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (matches != null && matches.size() > 0) {
+                String searchWrd = matches.get(0);
+                if (!TextUtils.isEmpty(searchWrd)) {
+                    conversasSearchView.setQuery(searchWrd, false);
+                }
+            }
+
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (conversasSearchView.isSearchOpen()) {
+            conversasSearchView.closeSearch();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

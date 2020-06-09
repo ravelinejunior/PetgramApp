@@ -7,8 +7,20 @@
     tools:context=".fragments.ContatosFragmentJam">
 
 
+    <ProgressBar
+        android:id="@+id/progressBar_FragmentContatosJam"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_Contatos_Jam"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+
+
 </LinearLayout>

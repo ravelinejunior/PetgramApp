@@ -2,23 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <item
-        android:id="@+id/pesquisar_MenuJam"
+        android:id="@+id/action_search_MenuJam"
         android:icon="@drawable/ic_search_pesquisar"
-        android:title="Pesquisar"
-        app:showAsAction="always"
-        />
+        android:orderInCategory="100"
+        android:title="@string/abc_search_hint"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/configuracoes_MenuJam"
-        android:icon="@drawable/ic_search_pesquisar"
         android:title="@string/congifura_es"
         app:showAsAction="never"
         />
 
     <item
         android:id="@+id/sair_MenuJam"
-        android:icon="@drawable/ic_search_pesquisar"
         android:title="@string/sair"
         app:showAsAction="never"
         />

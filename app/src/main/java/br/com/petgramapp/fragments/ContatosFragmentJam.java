@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -42,6 +43,7 @@ public class ContatosFragmentJam extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private CollectionReference usuarioCollection;
     private ListenerRegistration eventListener;
+    private ProgressBar progressBarContatosJam;
 
     public ContatosFragmentJam() {
         // Required empty public constructor
@@ -55,6 +57,7 @@ public class ContatosFragmentJam extends Fragment {
         View view = inflater.inflate(R.layout.fragment_contatos_jam, container, false);
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
         usuarioCollection = firebaseFirestore.collection("Usuarios");
+        progressBarContatosJam = view.findViewById(R.id.progressBar_FragmentContatosJam);
 
         recyclerViewListaContatos = view.findViewById(R.id.recyclerView_Contatos_Jam);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -63,8 +66,8 @@ public class ContatosFragmentJam extends Fragment {
 
         adapterContatosJam = new AdapterContatosJam(getContext(),usuarioList);
         recyclerViewListaContatos.setAdapter(adapterContatosJam);
-
-        //configuração do evento de clique da lista de contatos
+        eventoRecyclerView(recyclerViewListaContatos,usuarioList);
+       /* //configuração do evento de clique da lista de contatos
         recyclerViewListaContatos.addOnItemTouchListener(new RecyclerItemClickListener(
                 getContext(), recyclerViewListaContatos, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -88,7 +91,9 @@ public class ContatosFragmentJam extends Fragment {
 
             }
         }
-        ));
+        ));*/
+
+
 
         return view;
     }
@@ -104,6 +109,58 @@ public class ContatosFragmentJam extends Fragment {
     public void onStop() {
         super.onStop();
         eventListener.remove();
+    }
+
+    public void getContatosJam(String contato){
+        List<Usuario> contatosLista = new ArrayList<>();
+        for (Usuario usu: usuarioList){
+            String nomeUsuario = usu.getNomePetUsuario().toLowerCase();
+            String emailUsuario = usu.getEmailPetUsuario().toLowerCase();
+
+            if (emailUsuario.contains(contato) || nomeUsuario.contains(contato)){
+                contatosLista.add(usu);
+            }
+        }
+
+        adapterContatosJam = new AdapterContatosJam(getContext(),contatosLista);
+        recyclerViewListaContatos.setAdapter(adapterContatosJam);
+        adapterContatosJam.notifyDataSetChanged();
+
+        eventoRecyclerView(recyclerViewListaContatos,contatosLista);
+
+
+
+       /* //configuração do evento de clique da lista de contatos
+        recyclerViewListaContatos.addOnItemTouchListener(new RecyclerItemClickListener(
+                getContext(), recyclerViewListaContatos, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getContext(), TalksJamActivity.class);
+                Usuario usuarioSelecionado = contatosLista.get(position);
+                Usuario usuarioLogado = usuarioUnicoList.get(0);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("chatContato",usuarioSelecionado);
+                intent.putExtra("chatUsuarioLogado",usuarioLogado);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick() {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }
+        ));*/
+    }
+
+    public void reloadContatosJam(){
+        adapterContatosJam = new AdapterContatosJam(getContext(),usuarioList);
+        recyclerViewListaContatos.setAdapter(adapterContatosJam);
+        adapterContatosJam.notifyDataSetChanged();
     }
 
     public void recuperarContatos(){
@@ -125,6 +182,7 @@ public class ContatosFragmentJam extends Fragment {
                     }
 
                     adapterContatosJam.notifyDataSetChanged();
+                    progressBarContatosJam.setVisibility(View.GONE);
 
             }
         });
@@ -144,4 +202,36 @@ public class ContatosFragmentJam extends Fragment {
 
                 });
     }
+
+
+    public void eventoRecyclerView(RecyclerView recyclerView,List<Usuario> usuarios){
+        //configuração do evento de clique da lista de contatos
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(
+                getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getContext(), TalksJamActivity.class);
+                Usuario usuarioSelecionado = usuarios.get(position);
+                Usuario usuarioLogado = usuarioUnicoList.get(0);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("chatContato",usuarioSelecionado);
+                intent.putExtra("chatUsuarioLogado",usuarioLogado);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick() {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }
+        ));
+
+
+    }
+
 }
