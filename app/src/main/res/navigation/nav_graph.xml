@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="br.com.petgramapp.fragments.FirstFragment"
+        android:name="br.com.petgramapp.fragments.FirestoreHomeFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_home_firestore_adapter">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"

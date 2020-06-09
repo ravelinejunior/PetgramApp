@@ -27,18 +27,21 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.firebase.ui.firestore.paging.LoadingState;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.List;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.activities.ComentariosActivity;
@@ -52,41 +55,62 @@ import br.com.petgramapp.model.FotoPostada;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.ViewHolderFotoPostada> {
-    public List<FotoPostada> fotoPostadaList;
-    public static Integer posicao = 0;
-    public Context context;
-    private FirebaseUser firebaseUser;
+public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,AdapterFirestore.ViewHolderFoto> {
+        public Context context;
+        public OnListItemClick onListItemClick;
 
-
-    public AdapterFotoPostada(List<FotoPostada> fotoPostadaList, Context c) {
-        this.fotoPostadaList = fotoPostadaList;
-        this.context = c;
+    public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options) {
+        super(options);
     }
 
-    @NonNull
-    @Override
-    public ViewHolderFotoPostada onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.adapter_homefragment_post,parent,false);
-
-        return new ViewHolderFotoPostada(view);
+    public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options, Context context,OnListItemClick onListItemClick) {
+        super(options);
+        this.context = context;
+        this.onListItemClick = onListItemClick;
     }
 
+    public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options, Context context) {
+        super(options);
+        this.context = context;
+    }
 
     public void applyOptions(Context context, GlideBuilder builder) {
-        int bitmapPoolSizeBytes = 1024 * 1024 * 0; // 0mb
-        int memoryCacheSizeBytes = 1024 * 1024 * 0; // 0mb
+        int bitmapPoolSizeBytes = 0; // 0mb
+        int memoryCacheSizeBytes = 0; // 0mb
         builder.setMemoryCache(new LruResourceCache(memoryCacheSizeBytes));
         builder.setBitmapPool(new LruBitmapPool(bitmapPoolSizeBytes));
     }
 
+    @Override
+    protected void onLoadingStateChanged(@NonNull LoadingState state) {
+        super.onLoadingStateChanged(state);
+        switch (state){
+
+            case FINISHED:
+                Log.d("PAGING_LOG","CARREGADO");
+                break;
+
+            case LOADED:
+                Log.d("PAGING_LOG","Total de itens: "+getItemCount());
+                break;
+
+            case LOADING_INITIAL:
+                Log.d("PAGING_LOG","Carregando inicial");
+                break;
+
+            case LOADING_MORE:
+                Log.d("PAGING_LOG","Carregando mais...");
+                break;
+
+            case ERROR:
+                Log.d("PAGING_LOG","Erro. ");
+                break;
+        }
+    }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderFotoPostada holder, int position) {
-    FotoPostada fotoPostada = fotoPostadaList.get(position);
-    posicao = position;
-    firebaseUser = UsuarioFirebase.getUsuarioAtual();
-
+    protected void onBindViewHolder(@NonNull ViewHolderFoto holder, int position, @NonNull FotoPostada fotoPostada) {
+        FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
 
         RequestOptions reqOpt = RequestOptions
                 .fitCenterTransform()
@@ -94,35 +118,34 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                 .disallowHardwareConfig()
                 .override(holder.imagemPostadaHome.getWidth(),holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
 
-    applyOptions(context,new GlideBuilder());
+        applyOptions(context,new GlideBuilder());
 
-    //USUARIOS
-    Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
+        //USUARIOS
+        Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
 
         Glide.with(context).load(fotoUri).thumbnail(0.1f).apply(reqOpt).priority(Priority.IMMEDIATE).into(holder.imagemPostadaHome);
 
         if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {
-        holder.descricaoHome.setVisibility(View.GONE);
-    } else {
-        holder.descricaoHome.setVisibility(View.VISIBLE);
-        holder.descricaoHome.setText(fotoPostada.getDescricaoImagemPostada());
-    }
-
-    if (fotoPostada.getDataPostada()!= null){
-        if (fotoPostada.getDataPostada().equalsIgnoreCase("") || fotoPostada.getDataPostada() == null) {
-            holder.dataPostada.setVisibility(View.GONE);
+            holder.descricaoHome.setVisibility(View.GONE);
         } else {
-            holder.dataPostada.setVisibility(View.VISIBLE);
-            holder.dataPostada.setText(fotoPostada.getDataPostada());
+            holder.descricaoHome.setVisibility(View.VISIBLE);
+            holder.descricaoHome.setText(fotoPostada.getDescricaoImagemPostada());
         }
-    }
 
+        if (fotoPostada.getDataPostada()!= null){
+            if (fotoPostada.getDataPostada().equalsIgnoreCase("") || fotoPostada.getDataPostada() == null) {
+                holder.dataPostada.setVisibility(View.GONE);
+            } else {
+                holder.dataPostada.setVisibility(View.VISIBLE);
+                holder.dataPostada.setText(fotoPostada.getDataPostada());
+            }
+        }
 
-    informacoesPublicacao(holder.fotoPerfilHome, holder.nomeUsuarioHome, holder.postadaPorHome, fotoPostada.getIdUsuarioPostou());
+        informacoesPublicacao(holder.fotoPerfilHome, holder.nomeUsuarioHome, holder.postadaPorHome, fotoPostada.getIdUsuarioPostou());
 
-    //CURTIDAS
-    estaCurtido(fotoPostada.getIdPostagem(),holder.likeButtonHome);
-    quantidadeLikes(holder.qtLikesHome,fotoPostada.getIdPostagem());
+        //CURTIDAS
+        estaCurtido(fotoPostada.getIdPostagem(),holder.likeButtonHome);
+        quantidadeLikes(holder.qtLikesHome,fotoPostada.getIdPostagem());
 
         //LIKES
         holder.likeButtonHome.setOnLikeListener(new OnLikeListener() {
@@ -162,6 +185,8 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
                 addNovaNotificacaoSalvar(fotoPostada.getIdUsuarioPostou(),fotoPostada.getIdPostagem());
 
+
+
             }else{
                 ConfiguracaoFirebase.getReferenciaDatabase().child("SalvarFotos")
                         .child(firebaseUser.getUid())
@@ -176,10 +201,10 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         //SEGUIDORES
         holder.qtLikesHome.setOnClickListener(v -> {
 
-                    Intent intent = new Intent(context, SeguidoresActivity.class);
-                    intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
-                    intent.putExtra("titulo","Curtir");
-                    context.startActivity(intent);
+            Intent intent = new Intent(context, SeguidoresActivity.class);
+            intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
+            intent.putExtra("titulo","Curtir");
+            context.startActivity(intent);
 
         });
 
@@ -212,11 +237,11 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
         //POSTAGEM DETALHES
         holder.imagemPostadaHome.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
             editor.putString("idPostagem",fotoPostada.getIdPostagem());
             editor.apply();
 
-           ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).
+            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).
                     replace(R.id.fragment_container_principal_StartAct,new PostagemUsuarioFragment()).commit();
 
 
@@ -266,9 +291,9 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                 }
             });
             builder.setNegativeButton(R.string.cancelar, (dialog, which) -> {
-                    Snackbar.make(v,"Ufa, uma postagem fofa dessas deveria ser suuuper vista, não acha?",Snackbar.LENGTH_LONG).
-                    show();
-                    dialog.dismiss();
+                Snackbar.make(v,"Ufa, uma postagem fofa dessas deveria ser suuuper vista, não acha?",Snackbar.LENGTH_LONG).
+                        show();
+                dialog.dismiss();
             });
 
             Dialog dialog = builder.create();
@@ -278,11 +303,13 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
     }
 
-    @Override
-    public int getItemCount() {
-        return fotoPostadaList.size();
-    }
 
+    @NonNull
+    @Override
+    public ViewHolderFoto onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_homefragment_post,parent,false);
+        return new ViewHolderFoto(view);
+    }
 
     private void informacoesPublicacao(CircleImageView imagemPerfil,TextView nomeUsuario, TextView publicadoPor, String userId){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").child(userId);
@@ -294,7 +321,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
                 if (usuario.getUriCaminhoFotoPetUsuario() != null){
                     Uri uriFotoPerfil = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
-                   // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
+                    // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                     Glide.with(context).load(uriFotoPerfil).priority(Priority.IMMEDIATE).into(imagemPerfil);
                 }else{
                     //Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
@@ -304,7 +331,6 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                 nomeUsuario.setText(usuario.getNomePetUsuario());
                 publicadoPor.setText(String.format("@%s", usuario.getNomePetUsuario().replace(" ", "")));
                 publicadoPor.setTextColor(context.getResources().getColor(R.color.escuroAzul));
-
 
             }
 
@@ -352,10 +378,8 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
     }
 
-
-
     private void fotoSalvar(String idPostagem, ImageView imagemSalva){
-        firebaseUser = UsuarioFirebase.getUsuarioAtual();
+        FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference salvarReference = reference.child("SalvarFotos").child(firebaseUser.getUid());
 
@@ -390,11 +414,11 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(user.getUid()).exists()){
-                       // likeButtonImage.setImageResource(R.drawable.ic_likebutton_colorido);
-                        likeButtonImage.setTag("curtido");
-                        likeButtonImage.setLiked(true);
+                    // likeButtonImage.setImageResource(R.drawable.ic_likebutton_colorido);
+                    likeButtonImage.setTag("curtido");
+                    likeButtonImage.setLiked(true);
                 }else{
-                   // likeButtonImage.setImageResource(R.drawable.ic_like_branco);
+                    // likeButtonImage.setImageResource(R.drawable.ic_like_branco);
                     likeButtonImage.setTag("curtir");
                     likeButtonImage.setLiked(false);
                 }
@@ -409,33 +433,36 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     }
 
     private void deletarPostagem(String idUsuario,String idPostagem){
-           DatabaseReference postsRef = ConfiguracaoFirebase.getReferenciaDatabase()
-                   .child("Posts").child(idPostagem);
 
-           postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-               @Override
-               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
+        DatabaseReference postsRef = ConfiguracaoFirebase.getReferenciaDatabase()
+                .child("Posts").child(idPostagem);
 
-                   if (idUsuario.equals(firebaseUser.getUid())){
-                       postsRef.removeValue().addOnCompleteListener(task -> {
-                           if (task.isSuccessful()){
-                               deletaNotificacao(idUsuario,idPostagem);
-                               alteraNotificacao(idUsuario,idPostagem);
-                               Toast.makeText(context, "Deletado com sucesso.", Toast.LENGTH_SHORT).show();
-                           }
-                       });
-                   }
+        postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-               }
+                if (idUsuario.equals(firebaseUser.getUid())){
+                    postsRef.removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            deletaNotificacao(idUsuario,idPostagem);
+                            alteraNotificacao(idUsuario,idPostagem);
+                            Toast.makeText(context, "Deletado com sucesso.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
 
-               @Override
-               public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
 
-               }
-           });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void addNovaNotificacao(String idUsuario,String idPostagem){
+        FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference notificacaoReference =  reference.child("Notificacao").
                 child(idUsuario);
@@ -451,6 +478,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     }
 
     private void alteraNotificacao(String idUsuario,String idPostagem){
+        FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference notificacaoReference =  reference.child("Notificacao").
                 child(idUsuario).child(idPostagem);
@@ -488,10 +516,11 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     }
 
     private void addNovaNotificacaoSalvar(String idUsuario,String idPostagem){
+        FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference notificacaoReference =  reference.child("Notificacao").
                 child(idUsuario);
-            //    child(idPostagem).child(idUsuario);
+        //    child(idPostagem).child(idUsuario);
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("idUsuario",firebaseUser.getUid());
         hashMap.put("comentarioFeito","Salvou sua postagem!");
@@ -502,7 +531,11 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
 
     }
 
-    public static class ViewHolderFotoPostada extends RecyclerView.ViewHolder {
+    public interface OnListItemClick{
+        void OnItemClick(DocumentSnapshot snapshot,int position);
+    }
+
+    public class ViewHolderFoto extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView descricaoHome;
         public TextView nomeUsuarioHome;
@@ -521,7 +554,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         public CircleImageView deletarPostagemHome;
 
 
-        public ViewHolderFotoPostada(@NonNull View itemView) {
+        public ViewHolderFoto(@NonNull View itemView) {
             super(itemView);
 
             descricaoHome = itemView.findViewById(R.id.descricao_HomeAdapter_id);
@@ -540,9 +573,16 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
             fotoPerfilHome = itemView.findViewById(R.id.imagem_perfilUsuario_HomeAdapter_id);
             deletarPostagemHome = itemView.findViewById(R.id.deletarPostagem_HomeAdapter);
             dataPostada = itemView.findViewById(R.id.dataPostagem_HomeAdapter);
+
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            onListItemClick.OnItemClick(getItem(getAdapterPosition()),getAdapterPosition());
         }
     }
-
 
 
 }

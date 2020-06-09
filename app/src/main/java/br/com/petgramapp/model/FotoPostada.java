@@ -1,6 +1,7 @@
 package br.com.petgramapp.model;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,7 +110,6 @@ public class FotoPostada {
         objeto.put("/Posts"+combinacaodeId+"/idPostagem",getIdPostagem());
         objeto.put("/Posts"+combinacaodeId+"/idUsuarioPostou",getIdUsuarioPostou());
         objeto.put("/Posts"+combinacaodeId+"/descricaoImagemPostada",getDescricaoImagemPostada());
-        objeto.put("/Posts"+combinacaodeId+"/descricaoImagemPostada",getDescricaoImagemPostada());
         objeto.put("/Posts"+combinacaodeId+"/dataPostada",getDataPostada());
 
         objeto.put("/Posts"+combinacaodeId+"/usuario/nomePetUsuario",getUsuario().getNomePetUsuario());
@@ -127,6 +127,31 @@ public class FotoPostada {
         firebaseRef.updateChildren(objeto);
         return true;
         }
+
+    public boolean salvarFotoPostadaFireStore() {
+
+        //objeto para atualização
+        Map objeto = new HashMap();
+        FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
+
+        //objeto.put("/Posts"+combinacaodeId+"/idPostagem",getIdPostagem());
+        objeto.put("imagemPostada",getImagemPostada());
+        objeto.put("idPostagem",getIdPostagem());
+        objeto.put("idUsuarioPostou",getIdUsuarioPostou());
+        objeto.put("descricaoImagemPostada",getDescricaoImagemPostada());
+        objeto.put("dataPostada",getDataPostada());
+
+        objeto.put("nomePetUsuario",getUsuario().getNomePetUsuario());
+        objeto.put("emailPetUsuario",getUsuario().getEmailPetUsuario());
+        objeto.put("uriCaminhoFotoPetUsuario",getUsuario().getUriCaminhoFotoPetUsuario());
+
+        firebaseFirestore.collection("Posts")
+                .document(getIdPostagem())
+                .set(objeto);
+
+
+        return true;
+    }
 
 
 

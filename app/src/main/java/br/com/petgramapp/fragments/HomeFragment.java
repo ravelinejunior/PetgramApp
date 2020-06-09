@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,8 +27,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +61,11 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerViewStories;
     private AdapterStories adapterStories;
     private List<Stories> storiesList = new ArrayList<>();
+    List<DocumentChange> documentChanges;
     FirebaseAuth firebaseAuth;
-
-
+    LinearLayoutManager linearLayout;
+    private FirebaseFirestore firebaseFirestore;
+    private DocumentSnapshot lastResultado;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +74,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         progressBarHomeFragment = view.findViewById(R.id.progressBar_HomeFragment);
         toolbar = view.findViewById(R.id.toolbar_HomeFragment_id);
+        firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
         toolbar.setTitle("Bem vindo "+UsuarioFirebase.getUsuarioAtual().getDisplayName());
@@ -81,7 +93,7 @@ public class HomeFragment extends Fragment {
         recyclerViewHomeFragment.setNestedScrollingEnabled(false);
 
         //inverter ordem das postagem (a mais atual)
-        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext());
+        linearLayout = new LinearLayoutManager(getContext());
         linearLayout.setReverseLayout(true);
         linearLayout.setStackFromEnd(true);
         recyclerViewHomeFragment.setLayoutManager(linearLayout);
@@ -100,9 +112,11 @@ public class HomeFragment extends Fragment {
             }
         },50);
 
+
         //receberPostagens();
 
-       checarUsuariosSeguidores();
+        checarUsuariosSeguidores();
+        /*receberPostagensFireStore();*/
 
         //STORIES
         recyclerViewStories = view.findViewById(R.id.recyclerView_Stories_HomeFragment_id);
@@ -139,10 +153,7 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
-
                     fotoPostadaList.add(fotoPostada);
-
-
 
                 }
 
@@ -156,14 +167,58 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+    private void receberPostagensFireStore() {
+
+     CollectionReference collectionReference = firebaseFirestore.collection("Posts");
+
+        Query query;
+        if (lastResultado == null){
+            query = collectionReference.
+                    orderBy("dataPostada", Query.Direction.DESCENDING).
+                    limit(10);
+        }else{
+            query = collectionReference.
+                    orderBy("dataPostada",Query.Direction.DESCENDING).
+                    startAfter(lastResultado).
+                    limit(10);
+        }
+
+       // firebaseFirestore.collection("Posts").
+       // query.orderBy("dataPostada",Query.Direction.DESCENDING).
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        fotoPostadaList.clear();
+                        documentChanges = queryDocumentSnapshots.getDocumentChanges();
+
+                        if (documentChanges != null){
+                            for (DocumentChange doc: documentChanges) {
+                                FotoPostada fotoPostada = doc.getDocument().toObject(FotoPostada.class);
+                                fotoPostadaList.add(fotoPostada);
+                            }
+                        }
+
+                        if (queryDocumentSnapshots.size() > 0){
+                            lastResultado = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                        }
+
+                        progressBarHomeFragment.setVisibility(View.GONE);
+                    }
+
+              });
+
+            adapterFotoPostada.notifyDataSetChanged();
+
+            }
+
 
     private void receberPostagensSeguidores() {
 
 
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
-        Query query = databaseReference;
 
-        query.addValueEventListener(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -188,32 +243,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-       /* databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                fotoPostadaList.clear();
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                    FotoPostada fotoPostada = ds.getValue(FotoPostada.class);
-                    for (String id:listaSeguidores){
-                        if (fotoPostada.getIdUsuarioPostou().equals(id)){
-                            fotoPostadaList.add(fotoPostada);
-                        }
-                    }
-                }
-
-                adapterFotoPostada.notifyDataSetChanged();
-                progressBarHomeFragment.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }*/
 
     private void readStories() {
         DatabaseReference usuariosReferencia = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios");
@@ -323,7 +353,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void deslogarUsuario() {
+    private void deslogarUsuario() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.deseja_sair_app);
         builder.setIcon(R.drawable.ic_pets_black_24dp);
@@ -363,12 +393,18 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getContext(), ChatJamActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }else if (item.getItemId() == R.id.chatNovo_Jam){
-            Intent intent = new Intent(getContext(), ChatJamActivity.class);
+        }else if (item.getItemId() == R.id.atualizar_update_MenuSair){
+
+            ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
+                    replace(R.id.fragment_container_principal_StartAct,new FirestoreHomeFragment()).commit();
+
+           /* Intent intent = new Intent(getContext(), FirestoreTestes.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            startActivity(intent);*/
+
         }
         return super.onOptionsItemSelected(item);
 
     }
+
 }

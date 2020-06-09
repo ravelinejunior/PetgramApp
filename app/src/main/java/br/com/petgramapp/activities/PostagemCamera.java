@@ -28,6 +28,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -58,6 +60,7 @@ public class PostagemCamera extends AppCompatActivity {
     private DatabaseReference usuarioLogadoRef;
     private DatabaseReference firebaseRef;
     ProgressDialog dialog;
+    private FirebaseFirestore firebaseFirestore;
 
     //usuarios
     private String idUsuarioLogado;
@@ -71,6 +74,7 @@ public class PostagemCamera extends AppCompatActivity {
 
         //CONFIGURAÇÕES INICIAIS
         firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
+        firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
         usuarioLogado = UsuarioFirebase.getUsuarioLogado();
         idUsuarioLogado = UsuarioFirebase.getIdentificadorUsuario();
         usuariosRef = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios");
@@ -138,6 +142,7 @@ public class PostagemCamera extends AppCompatActivity {
     private void uploadFotoPostagem(){
         abrirDialogCarregamento("Sua petFoto está sendo postada! Aguarde...");
         FotoPostada fotoPostada = new FotoPostada();
+        CollectionReference collectionReference = firebaseFirestore.collection("Posts");
 
         fotoPostada.setIdUsuarioPostou(idUsuarioLogado);
         fotoPostada.setDescricaoImagemPostada(Objects.requireNonNull(descricaoInputTextPostagem.getText()).toString());
@@ -187,6 +192,9 @@ public class PostagemCamera extends AppCompatActivity {
 
                     //salvando a foto no banco de dados
                     if (fotoPostada.salvarFotoPostada()){
+
+                        fotoPostada.salvarFotoPostadaFireStore();
+
                         //caso foto tenha sido postada com sucesso, atualizar numero de fotos postada
                         dialog.dismiss();
                         Toast.makeText(getContext(), "Foto postada com sucesso!", Toast.LENGTH_SHORT).show();
