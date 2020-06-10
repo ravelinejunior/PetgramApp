@@ -11,6 +11,13 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_searchContatos_MenuJam"
+        android:icon="@drawable/ic_prucurar_pessoa_branco"
+        android:orderInCategory="100"
+        android:title="@string/abc_search_hint"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/configuracoes_MenuJam"
         android:title="@string/congifura_es"
         app:showAsAction="never"

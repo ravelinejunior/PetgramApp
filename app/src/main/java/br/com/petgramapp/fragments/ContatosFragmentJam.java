@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.activities.GrupoContatosJam;
 import br.com.petgramapp.activities.TalksJamActivity;
 import br.com.petgramapp.adapter.AdapterContatosJam;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
@@ -44,6 +45,7 @@ public class ContatosFragmentJam extends Fragment {
     private CollectionReference usuarioCollection;
     private ListenerRegistration eventListener;
     private ProgressBar progressBarContatosJam;
+    private  List<Usuario> contatosLista = new ArrayList<>();
 
     public ContatosFragmentJam() {
         // Required empty public constructor
@@ -66,19 +68,51 @@ public class ContatosFragmentJam extends Fragment {
 
         adapterContatosJam = new AdapterContatosJam(getContext(),usuarioList);
         recyclerViewListaContatos.setAdapter(adapterContatosJam);
-        eventoRecyclerView(recyclerViewListaContatos,usuarioList);
-       /* //configuração do evento de clique da lista de contatos
+
+        //configuração do evento de clique da lista de contatos
         recyclerViewListaContatos.addOnItemTouchListener(new RecyclerItemClickListener(
                 getContext(), recyclerViewListaContatos, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(getContext(), TalksJamActivity.class);
-                Usuario usuarioSelecionado = usuarioList.get(position);
-                Usuario usuarioLogado = usuarioUnicoList.get(0);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("chatContato",usuarioSelecionado);
-                intent.putExtra("chatUsuarioLogado",usuarioLogado);
-                startActivity(intent);
+               if (contatosLista.size() > 0){
+
+                   Intent intent = new Intent(getContext(), TalksJamActivity.class);
+                   Usuario usuarioSelecionado = contatosLista.get(position);
+                   Usuario usuarioLogado = usuarioUnicoList.get(0);
+                   boolean cabecalho = usuarioSelecionado.getEmailPetUsuario().isEmpty();
+
+                   if (cabecalho){
+                    Intent i = new Intent(getActivity(), GrupoContatosJam.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                   }else{
+
+                       intent.putExtra("chatContato",usuarioSelecionado);
+                       intent.putExtra("chatUsuarioLogado",usuarioLogado);
+                       startActivity(intent);
+                       startActivity(intent);
+                       contatosLista.clear();
+                   }
+
+
+               }else{
+                   Intent intent = new Intent(getContext(), TalksJamActivity.class);
+                   Usuario usuarioSelecionado = usuarioList.get(position);
+                   Usuario usuarioLogado = usuarioUnicoList.get(0);
+                   boolean cabecalho = usuarioSelecionado.getEmailPetUsuario().isEmpty();
+
+                   if (cabecalho){
+                       Intent i = new Intent(getActivity(), GrupoContatosJam.class);
+                       i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                       startActivity(i);
+                   }else{
+                       intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                       intent.putExtra("chatContato",usuarioSelecionado);
+                       intent.putExtra("chatUsuarioLogado",usuarioLogado);
+                       startActivity(intent);
+                   }
+
+               }
             }
 
             @Override
@@ -91,8 +125,7 @@ public class ContatosFragmentJam extends Fragment {
 
             }
         }
-        ));*/
-
+        ));
 
 
         return view;
@@ -111,8 +144,15 @@ public class ContatosFragmentJam extends Fragment {
         eventListener.remove();
     }
 
+    public void adicionaHeader(){
+        Usuario itemGrupo = new Usuario();
+        itemGrupo.setNomePetUsuario("Novo Grupo");
+        itemGrupo.setEmailPetUsuario("");
+        usuarioList.add(itemGrupo);
+    }
+
     public void getContatosJam(String contato){
-        List<Usuario> contatosLista = new ArrayList<>();
+        contatosLista = new ArrayList<>();
         for (Usuario usu: usuarioList){
             String nomeUsuario = usu.getNomePetUsuario().toLowerCase();
             String emailUsuario = usu.getEmailPetUsuario().toLowerCase();
@@ -126,35 +166,8 @@ public class ContatosFragmentJam extends Fragment {
         recyclerViewListaContatos.setAdapter(adapterContatosJam);
         adapterContatosJam.notifyDataSetChanged();
 
-        eventoRecyclerView(recyclerViewListaContatos,contatosLista);
 
 
-
-       /* //configuração do evento de clique da lista de contatos
-        recyclerViewListaContatos.addOnItemTouchListener(new RecyclerItemClickListener(
-                getContext(), recyclerViewListaContatos, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(getContext(), TalksJamActivity.class);
-                Usuario usuarioSelecionado = contatosLista.get(position);
-                Usuario usuarioLogado = usuarioUnicoList.get(0);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("chatContato",usuarioSelecionado);
-                intent.putExtra("chatUsuarioLogado",usuarioLogado);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongItemClick() {
-
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        }
-        ));*/
     }
 
     public void reloadContatosJam(){
@@ -172,6 +185,7 @@ public class ContatosFragmentJam extends Fragment {
                 if (e != null) return;
 
                     usuarioList.clear();
+                    adicionaHeader();
 
                     for (DocumentSnapshot ds: queryDocumentSnapshots){
                         Usuario usuario = ds.toObject(Usuario.class);
@@ -201,37 +215,6 @@ public class ContatosFragmentJam extends Fragment {
                         }
 
                 });
-    }
-
-
-    public void eventoRecyclerView(RecyclerView recyclerView,List<Usuario> usuarios){
-        //configuração do evento de clique da lista de contatos
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(
-                getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(getContext(), TalksJamActivity.class);
-                Usuario usuarioSelecionado = usuarios.get(position);
-                Usuario usuarioLogado = usuarioUnicoList.get(0);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("chatContato",usuarioSelecionado);
-                intent.putExtra("chatUsuarioLogado",usuarioLogado);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongItemClick() {
-
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        }
-        ));
-
-
     }
 
 }

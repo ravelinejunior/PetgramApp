@@ -29,7 +29,17 @@
         android:roundIcon="@mipmap/launcherpet"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".testes.FirestoreTestes"></activity>
+
+        <activity
+            android:name=".activities.GrupoContatosJam"
+            android:label="Novo Grupo"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ChatJamActivity" />
+        </activity>
+
+        <activity android:name=".testes.FirestoreTestes" />
         <activity
             android:name=".activities.TalksJamActivity"
             android:label="@string/title_activity_talks_jam"

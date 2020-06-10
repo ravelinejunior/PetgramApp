@@ -1,6 +1,7 @@
 package br.com.petgramapp.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +40,19 @@ public class AdapterContatosJam extends RecyclerView.Adapter<AdapterContatosJam.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Usuario usuario = listUsuario.get(position);
+        boolean cabecalho = usuario.getEmailPetUsuario().isEmpty();
 
         holder.nomeUsuarioContato.setText(usuario.getNomePetUsuario());
         holder.emailUsuarioContato.setText(usuario.getEmailPetUsuario());
         if (usuario.getUriCaminhoFotoPetUsuario() != null) {
             Uri uriFoto = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
             Glide.with(context).load(uriFoto).priority(Priority.HIGH).frame(1000).into(holder.imagemPerfil);
+        }
+
+        if (cabecalho){
+            holder.imagemPerfil.setImageResource(R.drawable.ic_grupos_pessoas_azul);
+            holder.nomeUsuarioContato.setTextColor(Color.DKGRAY);
+            holder.emailUsuarioContato.setVisibility(View.GONE);
         }
     }
 

@@ -108,7 +108,7 @@ public class ChatJamActivity extends AppCompatActivity {
             }
         });
 
-/*
+
         //CONFIGURAÇÃO DO SEARCH VIEW PARA USUARIOS
         contatosSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -147,7 +147,7 @@ public class ChatJamActivity extends AppCompatActivity {
             }
         });
 
-    */
+
 
         updateToken();
     }
@@ -173,7 +173,8 @@ public class ChatJamActivity extends AppCompatActivity {
 
         //CONFIGURAÇÃO DO MENU PESQUISA
         MenuItem item = menu.findItem(R.id.action_search_MenuJam);
-        contatosSearchView.setMenuItem(item);
+        MenuItem item2 = menu.findItem(R.id.action_searchContatos_MenuJam);
+        contatosSearchView.setMenuItem(item2);
         contatosSearchView.setVoiceIcon(getDrawable(R.drawable.ic_action_voice_search));
 
         conversasSearchView.setMenuItem(item);
@@ -201,7 +202,7 @@ public class ChatJamActivity extends AppCompatActivity {
         toolbar.setTitle("Pet Talks");
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
-        contatosSearchView = findViewById(R.id.search_viewPrincipal);
+        contatosSearchView = findViewById(R.id.search_viewContatosPrincipal);
         conversasSearchView = findViewById(R.id.search_viewPrincipal);
 
 

@@ -23,6 +23,13 @@
 
         />
 
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_viewContatosPrincipal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        />
+
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/smartTabLayout"

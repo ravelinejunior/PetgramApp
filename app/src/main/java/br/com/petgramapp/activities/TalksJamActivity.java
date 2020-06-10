@@ -166,7 +166,8 @@ public class TalksJamActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-      super.onBackPressed();
+     Intent i = new Intent(TalksJamActivity.this,ChatJamActivity.class);
+     startActivity(i);
     }
 
     @Override
