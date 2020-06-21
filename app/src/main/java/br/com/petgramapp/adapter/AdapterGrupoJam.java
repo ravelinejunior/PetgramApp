@@ -18,6 +18,9 @@ import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.firebase.ui.firestore.paging.LoadingState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.com.petgramapp.R;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.Usuario;
@@ -25,6 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterGrupoJam extends FirestorePagingAdapter<Usuario,AdapterGrupoJam.MyViewHolder> {
     private Context context;
+    private List<Usuario> listaMembros = new ArrayList<>();
 
     public AdapterGrupoJam(@NonNull FirestorePagingOptions<Usuario> options) {
         super(options);
@@ -33,6 +37,12 @@ public class AdapterGrupoJam extends FirestorePagingAdapter<Usuario,AdapterGrupo
     public AdapterGrupoJam(@NonNull FirestorePagingOptions<Usuario> options, Context context) {
         super(options);
         this.context = context;
+    }
+
+    public AdapterGrupoJam(@NonNull FirestorePagingOptions<Usuario> options, Context context, List<Usuario> usuarios) {
+        super(options);
+        this.context = context;
+        this.listaMembros = usuarios;
     }
 
 
@@ -65,23 +75,23 @@ public class AdapterGrupoJam extends FirestorePagingAdapter<Usuario,AdapterGrupo
 
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Usuario usuario) {
-
+        Usuario usu = listaMembros.get(position);
         String idUsuarioLogado = UsuarioFirebase.getIdentificadorUsuario();
 
         boolean cabecalho = usuario.getEmailPetUsuario().isEmpty();
 
-        if (idUsuarioLogado.equalsIgnoreCase(usuario.getId())){
+        if (idUsuarioLogado.equalsIgnoreCase(usu.getId())){
             holder.emailUsuario.setVisibility(View.GONE);
             holder.nomeUsuario.setVisibility(View.GONE);
             holder.imagemPerfil.setVisibility(View.GONE);
             holder.divider.setVisibility(View.GONE);
         }else{
-            holder.nomeUsuario.setText(usuario.getNomePetUsuario());
-            holder.emailUsuario.setText(usuario.getEmailPetUsuario());
+            holder.nomeUsuario.setText(usu.getNomePetUsuario());
+            holder.emailUsuario.setText(usu.getEmailPetUsuario());
 
 
-            if (usuario.getUriCaminhoFotoPetUsuario() != null) {
-                Uri uriFoto = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
+            if (usu.getUriCaminhoFotoPetUsuario() != null) {
+                Uri uriFoto = Uri.parse(usu.getUriCaminhoFotoPetUsuario());
                 Glide.with(context).load(uriFoto).priority(Priority.HIGH).frame(1000).into(holder.imagemPerfil);
             }
 
@@ -92,6 +102,9 @@ public class AdapterGrupoJam extends FirestorePagingAdapter<Usuario,AdapterGrupo
             holder.nomeUsuario.setTextColor(Color.DKGRAY);
             holder.emailUsuario.setVisibility(View.GONE);
         }
+
+        //CRIAR EVENTO DE CLIQUE
+
 
 
     }

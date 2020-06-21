@@ -16,14 +16,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,6 +67,11 @@ public class HomeFragment extends Fragment {
     LinearLayoutManager linearLayout;
     private FirebaseFirestore firebaseFirestore;
     private DocumentSnapshot lastResultado;
+   private static final int TOTAL_ITENS = 7;
+    RecyclerView recyclerViewHomeFragment;
+   private int mCurrentPage = 1;
+   private SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,12 +81,11 @@ public class HomeFragment extends Fragment {
         progressBarHomeFragment = view.findViewById(R.id.progressBar_HomeFragment);
         toolbar = view.findViewById(R.id.toolbar_HomeFragment_id);
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh_Home);
 
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
         toolbar.setTitle("Bem vindo "+UsuarioFirebase.getUsuarioAtual().getDisplayName());
         toolbar.setLogo(R.drawable.ic_pets_white_24dp);
-        toolbar.setPadding(15,0,0,0);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getContext(),R.color.branco));
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -88,7 +93,7 @@ public class HomeFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         //FEED
-        RecyclerView recyclerViewHomeFragment = view.findViewById(R.id.recyclerView_HomeFragment_id);
+        recyclerViewHomeFragment = view.findViewById(R.id.recyclerView_HomeFragment_id);
         recyclerViewHomeFragment.setHasFixedSize(true);
         recyclerViewHomeFragment.setNestedScrollingEnabled(false);
 
@@ -113,10 +118,18 @@ public class HomeFragment extends Fragment {
         },50);
 
 
-        //receberPostagens();
+     //  checarUsuariosSeguidores();
+        loadPosts();
 
-        checarUsuariosSeguidores();
-        /*receberPostagensFireStore();*/
+       swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+           @Override
+           public void onRefresh() {
+               mCurrentPage++;
+               onItemsLoadComplete();
+               loadPosts();
+               fotoPostadaList.clear();
+           }
+       });
 
         //STORIES
         recyclerViewStories = view.findViewById(R.id.recyclerView_Stories_HomeFragment_id);
@@ -140,10 +153,50 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void receberPostagens() {
+    private void loadPosts(){
+        DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase()
+                .child("Posts");
+
+        com.google.firebase.database.Query query = databaseReference.limitToLast(mCurrentPage*TOTAL_ITENS);
+
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+              //  fotoPostadaList.clear();
+                FotoPostada fotoPostada = dataSnapshot.getValue(FotoPostada.class);
+                fotoPostadaList.add(fotoPostada);
+                recyclerViewHomeFragment.scrollToPosition(fotoPostadaList.size() - 1);
+                adapterFotoPostada.notifyDataSetChanged();
+                progressBarHomeFragment.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void receberPostagens(@Nullable String nodeId ) {
 
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
-
        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -164,9 +217,54 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+
             }
         });
     }
+
+
+    void onItemsLoadComplete() {
+        // Update the adapter and notify data set changed
+        // ...
+
+        // Stop refresh animation
+
+    }
+
+     /* private void getUsers(String nodeId) {
+        Query query;
+
+        if (nodeId == null)
+            query = FirebaseDatabase.getInstance().getReference()
+                    .child(Consts.FIREBASE_DATABASE_LOCATION_USERS)
+                    .orderByKey()
+                    .limitToFirst(mPostsPerPage);
+        else
+            query = FirebaseDatabase.getInstance().getReference()
+                    .child(Consts.FIREBASE_DATABASE_LOCATION_USERS)
+                    .orderByKey()
+                    .startAt(nodeId)
+                    .limitToFirst(mPostsPerPage);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserModel user;
+                List<UserModel> userModels = new ArrayList<>();
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    userModels.add(userSnapshot.getValue(UserModel.class));
+                }
+
+                mAdapter.addAll(userModels);
+                mIsLoading = false;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                mIsLoading = false;
+            }
+        });
+    }*/
 
     private void receberPostagensFireStore() {
 
@@ -337,7 +435,7 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     listaIdUsuarios.add(dataSnapshot1.getKey());
                 }
-                receberPostagens();
+                receberPostagens(null);
             }
 
             @Override
@@ -395,8 +493,17 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         }else if (item.getItemId() == R.id.atualizar_update_MenuSair){
 
-            ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
+/*
+            mCurrentPage++;
+            onItemsLoadComplete();
+            loadPosts();
+            fotoPostadaList.clear();*/
+
+
+            ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction().
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
                     replace(R.id.fragment_container_principal_StartAct,new FirestoreHomeFragment()).commit();
+
 
            /* Intent intent = new Intent(getContext(), FirestoreTestes.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);

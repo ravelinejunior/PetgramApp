@@ -2,6 +2,7 @@ package br.com.petgramapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import br.com.petgramapp.model.Usuario;
 
 public class ConversasFragmentJam extends Fragment {
     Query query;
+    List<Conversas> conversasLista = new ArrayList<>();
     private List<Conversas> conversasList = new ArrayList<>();
     private AdapterConversasJam adapterConversasJam;
     private RecyclerView recyclerViewConversasJam;
@@ -43,7 +45,6 @@ public class ConversasFragmentJam extends Fragment {
     private Task<QuerySnapshot> eventListener;
     private CollectionReference usuarioCollection;
     private List<Usuario> usuarioList = new ArrayList<>();
-    List<Conversas> conversasLista = new ArrayList<>();
     private ProgressBar progressBarConversasJam;
 
 
@@ -66,32 +67,56 @@ public class ConversasFragmentJam extends Fragment {
         recyclerViewConversasJam.setLayoutManager(linearLayoutManager);
         recyclerViewConversasJam.setHasFixedSize(true);
 
-        adapterConversasJam = new AdapterConversasJam(getContext(),conversasList);
+        adapterConversasJam = new AdapterConversasJam(getContext(), conversasList);
         recyclerViewConversasJam.setAdapter(adapterConversasJam);
 
         reference = firebaseFirestore.collection("Talks")
-                                .document("Conversas")
-        .collection(idUsuarioRemetente);
+                .document("Conversas")
+                .collection(idUsuarioRemetente);
 
         recyclerViewConversasJam.addOnItemTouchListener(new RecyclerItemClickListener(
                 getContext(), recyclerViewConversasJam, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if (conversasLista.size() > 0){
+                if (conversasLista.size() > 0) {
                     Conversas conversas = conversasLista.get(position);
-                    Intent i = new Intent(getActivity(), TalksJamActivity.class);
-                    Usuario usuarioLogado = usuarioList.get(0);
-                    i.putExtra("chatContato",conversas.getUsuario());
-                    i.putExtra("chatUsuarioLogado",usuarioLogado);
-                    startActivity(i);
-                    conversasLista.clear();
-                }else{
+
+                    //verificar se conversa clicada é de um grupo
+                    if (conversas.getIsGroup().equals("true")) {
+                        Intent i = new Intent(getActivity(), TalksJamActivity.class);
+                        Usuario usuarioLogado = usuarioList.get(0);
+                        i.putExtra("chatGrupo", (Parcelable) conversas.getGrupoJam());
+                        i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        startActivity(i);
+                        conversasLista.clear();
+
+                    } else {
+                        Intent i = new Intent(getActivity(), TalksJamActivity.class);
+                        Usuario usuarioLogado = usuarioList.get(0);
+                        i.putExtra("chatContato", conversas.getUsuario());
+                        i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        startActivity(i);
+                        conversasLista.clear();
+                    }
+
+
+                } else {
                     Conversas conversas = conversasList.get(position);
-                    Intent i = new Intent(getActivity(), TalksJamActivity.class);
-                    Usuario usuarioLogado = usuarioList.get(0);
-                    i.putExtra("chatContato",conversas.getUsuario());
-                    i.putExtra("chatUsuarioLogado",usuarioLogado);
-                    startActivity(i);
+                    //verificar se conversa clicada é de um grupo
+                    if (conversas.getIsGroup().equals("true")) {
+                        Intent i = new Intent(getActivity(), TalksJamActivity.class);
+                        Usuario usuarioLogado = usuarioList.get(0);
+                        i.putExtra("chatGrupo", (Parcelable) conversas.getGrupoJam());
+                        i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        startActivity(i);
+                    } else {
+                        Intent i = new Intent(getActivity(), TalksJamActivity.class);
+                        Usuario usuarioLogado = usuarioList.get(0);
+                        i.putExtra("chatContato", conversas.getUsuario());
+                        i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        startActivity(i);
+                    }
+
                 }
 
             }
@@ -132,66 +157,70 @@ public class ConversasFragmentJam extends Fragment {
         super.onResume();
     }
 
-    public void pesquisarConversas(String texto){
-      //  Log.d("queryTextPesquisa",texto.toString());
+    public void pesquisarConversas(String texto) {
+        //  Log.d("queryTextPesquisa",texto.toString());
         conversasLista = new ArrayList<>();
-        for (Conversas conversas: conversasList){
+        for (Conversas conversas : conversasList) {
 
             String nomeUsuario = conversas.getUsuario().getNomePetUsuario().toLowerCase();
             String ultimaMensagem = conversas.getUltimaMensagem().toLowerCase();
 
-            if (nomeUsuario.contains(texto) || ultimaMensagem.contains(texto)){
+            if (nomeUsuario.contains(texto) || ultimaMensagem.contains(texto)) {
                 conversasLista.add(conversas);
             }
 
         }
 
-        adapterConversasJam = new AdapterConversasJam(getContext(),conversasLista);
+        adapterConversasJam = new AdapterConversasJam(getContext(), conversasLista);
         recyclerViewConversasJam.setAdapter(adapterConversasJam);
         adapterConversasJam.notifyDataSetChanged();
 
 
     }
 
-    public void readConversas(){
+    public void readConversas() {
 
-      conversasList.clear();
-      eventListener = reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-          @Override
-          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+        conversasList.clear();
+        eventListener = reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-              reference.orderBy("timeStamp", Query.Direction.DESCENDING)
-                      .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                  @Override
-                  public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                      for (DocumentSnapshot ds: queryDocumentSnapshots){
-                          Conversas conversas = ds.toObject(Conversas.class);
+                reference.orderBy("timeStamp", Query.Direction.DESCENDING)
+                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot ds : queryDocumentSnapshots) {
+                            Conversas conversas = ds.toObject(Conversas.class);
 
-                          if (conversas.getUsuario().getId().equals(UsuarioFirebase.getIdentificadorUsuario()))
-                              continue;
+                            if (conversas.getIsGroup().equals("false")) {
 
-                          conversasList.add(conversas);
-                      }
+                                if (conversas.getUsuario().getId().equals(UsuarioFirebase.getIdentificadorUsuario()))
+                                    continue;
+                            }
 
-                      adapterConversasJam.notifyDataSetChanged();
-                      progressBarConversasJam.setVisibility(View.GONE);
-                  }
-              });
+                            conversasList.add(conversas);
 
-          }
+                        }
 
-      });
+                        adapterConversasJam.notifyDataSetChanged();
+                        progressBarConversasJam.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+
+        });
 
     }
 
-    public void reloadConversas(){
+    public void reloadConversas() {
         conversasLista.clear();
-        adapterConversasJam = new AdapterConversasJam(getContext(),conversasList);
+        adapterConversasJam = new AdapterConversasJam(getContext(), conversasList);
         recyclerViewConversasJam.setAdapter(adapterConversasJam);
         adapterConversasJam.notifyDataSetChanged();
     }
 
-    public void recuperarContatoAtual(){
+    public void recuperarContatoAtual() {
         usuarioCollection = firebaseFirestore.collection("Usuarios");
         usuarioCollection.document(UsuarioFirebase.getIdentificadorUsuario())
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

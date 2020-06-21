@@ -48,7 +48,6 @@
                 android:gravity="center_vertical"
                 android:padding="2dp"
                 android:text="@string/email"
-                android:textColor="@color/textColor_padrao"
                 />
 
 

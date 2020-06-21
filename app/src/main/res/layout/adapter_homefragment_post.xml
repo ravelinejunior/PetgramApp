@@ -80,7 +80,7 @@
         <ImageView
             android:id="@+id/imagemPostada_HomeAdapter_id"
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="400dp"
             android:background="@color/branco"
             android:elevation="10dp"
             android:longClickable="true"
@@ -91,15 +91,11 @@
 
     </androidx.cardview.widget.CardView>
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
        >
-
-
 
         <com.like.LikeButton
             android:id="@+id/likeButton_HomeAdapter_id"

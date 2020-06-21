@@ -29,7 +29,16 @@
         android:roundIcon="@mipmap/launcherpet"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.CadastroGrupoConversasJam"
+            android:label="@string/title_activity_cadastro_grupo_conversas_jam"
+            android:theme="@style/AppTheme.NoActionBar">
 
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.GrupoContatosJam" />
+
+        </activity>
         <activity
             android:name=".activities.GrupoContatosJam"
             android:label="Novo Grupo"
@@ -38,7 +47,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ChatJamActivity" />
         </activity>
-
         <activity android:name=".testes.FirestoreTestes" />
         <activity
             android:name=".activities.TalksJamActivity"

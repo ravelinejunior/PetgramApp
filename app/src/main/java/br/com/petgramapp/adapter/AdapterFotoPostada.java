@@ -64,6 +64,17 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         this.context = c;
     }
 
+    public void addAll(List<FotoPostada> fotosNovas) {
+        int initialSize = fotoPostadaList.size();
+        fotoPostadaList.addAll(fotosNovas);
+        notifyItemRangeInserted(initialSize, fotosNovas.size());
+    }
+
+    public String getLastItemId() {
+        return fotoPostadaList.get(fotoPostadaList.size() - 1).getIdPostagem();
+    }
+
+
     @NonNull
     @Override
     public ViewHolderFotoPostada onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -99,7 +110,12 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     //USUARIOS
     Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
 
-        Glide.with(context).load(fotoUri).thumbnail(0.1f).apply(reqOpt).priority(Priority.IMMEDIATE).into(holder.imagemPostadaHome);
+        Glide.with(context).
+                load(fotoUri).
+                thumbnail(0.1f).
+                diskCacheStrategy(DiskCacheStrategy.ALL).
+                priority(Priority.IMMEDIATE).
+                into(holder.imagemPostadaHome);
 
         if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {
         holder.descricaoHome.setVisibility(View.GONE);

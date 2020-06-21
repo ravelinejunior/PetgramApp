@@ -86,6 +86,10 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="atualizar">Atualizar</string>
     <string name="title_activity_grupo_contatos_jam">GrupoContatosJam</string>
+    <string name="title_activity_cadastro_grupo_conversas_jam">CadastroGrupoConversasJam</string>
+    <string name="nome_do_grupo">Nome do Grupo</string>
+    <string name="escolha_um_nome_deveras_criativo_para_seu_grupo_e_uma_imagem_opcional">Escolha um nome deveras criativo para seu grupo e uma imagem opcional.</string>
+    <string name="participantes">Participantes</string>
 
 
 </resources>

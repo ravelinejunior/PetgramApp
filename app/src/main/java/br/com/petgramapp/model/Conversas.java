@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +16,16 @@ import java.util.Map;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 
-public class Conversas implements Parcelable {
+public class Conversas implements Parcelable, Serializable {
 
+
+    private String idRemetente;
+    private String idDestinatario;
+    private String ultimaMensagem;
+    private String dataEnvio;
+    private Long timeStamp;
+    private Usuario usuario;
+    private List<Usuario> usuarioUnicoList = new ArrayList<>();
     public static final Creator<Conversas> CREATOR = new Creator<Conversas>() {
         @Override
         public Conversas createFromParcel(Parcel in) {
@@ -28,13 +37,8 @@ public class Conversas implements Parcelable {
             return new Conversas[size];
         }
     };
-    private String idRemetente;
-    private String idDestinatario;
-    private String ultimaMensagem;
-    private String dataEnvio;
-    private Long timeStamp;
-    private Usuario usuario;
-    private List<Usuario> usuarioUnicoList = new ArrayList<>();
+    private String isGroup;
+
 
     public Conversas(String idRemetente, String idDestinatario, String ultimaMensagem, String dataEnvio, Long timeStamp, Usuario usuario) {
         this.idRemetente = idRemetente;
@@ -44,9 +48,10 @@ public class Conversas implements Parcelable {
         this.timeStamp = timeStamp;
         this.usuario = usuario;
     }
+    private GrupoJam grupoJam;
 
     public Conversas() {
-
+        this.setIsGroup("false");
     }
 
     protected Conversas(Parcel in) {
@@ -60,6 +65,8 @@ public class Conversas implements Parcelable {
             timeStamp = in.readLong();
         }
         usuario = in.readParcelable(Usuario.class.getClassLoader());
+        usuarioUnicoList = in.createTypedArrayList(Usuario.CREATOR);
+        isGroup = in.readString();
     }
 
     public String getIdRemetente() {
@@ -110,15 +117,31 @@ public class Conversas implements Parcelable {
         this.usuario = usuario;
     }
 
-    public void salvarConversa(){
+    public String getIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(String isGroup) {
+        this.isGroup = isGroup;
+    }
+
+    public GrupoJam getGrupoJam() {
+        return grupoJam;
+    }
+
+    public void setGrupoJam(GrupoJam grupoJam) {
+        this.grupoJam = grupoJam;
+    }
+
+    public void salvarConversa() {
         FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
-        Map<String,Object> hash = new HashMap<>();
-        hash.put("idRemetente",this.idRemetente);
-        hash.put("idDestinatario",this.idDestinatario);
-        hash.put("ultimaMensagem",this.ultimaMensagem);
-        hash.put("dataEnvio",this.dataEnvio);
-        hash.put("timeStamp",this.timeStamp);
-        hash.put("usuario",this.usuario);
+        Map<String, Object> hash = new HashMap<>();
+        hash.put("idRemetente", this.idRemetente);
+        hash.put("idDestinatario", this.idDestinatario);
+        hash.put("ultimaMensagem", this.ultimaMensagem);
+        hash.put("dataEnvio", this.dataEnvio);
+        hash.put("timeStamp", this.timeStamp);
+        hash.put("usuario", this.usuario);
 
         firebaseFirestore.collection("Talks")
                 .document("Conversas")
@@ -127,7 +150,7 @@ public class Conversas implements Parcelable {
 
     }
 
-    public void salvarConversaOutroUsuario(Usuario usuario){
+    public void salvarConversaOutroUsuario(Usuario usuario) {
         FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
         Usuario uLogado = UsuarioFirebase.getUsuarioLogado();
@@ -136,15 +159,16 @@ public class Conversas implements Parcelable {
         firebaseFirestore.collection("Talks")
                 .document("Conversas")
                 .collection(this.idDestinatario)
-                .document(this.idRemetente).set(this);
+                .document(this.idRemetente)
+                .set(this);
 
     }
 
-    public void recuperarContatoAtual(){
-    FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
+    public void recuperarContatoAtual() {
+        FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
-            firebaseFirestore.collection("Usuarios")
-                 .document(UsuarioFirebase.getIdentificadorUsuario())
+        firebaseFirestore.collection("Usuarios")
+                .document(UsuarioFirebase.getIdentificadorUsuario())
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -156,6 +180,7 @@ public class Conversas implements Parcelable {
 
         });
     }
+
 
     @Override
     public int describeContents() {
@@ -175,6 +200,8 @@ public class Conversas implements Parcelable {
             dest.writeLong(timeStamp);
         }
         dest.writeParcelable(usuario, flags);
+        dest.writeTypedList(usuarioUnicoList);
+        dest.writeString(isGroup);
     }
 }
 

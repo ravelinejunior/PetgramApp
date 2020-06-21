@@ -17,11 +17,12 @@ import java.util.List;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.model.Conversas;
+import br.com.petgramapp.model.GrupoJam;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterConversasJam extends RecyclerView.Adapter<AdapterConversasJam.MyViewHolder> {
-private Context context;
-private List<Conversas> listConversas;
+    private Context context;
+    private List<Conversas> listConversas;
 
     public AdapterConversasJam(Context context, List<Conversas> listConversas) {
         this.context = context;
@@ -31,29 +32,50 @@ private List<Conversas> listConversas;
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.adapter_conversas_jam,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_conversas_jam, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Conversas conversas = listConversas.get(position);
-
-        holder.nomeUsuario.setText(conversas.getUsuario().getNomePetUsuario());
         holder.ultimaMensagem.setText(conversas.getUltimaMensagem());
         holder.dataEnvio.setText(conversas.getDataEnvio());
 
-        if (conversas.getUsuario() != null){
-            if (conversas.getUsuario().getUriCaminhoFotoPetUsuario() != null){
-                Uri uriImagem = Uri.parse(conversas.getUsuario().getUriCaminhoFotoPetUsuario());
+        //validar os grupos
+        if (conversas.getIsGroup().equals("true")) {
+            GrupoJam grupoJam = conversas.getGrupoJam();
+            holder.nomeUsuario.setText(grupoJam.getNomeGrupo());
+
+            if (grupoJam.getFotoGrupo() != null) {
+                Uri uriImagem = Uri.parse(grupoJam.getFotoGrupo());
                 Glide.with(context).load(uriImagem).dontAnimate().priority(Priority.IMMEDIATE).into(holder.imagemPerfil);
+            } else {
+                Glide.with(context).load(R.drawable.ic_person_black_preto).dontAnimate()
+                        .priority(Priority.IMMEDIATE).into(holder.imagemPerfil);
             }
-        }else{
-            Glide.with(context).load(R.drawable.ic_person_black_preto).dontAnimate()
-                    .priority(Priority.IMMEDIATE).into(holder.imagemPerfil);
+
+        } else {
+
+            //verificar se usuario é diferente de nulo para exibir mensagem de grupo
+            if (conversas.getUsuario() != null) {
+
+                holder.nomeUsuario.setText(conversas.getUsuario().getNomePetUsuario());
+                if (conversas.getUsuario() != null) {
+                    if (conversas.getUsuario().getUriCaminhoFotoPetUsuario() != null) {
+                        Uri uriImagem = Uri.parse(conversas.getUsuario().getUriCaminhoFotoPetUsuario());
+                        Glide.with(context).load(uriImagem).dontAnimate().priority(Priority.IMMEDIATE).into(holder.imagemPerfil);
+                    }
+
+                } else {
+                    Glide.with(context).load(R.drawable.ic_person_black_preto).dontAnimate()
+                            .priority(Priority.IMMEDIATE).into(holder.imagemPerfil);
+                }
+            }else{
+
+            }
+
         }
-
-
 
     }
 
@@ -62,7 +84,7 @@ private List<Conversas> listConversas;
         return listConversas.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView nomeUsuario;
         public TextView dataEnvio;
         public TextView ultimaMensagem;

@@ -24,23 +24,23 @@
             app:subtitleTextColor="@color/branco"
             app:titleTextColor="@color/branco">
 
-
-            <RelativeLayout
-                android:id="@+id/relativeLayout_homeFrag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-            </RelativeLayout>
-
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh_FirestoreHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actionBar_HomeFragment_id"
+        android:layout_centerHorizontal="true"
+        >
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScroll_HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/actionBar_HomeFragment_id"
+        android:layout_below="@id/swipeRefresh_FirestoreHome"
         >
 
         <LinearLayout
@@ -73,11 +73,15 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <ProgressBar
         android:id="@+id/progressBar_HomeFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_centerInParent="true"
+        android:visibility="visible"
         />
 
 </RelativeLayout>
