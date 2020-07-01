@@ -42,6 +42,7 @@ import com.like.OnLikeListener;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 
 import br.com.petgramapp.R;
 import br.com.petgramapp.activities.ComentariosActivity;
@@ -58,6 +59,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,AdapterFirestore.ViewHolderFoto> {
         public Context context;
         public OnListItemClick onListItemClick;
+        public List<FotoPostada> fotoPostadaList;
 
     public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options) {
         super(options);
@@ -74,11 +76,22 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         this.context = context;
     }
 
+    public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options, Context context, List<FotoPostada> fotoPostadaList) {
+        super(options);
+        this.context = context;
+        this.fotoPostadaList = fotoPostadaList;
+    }
+
     public void applyOptions(Context context, GlideBuilder builder) {
         int bitmapPoolSizeBytes = 0; // 0mb
         int memoryCacheSizeBytes = 0; // 0mb
         builder.setMemoryCache(new LruResourceCache(memoryCacheSizeBytes));
         builder.setBitmapPool(new LruBitmapPool(bitmapPoolSizeBytes));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     @Override

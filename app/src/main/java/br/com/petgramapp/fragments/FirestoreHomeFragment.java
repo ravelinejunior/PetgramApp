@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -38,6 +41,9 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +54,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
@@ -86,20 +93,22 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
     private FirebaseFirestore firebaseFirestore;
     private static final int TOTAL_ITENS = 7;
     FirebaseRecyclerPagingAdapter<FotoPostada, ViewHolderFoto> adapter;
-    //private FirestorePagingAdapter adapter;
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private int mCurrentPage = 1;
     private RecyclerView recyclerViewFirestore;
 
 
     private AdapterFirestore adapterFirestore;
+    private DocumentSnapshot lastVisible;
+    private boolean isScrolling;
+    private boolean isLastItemReached;
 
     @Override
     public View onCreateView(
         LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
 
         View view = inflater.inflate(R.layout.fragment_home_firestore_adapter, container, false);
-
 
         progressBarHomeFragment = view.findViewById(R.id.progressBar_HomeFragment);
         toolbar = view.findViewById(R.id.toolbar_HomeFragment_id);
@@ -112,60 +121,36 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
-        toolbar.setTitle("Bem vindo "+ UsuarioFirebase.getUsuarioAtual().getDisplayName());
+        toolbar.setTitle(" Bem vindo");
         toolbar.setLogo(R.drawable.ic_pets_white_24dp);
         toolbar.setPadding(15,0,0,0);
         toolbar.setTitleTextColor(ContextCompat.getColor(getContext(),R.color.branco));
 
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
 
         //query
-        Query query = firebaseFirestore.collection("Posts").orderBy("dataPostada", Query.Direction.DESCENDING);
+        Query query = firebaseFirestore.collection("Posts")
+                .orderBy("dataPostada", Query.Direction.DESCENDING);
+               // .limitToLast(25);
 
 
         com.google.firebase.database.Query query1 = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
-              //  .limitToLast(mCurrentPage*TOTAL_ITENS);
 
-
-
-      /*  //PAGINATION
+       //PAGINATION
         PagedList.Config config = new PagedList.Config.Builder()
-                .setInitialLoadSizeHint(1)
-                .setPrefetchDistance(10)
-                .setPageSize(20)
-                .setMaxSize(100)
-                .build();
-
-
-        FirestorePagingOptions<FotoPostada> options = new FirestorePagingOptions.Builder<FotoPostada>()
-                .setLifecycleOwner(this)
-                .setQuery(query, config, new SnapshotParser<FotoPostada>() {
-                    @NonNull
-                    @Override
-                    public FotoPostada parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                        FotoPostada fotoPostada = snapshot.toObject(FotoPostada.class);
-                        return fotoPostada;
-                    }
-                })
-                .build();*/
-
-    /*    DatabasePagingOptions<FotoPostada> options2 = new DatabasePagingOptions.Builder<FotoPostada>()
-                .setLifecycleOwner(this)
-                .setQuery(databaseReference, config, FotoPostada.class)
-                .build();
-*/
-
-
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(true)
-                .setInitialLoadSizeHint(3)
                 .setPageSize(10)
-                .setMaxSize(100)
+                .setMaxSize(200)
                 .build();
+
+
+        FirestorePagingOptions<FotoPostada> options1 = new FirestorePagingOptions.Builder<FotoPostada>()
+                .setLifecycleOwner(this)
+                .setQuery(query, config, FotoPostada.class)
+                .build();
+
 
         DatabasePagingOptions<FotoPostada> options = new DatabasePagingOptions.Builder<FotoPostada>()
                 .setLifecycleOwner(this)
@@ -425,14 +410,87 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
         //ADAPTER
         RecyclerView recyclerViewFirestore = view.findViewById(R.id.recyclerViewTestes_Firestore_Fragment);
-        //recyclerViewFirestore.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerViewFirestore.setLayoutManager(linearLayoutManager);
-        //  adapterFirestore = new AdapterFirestore(options,getContext(), this);
+        adapterFirestore = new AdapterFirestore(options1,getContext());
+        adapterFirestore.setHasStableIds(true);
 
         recyclerViewFirestore.setItemViewCacheSize(20);
         adapter.setHasStableIds(true);
-        recyclerViewFirestore.setAdapter(adapter);
+
+
+        recyclerViewFirestore.setAdapter(adapterFirestore);
+
+
+        Query queryCop = firebaseFirestore.collection("Posts")
+                .orderBy("timeStamp").limit(10);
+
+        queryCop.get().addOnCompleteListener(getActivity(), new OnCompleteListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot dc : task.getResult()) {
+                       FotoPostada fotoPostada = dc.toObject(FotoPostada.class);
+
+                    }
+                    recyclerViewFirestore.setAdapter(adapter);
+                    adapterFirestore.notifyDataSetChanged();
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                    Toast.makeText(getContext(), "Primeira pagina carregada.", Toast.LENGTH_SHORT).show();
+
+                    RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+
+                            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                                isScrolling = true;
+
+                            }
+                        }
+
+                        @Override
+                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            int firstItemVisible = linearLayoutManager.findFirstVisibleItemPosition();
+                            int visibleItemCount = linearLayoutManager.getChildCount();
+                            int totalItemCount = linearLayoutManager.getItemCount();
+
+                            if (isScrolling && (firstItemVisible + visibleItemCount == totalItemCount) && !isLastItemReached) {
+                                isScrolling = false;
+
+                                Query nextQuery = firebaseFirestore.collection("Posts")
+                                        .orderBy("timeStamp")
+                                        .startAfter(lastVisible)
+                                        .limit(10);
+
+                                nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        for (DocumentSnapshot dc : task.getResult()) {
+
+                                        }
+
+                                        adapterFirestore.notifyDataSetChanged();
+
+                                        lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                                        Toast.makeText(getContext(), "Primeira pagina carregada.", Toast.LENGTH_SHORT).show();
+
+                                        if (task.getResult().size() < 10){
+                                            isLastItemReached = true;
+                                        }
+                                    }
+                                });
+
+                            }
+                        }
+                    };
+                    recyclerViewFirestore.addOnScrollListener(scrollListener);
+                }
+            }
+        });
 
 
         //STORIES

@@ -53,16 +53,13 @@ public class ChatJamActivity extends AppCompatActivity {
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
                         .add("Conversas", ConversasFragmentJam.class)
-                            .add("Contatos", ContatosFragmentJam.class)
-                .create()
-
+                        .add("Contatos", ContatosFragmentJam.class)
+                        .create()
 
         );
 
         ViewPager viewPager = findViewById(R.id.viewPagerTab);
         viewPager.setAdapter(adapter);
-
-
 
         SmartTabLayout smartTabLayout = findViewById(R.id.smartTabLayout);
         smartTabLayout.setViewPager(viewPager);
@@ -76,24 +73,54 @@ public class ChatJamActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
-                if (query != null && !query.isEmpty()){
-                    fragmentJam.pesquisarConversas(query.toLowerCase());
+                //verificar se está pesquisando conversa ou contato
+                switch (viewPager.getCurrentItem()) {
+                    case 0:
+                        ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
+                        if (query != null && !query.isEmpty()) {
+                            fragmentJam.pesquisarConversas(query.toLowerCase());
+                        }
+                        break;
+
+                    case 1:
+                        ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
+
+                        if (query != null && !query.isEmpty()) {
+                            contatosFragmentJam.getContatosJam(query.toLowerCase());
+                        }
+                        break;
                 }
+
+
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-               // Log.d("queryText",newText.toString());
-                ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
-                if (newText != null && !newText.isEmpty()){
-                    fragmentJam.pesquisarConversas(newText.toLowerCase());
+                // Log.d("queryText",newText.toString());
+
+                //verificar se está pesquisando conversa ou contato
+                switch (viewPager.getCurrentItem()) {
+                    case 0:
+                        ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
+                        if (newText != null && !newText.isEmpty()) {
+                            fragmentJam.pesquisarConversas(newText.toLowerCase());
+                        }
+                        break;
+
+                    case 1:
+                        ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
+
+                        if (newText != null && !newText.isEmpty()) {
+                            contatosFragmentJam.getContatosJam(newText.toLowerCase());
+                        }
+                        break;
                 }
+
+
                 return true;
             }
         });
-
 
         conversasSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
@@ -103,19 +130,28 @@ public class ChatJamActivity extends AppCompatActivity {
 
             @Override
             public void onSearchViewClosed() {
-                ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
-                fragmentJam.reloadConversas();
+                //verificar qual metodo de pesquisa está ativado
+                switch (viewPager.getCurrentItem()) {
+                    case 0:
+                        ConversasFragmentJam fragmentJam = (ConversasFragmentJam) adapter.getPage(0);
+                        fragmentJam.reloadConversas();
+                        break;
+                    case 1:
+                        ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
+                        contatosFragmentJam.reloadContatosJam();
+                        break;
+                }
+
             }
         });
 
-
-        //CONFIGURAÇÃO DO SEARCH VIEW PARA USUARIOS
+     /*   //CONFIGURAÇÃO DO SEARCH VIEW PARA USUARIOS
         contatosSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
 
-                if (query != null && !query.isEmpty()){
+                if (query != null && !query.isEmpty()) {
                     contatosFragmentJam.getContatosJam(query.toLowerCase());
                 }
 
@@ -126,7 +162,7 @@ public class ChatJamActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
 
-                if (newText != null && !newText.isEmpty()){
+                if (newText != null && !newText.isEmpty()) {
                     contatosFragmentJam.getContatosJam(newText.toLowerCase());
                 }
 
@@ -145,9 +181,7 @@ public class ChatJamActivity extends AppCompatActivity {
                 ContatosFragmentJam contatosFragmentJam = (ContatosFragmentJam) adapter.getPage(1);
                 contatosFragmentJam.reloadContatosJam();
             }
-        });
-
-
+        });*/
 
         updateToken();
     }
@@ -155,12 +189,12 @@ public class ChatJamActivity extends AppCompatActivity {
     private void updateToken() {
         String token = FirebaseInstanceId.getInstance().getToken();
         String idUsuario = UsuarioFirebase.getIdentificadorUsuario();
-        Log.i("TokenUser",token);
+        Log.i("TokenUser", token);
 
-        if (idUsuario != null){
+        if (idUsuario != null) {
             firebaseFirestore.collection("Usuarios")
                     .document(idUsuario)
-                    .update("token",token);
+                    .update("token", token);
 
         }
     }
@@ -169,16 +203,18 @@ public class ChatJamActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_pesquisa_jam,menu);
+        menuInflater.inflate(R.menu.menu_pesquisa_jam, menu);
 
         //CONFIGURAÇÃO DO MENU PESQUISA
         MenuItem item = menu.findItem(R.id.action_search_MenuJam);
-        MenuItem item2 = menu.findItem(R.id.action_searchContatos_MenuJam);
-        contatosSearchView.setMenuItem(item2);
-        contatosSearchView.setVoiceIcon(getDrawable(R.drawable.ic_action_voice_search));
-
         conversasSearchView.setMenuItem(item);
         conversasSearchView.setVoiceIcon(getDrawable(R.drawable.ic_action_voice_search));
+
+     /*   MenuItem item2 = menu.findItem(R.id.action_searchContatos_MenuJam);
+        contatosSearchView.setMenuItem(item2);
+        contatosSearchView.setVoiceIcon(getDrawable(R.drawable.ic_action_voice_search));*/
+
+
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -186,7 +222,7 @@ public class ChatJamActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.sair_MenuJam:
                 deslogarUsuario();
                 break;
@@ -196,7 +232,7 @@ public class ChatJamActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void carregarElementos(){
+    public void carregarElementos() {
 
         toolbar = findViewById(R.id.toobar_ChatJam_Principal);
         toolbar.setTitle("Pet Talks");
@@ -254,7 +290,8 @@ public class ChatJamActivity extends AppCompatActivity {
         if (conversasSearchView.isSearchOpen()) {
             conversasSearchView.closeSearch();
         } else {
-            super.onBackPressed();
+         Intent intent = new Intent(this,StartActivity.class);
+         startActivity(intent);
         }
     }
 }

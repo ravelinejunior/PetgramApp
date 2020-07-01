@@ -1,12 +1,15 @@
 package br.com.petgramapp.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,18 +28,19 @@ public class AdapterMensagensJam extends RecyclerView.Adapter<AdapterMensagensJa
     private static final int TIPO_DESTINATARIO = 1;
     private Context context;
     private List<MensagemJam> mensagemJamList;
+    RecyclerView recyclerView;
 
 
-    public AdapterMensagensJam(Context context, List<MensagemJam> mensagemJamList) {
+    public AdapterMensagensJam(Context context, List<MensagemJam> mensagemJamList, RecyclerView recyclerView) {
         this.context = context;
         this.mensagemJamList = mensagemJamList;
+        this.recyclerView = recyclerView;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = null;
+      View view = null;
 
       if (viewType == TIPO_REMETENTE){
            view = LayoutInflater.from(parent.getContext()).
@@ -50,51 +54,43 @@ public class AdapterMensagensJam extends RecyclerView.Adapter<AdapterMensagensJa
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         MensagemJam mensagemJam = mensagemJamList.get(position);
+try {
+    holder.setIsRecyclable(false);
+    if (mensagemJam.getImagemEnviada() != null
+            && mensagemJam.getMensagem().equalsIgnoreCase("imagem.jpeg")) {
 
-        if (mensagemJam.getImagemEnviada() != null){
-            Uri uriImagem = Uri.parse(mensagemJam.getImagemEnviada());
-            Glide.with(context).load(uriImagem).into(holder.imagemTalks);
-            holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
-            holder.mensagemTalks.setText(mensagemJam.getMensagem());
-        }else{
-           // Uri uriImagem = Uri.parse(mensagemJam.getImagemEnviada());
-            Glide.with(context).load(R.drawable.ic_pets_white_24dp).into(holder.imagemTalks);
-            holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
-            holder.mensagemTalks.setText(mensagemJam.getMensagem());
-            holder.imagemTalks.setVisibility(View.GONE);
-        }
+        Uri uriImagem = Uri.parse(mensagemJam.getImagemEnviada());
+        Glide.with(context).load(uriImagem).into(holder.imagemTalks);
+        holder.nomeUsuarioTalks.setText("Enviada por " + mensagemJam.getNomeUsuarioEnviou());
+        holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
+        //holder.mensagemTalks.setText(mensagemJam.getMensagem());
+        holder.mensagemTalks.setVisibility(View.GONE);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AdapterMensagensJam adapterMensagensJam = new AdapterMensagensJam(context,mensagemJamList);
-                adapterMensagensJam.notifyDataSetChanged();
+    } else if (mensagemJam.getImagemEnviada().equals("")) {
+        //Uri uriImagem = Uri.parse(mensagemJam.getImagemEnviada());
+        //Glide.with(context).load(R.drawable.ic_pets_white_24dp).into(holder.imagemTalks);
+        holder.nomeUsuarioTalks.setText("Enviada por " + mensagemJam.getNomeUsuarioEnviou());
+        holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
+        holder.mensagemTalks.setText(mensagemJam.getMensagem());
+        holder.imagemTalks.setVisibility(View.GONE);
+    } else {
+        holder.nomeUsuarioTalks.setText("Enviada por " + mensagemJam.getNomeUsuarioEnviou());
+        holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
+        holder.mensagemTalks.setText(mensagemJam.getMensagem());
+        holder.imagemTalks.setVisibility(View.GONE);
+    }
 
-            }
-        });
-
-
-      /*  if (mensagemJam.getImagemEnviada() != null){
-
-            Uri uriImagem = Uri.parse(mensagemJam.getImagemEnviada());
-            Glide.with(context).load(uriImagem).priority(Priority.HIGH).dontAnimate().into(holder.imagemTalks);
-            holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
-            holder.mensagemTalks.setText(mensagemJam.getMensagem());
-
-        }else if(mensagemJam.getMensagem().equalsIgnoreCase("imagem.jpeg")){
-            Uri uriImagem = Uri.parse(mensagemJam.getImagemEnviada());
-            Glide.with(context).load(uriImagem).priority(Priority.HIGH).dontAnimate().into(holder.imagemTalks);
-            holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
-        }else{
-
-            holder.imagemTalks.setVisibility(View.GONE);
-            holder.mensagemTalks.setText(mensagemJam.getMensagem());
-            holder.dataEnvioRecebido.setText(mensagemJam.getDataEnvio());
-        }*/
-
+    Log.d("LogsAdapter","mensagem - "+mensagemJam.getMensagem());
+    Log.d("LogsAdapter","foto - "+mensagemJam.getImagemEnviada());
+    Log.d("LogsAdapter","usuario - "+mensagemJam.getNomeUsuarioEnviou());
+}catch (Exception e){
+    e.printStackTrace();
+    Toast.makeText(context, "Erro ao carregar mensagens.", Toast.LENGTH_SHORT).show();
+}
     }
 
     @Override
@@ -113,15 +109,18 @@ public class AdapterMensagensJam extends RecyclerView.Adapter<AdapterMensagensJa
         return mensagemJamList.size();
     }
 
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         public TextView mensagemTalks;
+        public TextView nomeUsuarioTalks;
         public TextView dataEnvioRecebido;
         public ImageView imagemTalks;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            nomeUsuarioTalks = itemView.findViewById(R.id.nome_id_usuario_AdapterMensagem);
             mensagemTalks = itemView.findViewById(R.id.mensagemDigitada_AdapterMensagem);
             dataEnvioRecebido = itemView.findViewById(R.id.horaMensagem_id_Mensagem);
             imagemTalks = itemView.findViewById(R.id.imagem_MensagemTalks);

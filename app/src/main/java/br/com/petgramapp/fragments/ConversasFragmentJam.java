@@ -41,6 +41,7 @@ public class ConversasFragmentJam extends Fragment {
     private RecyclerView recyclerViewConversasJam;
     private FirebaseFirestore firebaseFirestore;
     private String idUsuarioRemetente;
+    private String idUsuarioDestinatario;
     private CollectionReference reference;
     private Task<QuerySnapshot> eventListener;
     private CollectionReference usuarioCollection;
@@ -73,6 +74,7 @@ public class ConversasFragmentJam extends Fragment {
         reference = firebaseFirestore.collection("Talks")
                 .document("Conversas")
                 .collection(idUsuarioRemetente);
+
 
         recyclerViewConversasJam.addOnItemTouchListener(new RecyclerItemClickListener(
                 getContext(), recyclerViewConversasJam, new RecyclerItemClickListener.OnItemClickListener() {
@@ -162,11 +164,22 @@ public class ConversasFragmentJam extends Fragment {
         conversasLista = new ArrayList<>();
         for (Conversas conversas : conversasList) {
 
-            String nomeUsuario = conversas.getUsuario().getNomePetUsuario().toLowerCase();
-            String ultimaMensagem = conversas.getUltimaMensagem().toLowerCase();
+            //verificar se existe um usuario, caso usuario exista, é uma conversa normal
+            if (conversas.getUsuario() != null) {
+                String nomeUsuario = conversas.getUsuario().getNomePetUsuario().toLowerCase();
+                String ultimaMensagem = conversas.getUltimaMensagem().toLowerCase();
 
-            if (nomeUsuario.contains(texto) || ultimaMensagem.contains(texto)) {
-                conversasLista.add(conversas);
+                if (nomeUsuario.contains(texto) || ultimaMensagem.contains(texto)) {
+                    conversasLista.add(conversas);
+                }
+            }else{
+
+                String nomeUsuario = conversas.getGrupoJam().getNomeGrupo().toLowerCase();
+                String ultimaMensagem = conversas.getUltimaMensagem().toLowerCase();
+
+                if (nomeUsuario.contains(texto) || ultimaMensagem.contains(texto)) {
+                    conversasLista.add(conversas);
+                }
             }
 
         }

@@ -66,30 +66,17 @@
         android:textSize="14sp"
         />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_HomeFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="10dp"
-        app:cardCornerRadius="10dp"
-        android:background="@color/branco"
-        app:cardElevation="10dp"
-
-        >
 
         <ImageView
             android:id="@+id/imagemPostada_HomeAdapter_id"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="350dp"
             android:background="@color/branco"
-            android:elevation="10dp"
             android:longClickable="true"
             android:saveEnabled="true"
             android:scaleType="centerCrop"
              />
 
-
-    </androidx.cardview.widget.CardView>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -241,14 +228,5 @@
 
             />
     </LinearLayout>
-
-
-
-
-
-
-
-
-
 
 </LinearLayout>

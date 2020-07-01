@@ -20,6 +20,7 @@
         android:id="@+id/search_viewPrincipal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/pesquisar_conversas_ou_contatos"
 
         />
 
@@ -27,6 +28,7 @@
         android:id="@+id/search_viewContatosPrincipal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/pesquisar_conversas_ou_contatos"
 
         />
 

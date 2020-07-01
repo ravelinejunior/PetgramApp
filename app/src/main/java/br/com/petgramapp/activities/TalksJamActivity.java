@@ -6,13 +6,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +24,12 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -63,6 +67,7 @@ public class TalksJamActivity extends AppCompatActivity {
     public static String idUsuarioDestinatario;
     public Usuario usuarioLogado;
     List<DocumentChange> documentChangeList = new ArrayList<>();
+    LinearLayoutManager linearLayoutManager;
     private TextView nomeUsuarioTalks;
     private CircleImageView imagemPerfilTalks;
     private EditText mensagemDigitadaTalks;
@@ -70,7 +75,6 @@ public class TalksJamActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButtonTalks;
     private Usuario usuarioSelecionado;
     private FirebaseFirestore firebaseFirestore;
-    private CollectionReference mensagemRef;
     private RecyclerView recyclerViewContentTalks;
     private AdapterMensagensJam adapterMensagensJam;
     private List<MensagemJam> mensagemJamList = new ArrayList<>();
@@ -85,6 +89,15 @@ public class TalksJamActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     //grupos
     private GrupoJam grupoJam;
+    //teste com pagination firestore
+    private DocumentSnapshot lastVisible;
+    private boolean isScrolling;
+    private boolean isLastItemReached;
+
+    //teste com database RealTime
+    private DatabaseReference reference;
+    private DatabaseReference mensagemRef;
+    private ChildEventListener childEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +109,7 @@ public class TalksJamActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         carregarElementos();
-
+        reference = ConfiguracaoFirebase.getReferenciaDatabase();
 
         storageReference = ConfiguracaoFirebase.getStorageReference();
 
@@ -149,7 +162,7 @@ public class TalksJamActivity extends AppCompatActivity {
         layoutManager.setMeasurementCacheEnabled(true);
         layoutManager.supportsPredictiveItemAnimations();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setSmoothScrollbarEnabled(true);
         linearLayoutManager.supportsPredictiveItemAnimations();
@@ -157,16 +170,20 @@ public class TalksJamActivity extends AppCompatActivity {
         recyclerViewContentTalks.setLayoutManager(linearLayoutManager);
         recyclerViewContentTalks.setHasFixedSize(true);
 
-        adapterMensagensJam = new AdapterMensagensJam(this, mensagemJamList);
+        adapterMensagensJam = new AdapterMensagensJam(this, mensagemJamList, recyclerViewContentTalks);
+        adapterMensagensJam.setHasStableIds(false);
+
         recyclerViewContentTalks.setAdapter(adapterMensagensJam);
 
         idUsuarioRemetente = UsuarioFirebase.getIdentificadorUsuario();
-        //idUsuarioDestinatario = usuarioSelecionado.getId();
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
         queryMensagens = firebaseFirestore.collection("Mensagens")
                 .document(idUsuarioRemetente)
                 .collection(idUsuarioDestinatario);
+
+        mensagemRef = reference.child("Mensagens").child(idUsuarioRemetente)
+                .child(idUsuarioDestinatario);
 
 
         //enviar foto
@@ -175,7 +192,6 @@ public class TalksJamActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CropImage.activity().setAspectRatio(100, 100)
                         .setCropShape(CropImageView.CropShape.RECTANGLE).start(TalksJamActivity.this);
-
             }
         });
 
@@ -184,7 +200,15 @@ public class TalksJamActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //readMensagensDatabase();
         readMensagens();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -196,16 +220,52 @@ public class TalksJamActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+//        mensagemRef.removeEventListener(childEventListener);
         eventListener.remove();
     }
 
-    private void readMensagens() {
+    void readMensagensDatabase() {
 
         mensagemJamList.clear();
+        com.google.firebase.database.Query query = mensagemRef.orderByChild("timeStamp");
 
+        childEventListener = query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                MensagemJam mensagemJam = dataSnapshot.getValue(MensagemJam.class);
+                mensagemJamList.add(mensagemJam);
+                adapterMensagensJam.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void readMensagens() {
+        mensagemJamList.clear();
         eventListener = queryMensagens
                 .orderBy("timeStamp", Query.Direction.ASCENDING)
-                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (e != null) return;
@@ -213,8 +273,7 @@ public class TalksJamActivity extends AppCompatActivity {
                         List<DocumentChange> documentChanges = queryDocumentSnapshots.getDocumentChanges();
                         if (documentChanges != null) {
                             for (DocumentChange doc : documentChanges) {
-                                if (doc.getType() == DocumentChange.Type.ADDED || doc.getType() == DocumentChange.Type.MODIFIED ||
-                                        doc.getType() == DocumentChange.Type.REMOVED) {
+                                if (doc.getType() == DocumentChange.Type.ADDED) {
                                     MensagemJam mensagemJam = doc.getDocument().toObject(MensagemJam.class);
                                     mensagemJamList.add(mensagemJam);
                                     adapterMensagensJam.notifyDataSetChanged();
@@ -223,8 +282,82 @@ public class TalksJamActivity extends AppCompatActivity {
                             }
                         }
                     }
-
                 });
+
+/*
+        Query query = firebaseFirestore.collection("Mensagens")
+                .document(idUsuarioRemetente).collection(idUsuarioDestinatario)
+                .orderBy("timeStamp").limit(10);
+
+        query.get().addOnCompleteListener(this, new OnCompleteListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot dc : task.getResult()) {
+                        MensagemJam mensagemJam = dc.toObject(MensagemJam.class);
+                        mensagemJamList.add(mensagemJam);
+                    }
+                    recyclerViewContentTalks.setAdapter(adapterMensagensJam);
+                    adapterMensagensJam.notifyDataSetChanged();
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                    Toast.makeText(TalksJamActivity.this, "Primeira pagina carregada.", Toast.LENGTH_SHORT).show();
+
+                    RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+
+                            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                                isScrolling = true;
+
+                            }
+                        }
+
+                        @Override
+                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            int firstItemVisible = linearLayoutManager.findFirstVisibleItemPosition();
+                            int visibleItemCount = linearLayoutManager.getChildCount();
+                            int totalItemCount = linearLayoutManager.getItemCount();
+
+                            if (isScrolling && (firstItemVisible + visibleItemCount == totalItemCount) && !isLastItemReached) {
+                                isScrolling = false;
+
+                                Query nextQuery = firebaseFirestore.collection("Mensagens")
+                                        .document(idUsuarioRemetente).collection(idUsuarioDestinatario)
+                                        .orderBy("timeStamp")
+                                        .startAfter(lastVisible)
+                                        .limit(10);
+
+                                nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        for (DocumentSnapshot dc : task.getResult()) {
+                                            MensagemJam mensagemJam = dc.toObject(MensagemJam.class);
+                                            mensagemJamList.add(mensagemJam);
+                                        }
+
+                                        adapterMensagensJam.notifyDataSetChanged();
+
+                                        lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                                        Toast.makeText(TalksJamActivity.this, "Primeira pagina carregada.", Toast.LENGTH_SHORT).show();
+
+                                        if (task.getResult().size() < 10){
+                                            isLastItemReached = true;
+                                        }
+                                    }
+                                });
+
+                            }
+                        }
+                    };
+                    recyclerViewContentTalks.addOnScrollListener(scrollListener);
+                }
+            }
+        });*/
+
 
     }
 
@@ -246,7 +379,6 @@ public class TalksJamActivity extends AppCompatActivity {
         String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
         String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
         String dataGet = "Rebido em ".concat(currentDate.concat(" às ").concat(currentTime));
-        Log.i("HoraMensagem", String.valueOf(new Date()));
 
         String mensagemDigitada = mensagemDigitadaTalks.getText().toString();
 
@@ -260,6 +392,7 @@ public class TalksJamActivity extends AppCompatActivity {
                 mensagemJam.setDataEnvio(dataPost);
                 mensagemJam.setDataRecebido(dataGet);
                 mensagemJam.setImagemEnviada("");
+                mensagemJam.setNomeUsuarioEnviou(usuarioLogado.getNomePetUsuario());
                 mensagemJam.setTimeStamp(System.currentTimeMillis());
 
                 NotificacoesJam notificacoesJam = new NotificacoesJam();
@@ -270,6 +403,7 @@ public class TalksJamActivity extends AppCompatActivity {
                 notificacoesJam.setDataRecebido(dataPost);
                 notificacoesJam.setTimeStamp(System.currentTimeMillis());
                 notificacoesJam.setMensagem(mensagemDigitada);
+                notificacoesJam.setNomeUsuarioEnviou(usuarioLogado.getNomePetUsuario());
 
                 firebaseFirestore.collection("Notificacoes")
                         .document(usuarioSelecionado.getToken())
@@ -282,7 +416,10 @@ public class TalksJamActivity extends AppCompatActivity {
                 salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagemJam);
 
                 //para o remetente
-                salvarConversa(mensagemJam, false);
+                salvarConversa(idUsuarioRemetente, idUsuarioDestinatario, usuarioSelecionado, mensagemJam, false);
+                salvarConversaUsuario(mensagemJam, false);
+                //para o remetente
+                //salvarConversa(idUsuarioDestinatario,idUsuarioRemetente,usuarioLogado,mensagemJam, false);
             } else {
                 for (Usuario membros : grupoJam.getMembrosGrupo()) {
                     String idRemetenteGrupo = membros.getId();
@@ -293,7 +430,8 @@ public class TalksJamActivity extends AppCompatActivity {
                     mensagemJam.setMensagem(mensagemDigitada);
                     mensagemJam.setDataEnvio(dataPost);
                     mensagemJam.setDataRecebido(dataGet);
-                    mensagemJam.setImagemEnviada("");
+                    mensagemJam.setImagemEnviada(" ");
+                    mensagemJam.setNomeUsuarioEnviou(usuarioLogado.getNomePetUsuario());
                     mensagemJam.setTimeStamp(System.currentTimeMillis());
 
                     NotificacoesJam notificacoesJam = new NotificacoesJam();
@@ -304,6 +442,7 @@ public class TalksJamActivity extends AppCompatActivity {
                     notificacoesJam.setDataRecebido(dataPost);
                     notificacoesJam.setTimeStamp(System.currentTimeMillis());
                     notificacoesJam.setMensagem(mensagemDigitada);
+                    notificacoesJam.setNomeUsuarioEnviou(membros.getNomePetUsuario());
 
                     //para o remetente
                     salvarMensagem(idRemetenteGrupo, idUsuarioDestinatario, mensagemJam);
@@ -311,12 +450,15 @@ public class TalksJamActivity extends AppCompatActivity {
                     //para o destinatario
                     salvarMensagem(idUsuarioDestinatario, idRemetenteGrupo, mensagemJam);
 
-                    //para o remetente
-                    salvarConversa(mensagemJam, true);
+                    //para o remetente //para o destinario que é o grupo
+                    salvarConversa(idRemetenteGrupo, idUsuarioDestinatario, usuarioSelecionado, mensagemJam, true);
+
+                    recyclerViewContentTalks.scrollToPosition(View.SCROLL_AXIS_VERTICAL);
 
 
                 }
             }
+
 
 
         } else {
@@ -326,12 +468,16 @@ public class TalksJamActivity extends AppCompatActivity {
 
     public void salvarMensagem(String idUsuRemetente, String idUsuDesti, MensagemJam mensagem) {
 
-        firebaseFirestore.collection("Mensagens");
-
         firebaseFirestore.collection("Mensagens")
                 .document(idUsuRemetente)
                 .collection(idUsuDesti).
                 add(mensagem);
+
+
+      /*  DatabaseReference mensagensRef = reference.child("Mensagens");
+        mensagensRef.child(idUsuRemetente)
+                .child(idUsuDesti)
+                .push().setValue(mensagem);*/
 
         mensagemDigitadaTalks.setText("");
 
@@ -343,9 +489,9 @@ public class TalksJamActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             CropImage.ActivityResult activityResult = CropImage.getActivityResult(data);
             imagemFotoUri = activityResult.getUri();
-            if (usuarioSelecionado != null){
+            if (usuarioSelecionado != null) {
                 uploadImagemEnviada(false);
-            }else{
+            } else {
                 uploadImagemEnviada(true);
             }
 
@@ -392,28 +538,25 @@ public class TalksJamActivity extends AppCompatActivity {
 
                     imagemUrlPostagem = downloadUriImagem.toString();
 
-                    //DATA POSTAGEM
-                    String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-                    String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-                    String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
-                    mensagemJam.setDataEnvio(dataPost);
-                    mensagemJam.setDataRecebido(dataPost);
-                    mensagemJam.setImagemEnviada(imagemUrlPostagem);
-                    mensagemJam.setId(idUsuarioRemetente);
-                    mensagemJam.setMensagem("imagem.jpeg");
-                    //mensagemJam.setMensagem(null);
-                    mensagemJam.setTimeStamp(System.currentTimeMillis());
-
-
-                    if (usuarioSelecionado != null){
+                    if (usuarioSelecionado != null) {
+                        //DATA POSTAGEM
+                        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+                        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+                        String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
+                        mensagemJam.setDataEnvio(dataPost);
+                        mensagemJam.setDataRecebido(dataPost);
+                        mensagemJam.setImagemEnviada(imagemUrlPostagem);
+                        mensagemJam.setId(idUsuarioRemetente);
+                        mensagemJam.setNomeUsuarioEnviou(usuarioLogado.getNomePetUsuario());
+                        mensagemJam.setMensagem("imagem.jpeg");
+                        //mensagemJam.setMensagem(null);
+                        mensagemJam.setTimeStamp(System.currentTimeMillis());
                         //para remetente
                         salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario, mensagemJam);
-
                         //para destinatario
                         salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagemJam);
-
                         //SALVAR CONVERSA
-                        salvarConversa(mensagemJam,false);
+                        salvarConversa(idUsuarioRemetente, idUsuarioDestinatario, usuarioSelecionado, mensagemJam, false);
 
                         NotificacoesJam notificacoesJam = new NotificacoesJam();
 
@@ -428,27 +571,43 @@ public class TalksJamActivity extends AppCompatActivity {
                                 .document(usuarioSelecionado.getToken())
                                 .set(notificacoesJam);
 
-                    }else{
-                        //para remetente
-                        salvarMensagem(grupoJam.getIdGrupo(), idUsuarioDestinatario, mensagemJam);
+                    } else {
+                        for (Usuario membros : grupoJam.getMembrosGrupo()) {
+                            String idRemetenteGrupo = membros.getId();
+                            String idUsuarioLogadoGrupo = UsuarioFirebase.getIdentificadorUsuario();
 
-                        //para destinatario
-                        salvarMensagem(idUsuarioDestinatario, grupoJam.getIdGrupo(), mensagemJam);
+                            String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+                            String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+                            String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
+                            mensagemJam.setDataEnvio(dataPost);
+                            mensagemJam.setDataRecebido(dataPost);
+                            mensagemJam.setImagemEnviada(imagemUrlPostagem);
+                            mensagemJam.setId(idUsuarioRemetente);
+                            mensagemJam.setNomeUsuarioEnviou(usuarioLogado.getNomePetUsuario());
+                            mensagemJam.setMensagem("imagem.jpeg");
+                            //mensagemJam.setMensagem(null);
+                            mensagemJam.setTimeStamp(System.currentTimeMillis());
 
-                        //SALVAR CONVERSA
-                        salvarConversa(mensagemJam,true);
+                            NotificacoesJam notificacoesJam = new NotificacoesJam();
 
-                        NotificacoesJam notificacoesJam = new NotificacoesJam();
-                        notificacoesJam.setFromName(grupoJam.getNomeGrupo());
-                        notificacoesJam.setId(grupoJam.getIdGrupo());
-                        notificacoesJam.setDataEnvio(dataPost);
-                        notificacoesJam.setDataRecebido(dataPost);
-                        notificacoesJam.setTimeStamp(System.currentTimeMillis());
-                        notificacoesJam.setMensagem(mensagemJam.getMensagem());
+                            notificacoesJam.setFromName(grupoJam.getNomeGrupo());
+                            notificacoesJam.setId(idUsuarioLogadoGrupo);
+                            notificacoesJam.setDataEnvio(dataPost);
+                            notificacoesJam.setDataRecebido(dataPost);
+                            notificacoesJam.setTimeStamp(System.currentTimeMillis());
+                            notificacoesJam.setMensagem(mensagemJam.getMensagem());
+                            notificacoesJam.setNomeUsuarioEnviou(membros.getNomePetUsuario());
 
-                        firebaseFirestore.collection("Notificacoes")
-                                .document(usuarioSelecionado.getToken())
-                                .set(notificacoesJam);
+                            //para o remetente
+                            salvarMensagem(idRemetenteGrupo, idUsuarioDestinatario, mensagemJam);
+
+                            //para o destinatario
+                            salvarMensagem(idUsuarioDestinatario, idRemetenteGrupo, mensagemJam);
+
+                            //para o remetente //para o destinario que é o grupo
+                            salvarConversa(idRemetenteGrupo, idUsuarioDestinatario, usuarioSelecionado, mensagemJam, true);
+
+                        }
 
                     }
 
@@ -470,7 +629,41 @@ public class TalksJamActivity extends AppCompatActivity {
         }
     }
 
-    private void salvarConversa(MensagemJam mensagem, boolean isGroup) {
+    private void salvarConversa(String idUsuRemetente, String idUsuDesti, Usuario usuarioExibicao, MensagemJam mensagem, boolean isGroup) {
+
+        //DATA POSTAGEM
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
+        Conversas conversasRemetente = new Conversas();
+
+        conversasRemetente.setIdRemetente(idUsuRemetente);
+        conversasRemetente.setIdDestinatario(idUsuDesti);
+        conversasRemetente.setTimeStamp(System.currentTimeMillis());
+        conversasRemetente.setUltimaMensagem(mensagem.getMensagem());
+        conversasRemetente.setDataEnvio(dataPost);
+
+        //verificar se é conversa de grupo
+        if (isGroup) {
+            // conversasRemetente.setUsuario(usuarioSelecionado);
+            conversasRemetente.setGrupoJam(grupoJam);
+            conversasRemetente.setIsGroup("true");
+            conversasRemetente.salvarConversa();
+            conversasRemetente.salvarConversaOutroUsuario(usuarioLogado);
+
+        } else {
+
+            conversasRemetente.setUsuario(usuarioExibicao);
+            conversasRemetente.setIsGroup("false");
+            conversasRemetente.salvarConversa();
+            conversasRemetente.salvarConversaOutroUsuario(usuarioLogado);
+
+        }
+
+
+    }
+
+    private void salvarConversaUsuario(MensagemJam mensagem, boolean isGroup) {
 
         //DATA POSTAGEM
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());

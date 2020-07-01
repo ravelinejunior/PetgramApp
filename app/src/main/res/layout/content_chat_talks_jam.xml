@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/branco_azulado"
+    android:background="#EAE7E7"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -61,7 +61,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_marginEnd="5dp"
-                    app:srcCompat="@drawable/ic_foto_preto" />
+                    app:srcCompat="@drawable/ic_camera_preto" />
 
             </LinearLayout>
 

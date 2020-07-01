@@ -3,8 +3,6 @@ package br.com.petgramapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
@@ -14,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
-import br.com.petgramapp.helper.UsuarioFirebase;
 
 public class Conversas implements Parcelable, Serializable {
 
@@ -146,14 +143,13 @@ public class Conversas implements Parcelable, Serializable {
         firebaseFirestore.collection("Talks")
                 .document("Conversas")
                 .collection(this.idRemetente)
-                .document(this.idDestinatario).set(this);
+                .document(this.idDestinatario).
+                set(this);
 
     }
 
     public void salvarConversaOutroUsuario(Usuario usuario) {
         FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
-
-        Usuario uLogado = UsuarioFirebase.getUsuarioLogado();
         setUsuario(usuario);
 
         firebaseFirestore.collection("Talks")
@@ -162,23 +158,6 @@ public class Conversas implements Parcelable, Serializable {
                 .document(this.idRemetente)
                 .set(this);
 
-    }
-
-    public void recuperarContatoAtual() {
-        FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
-
-        firebaseFirestore.collection("Usuarios")
-                .document(UsuarioFirebase.getIdentificadorUsuario())
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                usuarioUnicoList.clear();
-
-                Usuario usuario = documentSnapshot.toObject(Usuario.class);
-                usuarioUnicoList.add(usuario);
-            }
-
-        });
     }
 
 

@@ -4,6 +4,7 @@ public class MensagemJam {
 
     private String id;
     private String mensagem;
+    private String nomeUsuarioEnviou;
     private String imagemEnviada;
     private String dataEnvio;
     private String dataRecebido;
@@ -65,5 +66,13 @@ public class MensagemJam {
 
     public void setTimeStamp(Long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getNomeUsuarioEnviou() {
+        return nomeUsuarioEnviou;
+    }
+
+    public void setNomeUsuarioEnviou(String nomeUsuarioEnviou) {
+        this.nomeUsuarioEnviou = nomeUsuarioEnviou;
     }
 }
