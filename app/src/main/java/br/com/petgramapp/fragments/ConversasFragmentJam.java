@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +90,7 @@ public class ConversasFragmentJam extends Fragment {
                         Usuario usuarioLogado = usuarioList.get(0);
                         i.putExtra("chatGrupo", (Parcelable) conversas.getGrupoJam());
                         i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        i.putExtra("conversasFull", (Serializable) conversas);
                         startActivity(i);
                         conversasLista.clear();
 
@@ -97,6 +99,7 @@ public class ConversasFragmentJam extends Fragment {
                         Usuario usuarioLogado = usuarioList.get(0);
                         i.putExtra("chatContato", conversas.getUsuario());
                         i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        i.putExtra("conversasFull", (Serializable) conversas);
                         startActivity(i);
                         conversasLista.clear();
                     }
@@ -110,12 +113,14 @@ public class ConversasFragmentJam extends Fragment {
                         Usuario usuarioLogado = usuarioList.get(0);
                         i.putExtra("chatGrupo", (Parcelable) conversas.getGrupoJam());
                         i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        i.putExtra("conversasFull", (Serializable) conversas);
                         startActivity(i);
                     } else {
                         Intent i = new Intent(getActivity(), TalksJamActivity.class);
                         Usuario usuarioLogado = usuarioList.get(0);
                         i.putExtra("chatContato", conversas.getUsuario());
                         i.putExtra("chatUsuarioLogado", usuarioLogado);
+                        i.putExtra("conversasFull", (Serializable) conversas);
                         startActivity(i);
                     }
 
@@ -207,8 +212,11 @@ public class ConversasFragmentJam extends Fragment {
 
                             if (conversas.getIsGroup().equals("false")) {
 
-                                if (conversas.getUsuario().getId().equals(UsuarioFirebase.getIdentificadorUsuario()))
-                                    continue;
+                                if (conversas.getUsuario()!= null){
+                                    if (conversas.getUsuario().getId().equals(UsuarioFirebase.getIdentificadorUsuario()))
+                                        continue;
+                                }
+
                             }
 
                             conversasList.add(conversas);

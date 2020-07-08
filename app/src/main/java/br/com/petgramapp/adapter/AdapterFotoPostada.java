@@ -114,7 +114,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                 load(fotoUri).
                 thumbnail(0.1f).
                 diskCacheStrategy(DiskCacheStrategy.ALL).
-                priority(Priority.IMMEDIATE).
+                priority(Priority.HIGH).
                 into(holder.imagemPostadaHome);
 
         if (fotoPostada.getDescricaoImagemPostada().equalsIgnoreCase("") || fotoPostada.getDescricaoImagemPostada() == null) {

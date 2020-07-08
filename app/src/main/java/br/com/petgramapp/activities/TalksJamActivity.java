@@ -93,11 +93,13 @@ public class TalksJamActivity extends AppCompatActivity {
     private DocumentSnapshot lastVisible;
     private boolean isScrolling;
     private boolean isLastItemReached;
+    private int numConversas = 0;
 
     //teste com database RealTime
     private DatabaseReference reference;
     private DatabaseReference mensagemRef;
     private ChildEventListener childEventListener;
+    private Conversas conversasGeral;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,7 @@ public class TalksJamActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         carregarElementos();
         reference = ConfiguracaoFirebase.getReferenciaDatabase();
+        firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
         storageReference = ConfiguracaoFirebase.getStorageReference();
 
@@ -124,6 +127,8 @@ public class TalksJamActivity extends AppCompatActivity {
             if (bundle.containsKey("chatContato")) {
                 usuarioSelecionado = bundle.getParcelable("chatContato");
                 nomeUsuarioTalks.setText(usuarioSelecionado.getNomePetUsuario());
+                conversasGeral = (Conversas) bundle.getSerializable("conversasFull");
+               // Log.d("chatGeral", conversasGeral.getNumeroMensagens() + " conversas");
                 idUsuarioDestinatario = usuarioSelecionado.getId();
                 if (usuarioSelecionado.getUriCaminhoFotoPetUsuario() != null) {
                     Uri uriFotoPerfil = Uri.parse(usuarioSelecionado.getUriCaminhoFotoPetUsuario());
@@ -137,7 +142,8 @@ public class TalksJamActivity extends AppCompatActivity {
                 grupoJam = (GrupoJam) bundle.getParcelable("chatGrupo");
                 idUsuarioDestinatario = grupoJam.getIdGrupo();
                 nomeUsuarioTalks.setText(grupoJam.getNomeGrupo());
-
+                conversasGeral = (Conversas) bundle.getSerializable("conversasFull");
+            //    Log.d("chatGeral", conversasGeral.getNumeroMensagens() + " conversas");
                 if (grupoJam.getFotoGrupo() != null) {
                     Uri fotoGrupoUri = Uri.parse(grupoJam.getFotoGrupo());
                     Picasso.get().load(fotoGrupoUri).
@@ -147,8 +153,6 @@ public class TalksJamActivity extends AppCompatActivity {
                 }
 
             }
-
-
         }
 
         Bundle bundle1 = getIntent().getExtras();
@@ -176,7 +180,6 @@ public class TalksJamActivity extends AppCompatActivity {
         recyclerViewContentTalks.setAdapter(adapterMensagensJam);
 
         idUsuarioRemetente = UsuarioFirebase.getIdentificadorUsuario();
-        firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
         queryMensagens = firebaseFirestore.collection("Mensagens")
                 .document(idUsuarioRemetente)
@@ -184,6 +187,23 @@ public class TalksJamActivity extends AppCompatActivity {
 
         mensagemRef = reference.child("Mensagens").child(idUsuarioRemetente)
                 .child(idUsuarioDestinatario);
+
+        if (conversasGeral != null) {
+            if (conversasGeral.getNumeroMensagens() > 0) {
+                firebaseFirestore.collection("Talks")
+                        .document("Conversas")
+                        .collection(idUsuarioRemetente)
+                        .document(idUsuarioDestinatario).
+                        update("numeroMensagens", 0);
+
+                firebaseFirestore.collection("Talks")
+                        .document("Conversas")
+                        .collection(idUsuarioDestinatario)
+                        .document(idUsuarioRemetente).
+                        update("numeroMensagens", 0);
+
+            }
+        }
 
 
         //enviar foto
@@ -460,7 +480,6 @@ public class TalksJamActivity extends AppCompatActivity {
             }
 
 
-
         } else {
             Snackbar.make(view, "Por gentileza, digitar uma mensagem.", Snackbar.LENGTH_SHORT).show();
         }
@@ -473,12 +492,6 @@ public class TalksJamActivity extends AppCompatActivity {
                 .collection(idUsuDesti).
                 add(mensagem);
 
-
-      /*  DatabaseReference mensagensRef = reference.child("Mensagens");
-        mensagensRef.child(idUsuRemetente)
-                .child(idUsuDesti)
-                .push().setValue(mensagem);*/
-
         mensagemDigitadaTalks.setText("");
 
     }
@@ -490,9 +503,9 @@ public class TalksJamActivity extends AppCompatActivity {
             CropImage.ActivityResult activityResult = CropImage.getActivityResult(data);
             imagemFotoUri = activityResult.getUri();
             if (usuarioSelecionado != null) {
-                uploadImagemEnviada(false);
+                uploadImagemEnviada();
             } else {
-                uploadImagemEnviada(true);
+                uploadImagemEnviada();
             }
 
         } else {
@@ -500,7 +513,7 @@ public class TalksJamActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadImagemEnviada(boolean isGroup) {
+    private void uploadImagemEnviada() {
 
         abrirDialogCarregamento("Sua petFoto está sendo postada! Aguarde...");
         MensagemJam mensagemJam = new MensagemJam();
@@ -557,7 +570,7 @@ public class TalksJamActivity extends AppCompatActivity {
                         salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagemJam);
                         //SALVAR CONVERSA
                         salvarConversa(idUsuarioRemetente, idUsuarioDestinatario, usuarioSelecionado, mensagemJam, false);
-
+                        //salvarConversaUsuario(mensagemJam, false);
                         NotificacoesJam notificacoesJam = new NotificacoesJam();
 
                         notificacoesJam.setFromName(usuarioLogado.getNomePetUsuario());
@@ -636,7 +649,7 @@ public class TalksJamActivity extends AppCompatActivity {
         String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
         String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
         Conversas conversasRemetente = new Conversas();
-
+        numConversas++;
         conversasRemetente.setIdRemetente(idUsuRemetente);
         conversasRemetente.setIdDestinatario(idUsuDesti);
         conversasRemetente.setTimeStamp(System.currentTimeMillis());
@@ -645,7 +658,7 @@ public class TalksJamActivity extends AppCompatActivity {
 
         //verificar se é conversa de grupo
         if (isGroup) {
-            // conversasRemetente.setUsuario(usuarioSelecionado);
+            conversasRemetente.setNumeroMensagens(numConversas);
             conversasRemetente.setGrupoJam(grupoJam);
             conversasRemetente.setIsGroup("true");
             conversasRemetente.salvarConversa();
@@ -653,6 +666,7 @@ public class TalksJamActivity extends AppCompatActivity {
 
         } else {
 
+            conversasRemetente.setNumeroMensagens(numConversas);
             conversasRemetente.setUsuario(usuarioExibicao);
             conversasRemetente.setIsGroup("false");
             conversasRemetente.salvarConversa();
@@ -671,6 +685,7 @@ public class TalksJamActivity extends AppCompatActivity {
         String dataPost = "Enviado em ".concat(currentDate.concat(" às ").concat(currentTime));
         Conversas conversasRemetente = new Conversas();
 
+        numConversas++;
         conversasRemetente.setIdRemetente(idUsuarioRemetente);
         conversasRemetente.setIdDestinatario(idUsuarioDestinatario);
         conversasRemetente.setTimeStamp(System.currentTimeMillis());
@@ -680,13 +695,14 @@ public class TalksJamActivity extends AppCompatActivity {
         //verificar se é conversa de grupo
         if (isGroup) {
             // conversasRemetente.setUsuario(usuarioSelecionado);
+            conversasRemetente.setNumeroMensagens(numConversas);
             conversasRemetente.setGrupoJam(grupoJam);
             conversasRemetente.setIsGroup("true");
             conversasRemetente.salvarConversa();
             conversasRemetente.salvarConversaOutroUsuario(usuarioLogado);
 
         } else {
-
+            conversasRemetente.setNumeroMensagens(numConversas);
             conversasRemetente.setUsuario(usuarioSelecionado);
             conversasRemetente.setIsGroup("false");
             conversasRemetente.salvarConversa();

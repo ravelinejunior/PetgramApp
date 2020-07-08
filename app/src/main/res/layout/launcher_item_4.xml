@@ -1,128 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    >
+    android:fillViewport="true">
 
 
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/branco"
-    android:gravity="center_vertical"
->
-
-
-    <TextView
-        android:id="@+id/textView3"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:padding="5dp"
-        android:text="@string/crie_sua_conta_gr_tis"
-        android:textAlignment="center"
-        android:textColor="@color/Azulnovo"
-        android:textIsSelectable="true"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:padding="5dp"
-        android:text="@string/caso_nao_possua"
-        android:textAlignment="center"
-        android:textColor="@color/Azulnovo"
-        android:textIsSelectable="true"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        android:background="@color/branco"
+        android:gravity="center_vertical">
 
 
-    <Button
-        android:id="@+id/botao_CadastrarMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/shape_botao_perfil_fragment"
-        android:fontFamily="sans-serif-medium"
-        android:onClick="botaoCadastrarLauncher"
-        android:padding="5dp"
-        android:text="@string/cadastrar"
-        android:textAlignment="center"
-        android:textColor="@color/branco"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:padding="5dp"
+            android:text="@string/crie_sua_conta_gr_tis"
+            android:textAlignment="center"
+            android:textColor="@color/Azulnovo"
+            android:textIsSelectable="true"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/Azulnovo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/botao_CadastrarMain" />
-
-    <TextView
-        android:id="@+id/entrar_LogarMain"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center_vertical|center_horizontal"
-        android:onClick="botaoLogarLauncher"
-        android:padding="5dp"
-        android:text="@string/entrar"
-        android:textAlignment="center"
-        android:textColor="@color/Azulnovo"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-
-        android:background="@color/Azulnovo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/entrar_LogarMain" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/catabdidog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:padding="5dp"
+            android:text="@string/caso_nao_possua"
+            android:textAlignment="center"
+            android:textColor="@color/Azulnovo"
+            android:textIsSelectable="true"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/botao_CadastrarMain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/botao_CadastrarMain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/shape_botao_perfil_fragment"
+            android:fontFamily="sans-serif-medium"
+            android:onClick="botaoCadastrarLauncher"
+            android:padding="5dp"
+            android:text="@string/cadastrar"
+            android:textAlignment="center"
+            android:textColor="@color/branco"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/entrar_LogarMain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+
+        <Button
+            android:id="@+id/entrar_LogarMain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="154dp"
+            android:background="@color/branco"
+            android:elevation="50dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical|center_horizontal"
+            android:onClick="botaoLogarLauncher"
+            android:padding="5dp"
+            android:text="@string/entrar"
+            android:textAlignment="center"
+            android:textColor="@color/Azulnovo"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_CadastrarMain" />
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/catabdidog"
+            app:layout_constraintBottom_toTopOf="@+id/textView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

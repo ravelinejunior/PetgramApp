@@ -287,6 +287,18 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
             holder.deletarPostagemHome.setVisibility(View.VISIBLE);
         }
 
+        registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+            }
+        });
+
         holder.deletarPostagemHome.setOnClickListener(v -> {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);

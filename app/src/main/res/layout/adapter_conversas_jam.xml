@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -14,8 +13,7 @@
             android:id="@+id/imagem_fotoPerfil_AdapterConversasJam"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_margin="10dp"
-            />
+            android:layout_margin="10dp" />
 
         <LinearLayout
 
@@ -33,25 +31,53 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/ultimaMensagem_AdapterConversasJam"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/petmensagem"
-                android:textSize="14sp"
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/dataEnvio_AdapterConversasJam"
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/firebase_database_url" />
+                >
+                <TextView
+                    android:id="@+id/ultimaMensagem_AdapterConversasJam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/petmensagem"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/dataEnvio_AdapterConversasJam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ultimaMensagem_AdapterConversasJam"
+                    android:padding="5dp"
+                    android:text="@string/firebase_database_url" />
+
+                <TextView
+                    android:id="@+id/notificacaoQuantidade_AdapterConversasJam"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_notificacao_conversas"
+                    android:gravity="center"
+                    android:textColor="@color/branco"
+                    android:textSize="12sp"
+
+
+                    />
+
+            </RelativeLayout>
+
+
+
+
         </LinearLayout>
 
 
     </LinearLayout>
+
     <View
         android:id="@+id/divider2"
         android:layout_width="match_parent"

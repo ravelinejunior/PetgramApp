@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipeRefresh_Home);
 
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
-        toolbar.setTitle("Bem vindo " + UsuarioFirebase.getUsuarioAtual().getDisplayName());
+        toolbar.setTitle(" Bem vindo");
         toolbar.setLogo(R.drawable.ic_pets_white_24dp);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -125,6 +125,8 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        recyclerViewHomeFragment.setHasTransientState(true);
+        adapterFotoPostada.setHasStableIds(true);
 
 
         //  checarUsuariosSeguidores();

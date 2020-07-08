@@ -20,12 +20,17 @@ public class ChatApplication extends Application implements Application.Activity
     private void setOnline(boolean enabled){
         firebaseFirestore =ConfiguracaoFirebase.getFirebaseFirestore();
         firebaseUser = UsuarioFirebase.getUsuarioAtual();
-        String idUsuario = firebaseUser.getUid();
+        try {
+            String idUsuario = firebaseUser.getUid();
 
-        if (idUsuario != null){
-            firebaseFirestore.collection("Usuarios")
-                    .document(idUsuario)
-                    .update("online",enabled);
+            if (idUsuario != null) {
+                firebaseFirestore.collection("Usuarios")
+                        .document(idUsuario)
+                        .update("online", enabled);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

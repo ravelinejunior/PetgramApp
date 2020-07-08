@@ -16,6 +16,7 @@ import com.bumptech.glide.Priority;
 import java.util.List;
 
 import br.com.petgramapp.R;
+import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.Conversas;
 import br.com.petgramapp.model.GrupoJam;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,8 +40,23 @@ public class AdapterConversasJam extends RecyclerView.Adapter<AdapterConversasJa
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Conversas conversas = listConversas.get(position);
+        String idUsuario = UsuarioFirebase.getIdentificadorUsuario();
         holder.ultimaMensagem.setText(conversas.getUltimaMensagem());
         holder.dataEnvio.setText(conversas.getDataEnvio());
+
+        if (conversas.getNumeroMensagens() != null){
+            if (conversas.getNumeroMensagens() > 0) {
+                holder.notificacaoMensagens.setVisibility(View.VISIBLE);
+                holder.nomeUsuario.setTextColor(context.getResources().getColor(R.color.preto));
+                holder.dataEnvio.setTextColor(context.getResources().getColor(R.color.preto));
+                holder.ultimaMensagem.setTextColor(context.getResources().getColor(R.color.preto));
+
+            } else {
+                holder.notificacaoMensagens.setVisibility(View.GONE);
+            }
+        } else {
+            holder.notificacaoMensagens.setVisibility(View.GONE);
+        }
 
         //validar os grupos
         if (conversas.getIsGroup().equals("true")) {
@@ -71,8 +87,6 @@ public class AdapterConversasJam extends RecyclerView.Adapter<AdapterConversasJa
                     Glide.with(context).load(R.drawable.ic_person_black_preto).dontAnimate()
                             .priority(Priority.IMMEDIATE).into(holder.imagemPerfil);
                 }
-            }else{
-
             }
 
         }
@@ -89,6 +103,7 @@ public class AdapterConversasJam extends RecyclerView.Adapter<AdapterConversasJa
         public TextView dataEnvio;
         public TextView ultimaMensagem;
         public CircleImageView imagemPerfil;
+        public TextView notificacaoMensagens;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -97,6 +112,7 @@ public class AdapterConversasJam extends RecyclerView.Adapter<AdapterConversasJa
             dataEnvio = itemView.findViewById(R.id.dataEnvio_AdapterConversasJam);
             ultimaMensagem = itemView.findViewById(R.id.ultimaMensagem_AdapterConversasJam);
             imagemPerfil = itemView.findViewById(R.id.imagem_fotoPerfil_AdapterConversasJam);
+            notificacaoMensagens = itemView.findViewById(R.id.notificacaoQuantidade_AdapterConversasJam);
         }
     }
 }

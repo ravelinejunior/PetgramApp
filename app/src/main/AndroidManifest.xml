@@ -59,7 +59,11 @@
         </activity>
         <activity
             android:name=".activities.ChatJamActivity"
-            android:theme="@style/AppThemeComentarioActivity" />
+            android:theme="@style/AppThemeComentarioActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.StartActivity" />
+        </activity>
         <activity
             android:name=".activities.ConversasActivity"
             android:icon="@drawable/ic_pets_white_24dp"

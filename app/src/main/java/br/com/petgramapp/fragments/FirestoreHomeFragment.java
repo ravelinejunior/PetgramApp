@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -42,8 +39,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.database.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,7 +49,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
@@ -83,7 +77,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.OnListItemClick {
 
+    private static final int TOTAL_ITENS = 7;
     FirebaseAuth firebaseAuth;
+    FirebaseRecyclerPagingAdapter<FotoPostada, ViewHolderFoto> adapter;
     private ProgressBar progressBarHomeFragment;
     private List<String> listaIdUsuarios = new ArrayList<>();
     private Toolbar toolbar;
@@ -91,9 +87,6 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
     private AdapterStories adapterStories;
     private List<Stories> storiesList = new ArrayList<>();
     private FirebaseFirestore firebaseFirestore;
-    private static final int TOTAL_ITENS = 7;
-    FirebaseRecyclerPagingAdapter<FotoPostada, ViewHolderFoto> adapter;
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private int mCurrentPage = 1;
     private RecyclerView recyclerViewFirestore;
@@ -106,7 +99,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
     @Override
     public View onCreateView(
-        LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home_firestore_adapter, container, false);
 
@@ -123,23 +116,22 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
         toolbar.setTitle(" Bem vindo");
         toolbar.setLogo(R.drawable.ic_pets_white_24dp);
-        toolbar.setPadding(15,0,0,0);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getContext(),R.color.branco));
+        toolbar.setPadding(15, 0, 0, 0);
+        toolbar.setTitleTextColor(ContextCompat.getColor(getContext(), R.color.branco));
 
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
 
         //query
         Query query = firebaseFirestore.collection("Posts")
                 .orderBy("dataPostada", Query.Direction.DESCENDING);
-               // .limitToLast(25);
+        // .limitToLast(25);
 
 
         com.google.firebase.database.Query query1 = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts");
 
-       //PAGINATION
+        //PAGINATION
         PagedList.Config config = new PagedList.Config.Builder()
                 .setPageSize(10)
                 .setMaxSize(200)
@@ -160,9 +152,9 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
                     public FotoPostada parseSnapshot(@NonNull DataSnapshot snapshot) {
                         FotoPostada fotoPostada = snapshot.getValue(FotoPostada.class);
                         swipeRefreshLayout.setRefreshing(false);
-                        if (fotoPostada.getIdUsuarioPostou().equals(UsuarioFirebase.getIdentificadorUsuario())){
+                        if (fotoPostada.getIdUsuarioPostou().equals(UsuarioFirebase.getIdentificadorUsuario())) {
                             return null;
-                        }else{
+                        } else {
                             return fotoPostada;
                         }
                     }
@@ -174,8 +166,13 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
             @NonNull
             @Override
             public ViewHolderFoto onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_homefragment_post,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_homefragment_post, parent, false);
                 return new ViewHolderFoto(view);
+            }
+
+            @Override
+            public void registerAdapterDataObserver(@NonNull RecyclerView.AdapterDataObserver observer) {
+                super.registerAdapterDataObserver(observer);
             }
 
             @Override
@@ -192,7 +189,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
                         .fitCenterTransform()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .disallowHardwareConfig()
-                        .override(holder.imagemPostadaHome.getWidth(),holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
+                        .override(holder.imagemPostadaHome.getWidth(), holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
 
                 if (fotoPostada != null) {
                     //USUARIOS
@@ -376,7 +373,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
                         dialog.show();
 
                     });
-                }else{
+                } else {
                     holder.itemView.setVisibility(View.GONE);
                 }
             }
@@ -401,9 +398,9 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
                         break;
 
                     case ERROR:
-                        retry();
                         break;
                 }
+                retry();
             }
         };
 
@@ -412,7 +409,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         RecyclerView recyclerViewFirestore = view.findViewById(R.id.recyclerViewTestes_Firestore_Fragment);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerViewFirestore.setLayoutManager(linearLayoutManager);
-        adapterFirestore = new AdapterFirestore(options1,getContext());
+        adapterFirestore = new AdapterFirestore(options1, getContext());
         adapterFirestore.setHasStableIds(true);
 
         recyclerViewFirestore.setItemViewCacheSize(20);
@@ -425,7 +422,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         Query queryCop = firebaseFirestore.collection("Posts")
                 .orderBy("timeStamp").limit(10);
 
-        queryCop.get().addOnCompleteListener(getActivity(), new OnCompleteListener<QuerySnapshot>() {
+       /* queryCop.get().addOnCompleteListener(getActivity(), new OnCompleteListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -490,7 +487,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
                     recyclerViewFirestore.addOnScrollListener(scrollListener);
                 }
             }
-        });
+        });*/
 
 
         //STORIES
@@ -525,6 +522,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
+
     private void readStories() {
         DatabaseReference usuariosReferencia = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios");
         usuariosReferencia.addValueEventListener(new ValueEventListener() {
@@ -615,14 +613,14 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
         if (item.getItemId() == R.id.item_sair_MenuSair) {
             deslogarUsuario();
-        }else if (item.getItemId() == R.id.chat_MenuSair){
+        } else if (item.getItemId() == R.id.chat_MenuSair) {
             Intent intent = new Intent(getContext(), ChatJamActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }else if (item.getItemId() == R.id.atualizar_update_MenuSair){
+        } else if (item.getItemId() == R.id.atualizar_update_MenuSair) {
 
             Intent intent = new Intent(getContext(), FirestoreTestes.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
         }
@@ -633,11 +631,9 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
     @Override
     public void OnItemClick(DocumentSnapshot snapshot, int position) {
-        Log.i("onClickAdapterFirestore","Item clicado: "+position);
-        Log.i("onClickAdapterFirestore","ID clicado: "+snapshot.getId());
+        Log.i("onClickAdapterFirestore", "Item clicado: " + position);
+        Log.i("onClickAdapterFirestore", "ID clicado: " + snapshot.getId());
     }
-
-
 
 
     @Override
@@ -658,7 +654,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         progressBarHomeFragment.setVisibility(View.GONE);
     }
 
-    private void informacoesPublicacao(CircleImageView imagemPerfil,TextView nomeUsuario, TextView publicadoPor, String userId){
+    private void informacoesPublicacao(CircleImageView imagemPerfil, TextView nomeUsuario, TextView publicadoPor, String userId) {
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").child(userId);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -666,11 +662,11 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
 
-                if (usuario.getUriCaminhoFotoPetUsuario() != null){
+                if (usuario.getUriCaminhoFotoPetUsuario() != null) {
                     Uri uriFotoPerfil = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
                     // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                     Glide.with(getContext()).load(uriFotoPerfil).priority(Priority.IMMEDIATE).into(imagemPerfil);
-                }else{
+                } else {
                     //Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                     Glide.with(getContext()).load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                 }
@@ -689,7 +685,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         });
     }
 
-    private void getQuantidadeComentarios(String idPostagem,TextView comentariosView){
+    private void getQuantidadeComentarios(String idPostagem, TextView comentariosView) {
         DatabaseReference referenceComentario = ConfiguracaoFirebase.getReferenciaDatabase()
                 .child("Comentarios")
                 .child(idPostagem);
@@ -708,14 +704,14 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         });
     }
 
-    private void quantidadeLikes(TextView quantidadeLikesText, String idPostagem){
+    private void quantidadeLikes(TextView quantidadeLikesText, String idPostagem) {
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference likesRef = reference.child("Likes").child(idPostagem);
 
         likesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                quantidadeLikesText.setText(dataSnapshot.getChildrenCount()+" likes");
+                quantidadeLikesText.setText(dataSnapshot.getChildrenCount() + " likes");
             }
 
             @Override
@@ -726,7 +722,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
     }
 
-    private void fotoSalvar(String idPostagem, ImageView imagemSalva){
+    private void fotoSalvar(String idPostagem, ImageView imagemSalva) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference salvarReference = reference.child("SalvarFotos").child(firebaseUser.getUid());
@@ -734,11 +730,11 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         salvarReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(idPostagem).exists()){
+                if (dataSnapshot.child(idPostagem).exists()) {
                     imagemSalva.setImageResource(R.drawable.ic_foto_salva_completo);
                     imagemSalva.setTag("Salva");
 
-                }else{
+                } else {
 
                     imagemSalva.setImageResource(R.drawable.ic_foto_salva_oco);
                     imagemSalva.setTag("Salvar");
@@ -753,7 +749,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
     }
 
-    private void estaCurtido(String idPostagem, LikeButton likeButtonImage){
+    private void estaCurtido(String idPostagem, LikeButton likeButtonImage) {
         FirebaseUser user = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference likesRef = reference.child("Likes").child(idPostagem);
@@ -761,11 +757,11 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         likesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(user.getUid()).exists()){
+                if (dataSnapshot.child(user.getUid()).exists()) {
                     // likeButtonImage.setImageResource(R.drawable.ic_likebutton_colorido);
                     likeButtonImage.setTag("curtido");
                     likeButtonImage.setLiked(true);
-                }else{
+                } else {
                     // likeButtonImage.setImageResource(R.drawable.ic_like_branco);
                     likeButtonImage.setTag("curtir");
                     likeButtonImage.setLiked(false);
@@ -780,7 +776,7 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
     }
 
-    private void deletarPostagem(String idUsuario,String idPostagem){
+    private void deletarPostagem(String idUsuario, String idPostagem) {
 
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference postsRef = ConfiguracaoFirebase.getReferenciaDatabase()
@@ -790,11 +786,11 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (idUsuario.equals(firebaseUser.getUid())){
+                if (idUsuario.equals(firebaseUser.getUid())) {
                     postsRef.removeValue().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()){
-                            deletaNotificacao(idUsuario,idPostagem);
-                            alteraNotificacao(idUsuario,idPostagem);
+                        if (task.isSuccessful()) {
+                            deletaNotificacao(idUsuario, idPostagem);
+                            alteraNotificacao(idUsuario, idPostagem);
                             Toast.makeText(getContext(), "Deletado com sucesso.", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -809,40 +805,40 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         });
     }
 
-    private void addNovaNotificacao(String idUsuario,String idPostagem){
+    private void addNovaNotificacao(String idUsuario, String idPostagem) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+        DatabaseReference notificacaoReference = reference.child("Notificacao").
                 child(idUsuario);
         // child(idPostagem).child(idUsuario);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("idUsuario",firebaseUser.getUid());
-        hashMap.put("comentarioFeito","Gostou da sua postagem");
-        hashMap.put("idPostagem",idPostagem);
-        hashMap.put("isPostado",true);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario", firebaseUser.getUid());
+        hashMap.put("comentarioFeito", "Gostou da sua postagem");
+        hashMap.put("idPostagem", idPostagem);
+        hashMap.put("isPostado", true);
 
         notificacaoReference.push().setValue(hashMap);
 
     }
 
-    private void alteraNotificacao(String idUsuario,String idPostagem){
+    private void alteraNotificacao(String idUsuario, String idPostagem) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+        DatabaseReference notificacaoReference = reference.child("Notificacao").
                 child(idUsuario).child(idPostagem);
         //    child(idPostagem).child(idUsuario);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("idUsuario",firebaseUser.getUid());
-        hashMap.put("idPostagem",null);
-        hashMap.put("isPostado",true);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario", firebaseUser.getUid());
+        hashMap.put("idPostagem", null);
+        hashMap.put("isPostado", true);
 
         notificacaoReference.updateChildren(hashMap);
 
     }
 
-    private void deletaNotificacao(String idUsuario,String idPostagem){
+    private void deletaNotificacao(String idUsuario, String idPostagem) {
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
+        DatabaseReference notificacaoReference = reference.child("Notificacao").child(idUsuario);
         notificacaoReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -850,8 +846,8 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
 
                 notificacaoReference.removeValue().addOnCompleteListener(task -> {
 
-                    if (task.isSuccessful()){
-                        Log.i("notificacaoReference","Notificação excluida. Id Postagem = "+idPostagem);
+                    if (task.isSuccessful()) {
+                        Log.i("notificacaoReference", "Notificação excluida. Id Postagem = " + idPostagem);
                     }
                 });
             }
@@ -863,17 +859,17 @@ public class FirestoreHomeFragment extends Fragment implements AdapterFirestore.
         });
     }
 
-    private void addNovaNotificacaoSalvar(String idUsuario,String idPostagem){
+    private void addNovaNotificacaoSalvar(String idUsuario, String idPostagem) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+        DatabaseReference notificacaoReference = reference.child("Notificacao").
                 child(idUsuario);
         //    child(idPostagem).child(idUsuario);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("idUsuario",firebaseUser.getUid());
-        hashMap.put("comentarioFeito","Salvou sua postagem!");
-        hashMap.put("idPostagem",idPostagem);
-        hashMap.put("isPostado",true);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario", firebaseUser.getUid());
+        hashMap.put("comentarioFeito", "Salvou sua postagem!");
+        hashMap.put("idPostagem", idPostagem);
+        hashMap.put("isPostado", true);
 
         notificacaoReference.push().setValue(hashMap);
 

@@ -15,14 +15,12 @@ import br.com.petgramapp.helper.ConfiguracaoFirebase;
 
 public class Conversas implements Parcelable, Serializable {
 
-
     private String idRemetente;
     private String idDestinatario;
     private String ultimaMensagem;
     private String dataEnvio;
     private Long timeStamp;
     private Usuario usuario;
-    private List<Usuario> usuarioUnicoList = new ArrayList<>();
     public static final Creator<Conversas> CREATOR = new Creator<Conversas>() {
         @Override
         public Conversas createFromParcel(Parcel in) {
@@ -34,6 +32,7 @@ public class Conversas implements Parcelable, Serializable {
             return new Conversas[size];
         }
     };
+    private List<Usuario> usuarioUnicoList = new ArrayList<>();
     private String isGroup;
 
 
@@ -50,6 +49,7 @@ public class Conversas implements Parcelable, Serializable {
     public Conversas() {
         this.setIsGroup("false");
     }
+    private Integer numeroMensagens;
 
     protected Conversas(Parcel in) {
         idRemetente = in.readString();
@@ -62,8 +62,43 @@ public class Conversas implements Parcelable, Serializable {
             timeStamp = in.readLong();
         }
         usuario = in.readParcelable(Usuario.class.getClassLoader());
+        if (in.readByte() == 0) {
+            numeroMensagens = null;
+        } else {
+            numeroMensagens = in.readInt();
+        }
         usuarioUnicoList = in.createTypedArrayList(Usuario.CREATOR);
         isGroup = in.readString();
+        grupoJam = in.readParcelable(GrupoJam.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(idRemetente);
+        dest.writeString(idDestinatario);
+        dest.writeString(ultimaMensagem);
+        dest.writeString(dataEnvio);
+        if (timeStamp == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(timeStamp);
+        }
+        dest.writeParcelable(usuario, flags);
+        if (numeroMensagens == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(numeroMensagens);
+        }
+        dest.writeTypedList(usuarioUnicoList);
+        dest.writeString(isGroup);
+        dest.writeParcelable(grupoJam, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public String getIdRemetente() {
@@ -80,6 +115,14 @@ public class Conversas implements Parcelable, Serializable {
 
     public void setIdDestinatario(String idDestinatario) {
         this.idDestinatario = idDestinatario;
+    }
+
+    public Integer getNumeroMensagens() {
+        return numeroMensagens;
+    }
+
+    public void setNumeroMensagens(Integer numeroMensagens) {
+        this.numeroMensagens = numeroMensagens;
     }
 
     public String getUltimaMensagem() {
@@ -137,8 +180,10 @@ public class Conversas implements Parcelable, Serializable {
         hash.put("idDestinatario", this.idDestinatario);
         hash.put("ultimaMensagem", this.ultimaMensagem);
         hash.put("dataEnvio", this.dataEnvio);
+        hash.put("isGroup", this.isGroup);
         hash.put("timeStamp", this.timeStamp);
         hash.put("usuario", this.usuario);
+        hash.put("numeroMensagens", this.numeroMensagens);
 
         firebaseFirestore.collection("Talks")
                 .document("Conversas")
@@ -151,6 +196,15 @@ public class Conversas implements Parcelable, Serializable {
     public void salvarConversaOutroUsuario(Usuario usuario) {
         FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
         setUsuario(usuario);
+        Map<String, Object> hash = new HashMap<>();
+        hash.put("idRemetente", this.idRemetente);
+        hash.put("idDestinatario", this.idDestinatario);
+        hash.put("ultimaMensagem", this.ultimaMensagem);
+        hash.put("dataEnvio", this.dataEnvio);
+        hash.put("isGroup", this.isGroup);
+        hash.put("timeStamp", this.timeStamp);
+        hash.put("usuario", this.usuario);
+        hash.put("numeroMensagens", this.numeroMensagens);
 
         firebaseFirestore.collection("Talks")
                 .document("Conversas")
@@ -161,27 +215,6 @@ public class Conversas implements Parcelable, Serializable {
     }
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(idRemetente);
-        dest.writeString(idDestinatario);
-        dest.writeString(ultimaMensagem);
-        dest.writeString(dataEnvio);
-        if (timeStamp == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(timeStamp);
-        }
-        dest.writeParcelable(usuario, flags);
-        dest.writeTypedList(usuarioUnicoList);
-        dest.writeString(isGroup);
-    }
 }
 
 

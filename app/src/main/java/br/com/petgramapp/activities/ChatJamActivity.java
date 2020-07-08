@@ -47,6 +47,8 @@ public class ChatJamActivity extends AppCompatActivity {
         carregarElementos();
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         //configuração de abas
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
