@@ -29,7 +29,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -66,7 +65,6 @@ public class TalksJamActivity extends AppCompatActivity {
 
     public static String idUsuarioDestinatario;
     public Usuario usuarioLogado;
-    List<DocumentChange> documentChangeList = new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
     private TextView nomeUsuarioTalks;
     private CircleImageView imagemPerfilTalks;
@@ -89,10 +87,6 @@ public class TalksJamActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     //grupos
     private GrupoJam grupoJam;
-    //teste com pagination firestore
-    private DocumentSnapshot lastVisible;
-    private boolean isScrolling;
-    private boolean isLastItemReached;
     private int numConversas = 0;
 
     //teste com database RealTime
@@ -113,7 +107,6 @@ public class TalksJamActivity extends AppCompatActivity {
         carregarElementos();
         reference = ConfiguracaoFirebase.getReferenciaDatabase();
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
-
         storageReference = ConfiguracaoFirebase.getStorageReference();
 
         ChatApplication application = (ChatApplication) getApplication();
@@ -128,7 +121,7 @@ public class TalksJamActivity extends AppCompatActivity {
                 usuarioSelecionado = bundle.getParcelable("chatContato");
                 nomeUsuarioTalks.setText(usuarioSelecionado.getNomePetUsuario());
                 conversasGeral = (Conversas) bundle.getSerializable("conversasFull");
-               // Log.d("chatGeral", conversasGeral.getNumeroMensagens() + " conversas");
+                // Log.d("chatGeral", conversasGeral.getNumeroMensagens() + " conversas");
                 idUsuarioDestinatario = usuarioSelecionado.getId();
                 if (usuarioSelecionado.getUriCaminhoFotoPetUsuario() != null) {
                     Uri uriFotoPerfil = Uri.parse(usuarioSelecionado.getUriCaminhoFotoPetUsuario());
@@ -143,7 +136,7 @@ public class TalksJamActivity extends AppCompatActivity {
                 idUsuarioDestinatario = grupoJam.getIdGrupo();
                 nomeUsuarioTalks.setText(grupoJam.getNomeGrupo());
                 conversasGeral = (Conversas) bundle.getSerializable("conversasFull");
-            //    Log.d("chatGeral", conversasGeral.getNumeroMensagens() + " conversas");
+                //    Log.d("chatGeral", conversasGeral.getNumeroMensagens() + " conversas");
                 if (grupoJam.getFotoGrupo() != null) {
                     Uri fotoGrupoUri = Uri.parse(grupoJam.getFotoGrupo());
                     Picasso.get().load(fotoGrupoUri).
@@ -189,19 +182,30 @@ public class TalksJamActivity extends AppCompatActivity {
                 .child(idUsuarioDestinatario);
 
         if (conversasGeral != null) {
-            if (conversasGeral.getNumeroMensagens() > 0) {
+
+            if (conversasGeral.getNumeroMensagens() != null) {
+
+                if (conversasGeral.getNumeroMensagens() > 0) {
+
+                    firebaseFirestore.collection("Talks")
+                            .document("Conversas")
+                            .collection(idUsuarioRemetente)
+                            .document(idUsuarioDestinatario).
+                            update("numeroMensagens", 0);
+
+                    firebaseFirestore.collection("Talks")
+                            .document("Conversas")
+                            .collection(idUsuarioDestinatario)
+                            .document(idUsuarioRemetente).
+                            update("numeroMensagens", 0);
+
+                }
+            } else {
                 firebaseFirestore.collection("Talks")
                         .document("Conversas")
                         .collection(idUsuarioRemetente)
                         .document(idUsuarioDestinatario).
-                        update("numeroMensagens", 0);
-
-                firebaseFirestore.collection("Talks")
-                        .document("Conversas")
-                        .collection(idUsuarioDestinatario)
-                        .document(idUsuarioRemetente).
-                        update("numeroMensagens", 0);
-
+                        update("numeroMensagens", 1);
             }
         }
 
@@ -216,6 +220,7 @@ public class TalksJamActivity extends AppCompatActivity {
         });
 
     }
+
 
     @Override
     protected void onStart() {

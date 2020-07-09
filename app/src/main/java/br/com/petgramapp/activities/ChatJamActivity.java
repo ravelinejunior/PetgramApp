@@ -59,7 +59,6 @@ public class ChatJamActivity extends AppCompatActivity {
                         .create()
 
         );
-
         ViewPager viewPager = findViewById(R.id.viewPagerTab);
         viewPager.setAdapter(adapter);
 
