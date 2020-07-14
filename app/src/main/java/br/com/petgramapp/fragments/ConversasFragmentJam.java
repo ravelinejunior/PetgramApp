@@ -9,15 +9,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -44,7 +47,7 @@ public class ConversasFragmentJam extends Fragment {
     private String idUsuarioRemetente;
     private String idUsuarioDestinatario;
     private CollectionReference reference;
-    private Task<QuerySnapshot> eventListener;
+    private ListenerRegistration eventListener;
     private CollectionReference usuarioCollection;
     private List<Usuario> usuarioList = new ArrayList<>();
     private ProgressBar progressBarConversasJam;
@@ -156,7 +159,7 @@ public class ConversasFragmentJam extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-
+        eventListener.remove();
     }
 
     @Override
@@ -177,7 +180,7 @@ public class ConversasFragmentJam extends Fragment {
                 if (nomeUsuario.contains(texto) || ultimaMensagem.contains(texto)) {
                     conversasLista.add(conversas);
                 }
-            }else{
+            } else {
 
                 String nomeUsuario = conversas.getGrupoJam().getNomeGrupo().toLowerCase();
                 String ultimaMensagem = conversas.getUltimaMensagem().toLowerCase();
@@ -198,21 +201,18 @@ public class ConversasFragmentJam extends Fragment {
 
     public void readConversas() {
 
-        conversasList.clear();
-        eventListener = reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                reference.orderBy("timeStamp", Query.Direction.DESCENDING)
-                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        eventListener = reference.orderBy("timeStamp", Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        conversasList.clear();
                         for (DocumentSnapshot ds : queryDocumentSnapshots) {
                             Conversas conversas = ds.toObject(Conversas.class);
 
                             if (conversas.getIsGroup().equals("false")) {
 
-                                if (conversas.getUsuario()!= null){
+                                if (conversas.getUsuario() != null) {
                                     if (conversas.getUsuario().getId().equals(UsuarioFirebase.getIdentificadorUsuario()))
                                         continue;
                                 }
@@ -228,9 +228,7 @@ public class ConversasFragmentJam extends Fragment {
                     }
                 });
 
-            }
 
-        });
 
     }
 

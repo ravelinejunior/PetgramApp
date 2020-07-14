@@ -1,11 +1,15 @@
 package br.com.petgramapp.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -240,6 +245,7 @@ public class TalksJamActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent i = new Intent(TalksJamActivity.this, ChatJamActivity.class);
         startActivity(i);
+        finish();
     }
 
     @Override
@@ -383,6 +389,77 @@ public class TalksJamActivity extends AppCompatActivity {
             }
         });*/
 
+
+    }
+
+    private void deleteMensagem() {
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Excluir mensagens");
+        alert.setMessage("Deseja excluir todas as mensagens?");
+        alert.setIcon(getDrawable(R.drawable.ic_pets_black_24dp));
+        alert.setPositiveButton("Confirmar", (dialog, which) -> {
+
+            Query query = firebaseFirestore.collection("Mensagens")
+                    .document(idUsuarioRemetente)
+                    .collection(idUsuarioDestinatario);
+
+            eventListener = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                    for (DocumentSnapshot ds : queryDocumentSnapshots) {
+                        ds.getReference().delete();
+                    }
+                }
+            });
+
+            deleteConversas();
+            Toast.makeText(TalksJamActivity.this, "Mensagens exluídas com sucesso.", Toast.LENGTH_SHORT).show();
+
+        });
+
+        alert.setNegativeButton("Cancelar", (dialog, which) ->
+                Toast.makeText(TalksJamActivity.this, "Suas mensagens estão à salvo", Toast.LENGTH_SHORT).show()
+        );
+
+        AlertDialog dialog = alert.create();
+        dialog.show();
+
+
+    }
+
+    private void deleteConversas() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Excluir conversa");
+        alert.setMessage("Deseja excluir a conversa?");
+        alert.setIcon(getDrawable(R.drawable.fui_ic_twitter_bird_white_24dp));
+        alert.setPositiveButton("Excluir", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                firebaseFirestore.collection("Talks")
+                        .document("Conversas")
+                        .collection(idUsuarioRemetente)
+                        .document(idUsuarioDestinatario).delete();
+
+                Toast.makeText(TalksJamActivity.this, "Conversa excluída com sucesso! ", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
+
+        alert.setNegativeButton("Cancelar", (dialog, which) -> {
+
+            Toast.makeText(TalksJamActivity.this, "Conversa não foi excluída, mas, as mensagens já foram deletadas ",
+                    Toast.LENGTH_LONG).show();
+            finish();
+
+        });
+
+        AlertDialog dialog = alert.create();
+        dialog.show();
 
     }
 
@@ -727,4 +804,20 @@ public class TalksJamActivity extends AppCompatActivity {
         recyclerViewContentTalks = findViewById(R.id.recyclerView_Content_ChatTalksJam);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_exclusao_talks, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_excluir_item_talks:
+                deleteMensagem();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
