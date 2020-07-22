@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,6 +68,7 @@ import br.com.petgramapp.helper.RecyclerItemClickListener;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
 import br.com.petgramapp.model.Usuario;
+import br.com.petgramapp.utils.SpacesItemDecoration;
 
 public class PostagemActivity extends AppCompatActivity {
 
@@ -190,6 +193,9 @@ public class PostagemActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         recyclerViewFiltros.setLayoutManager(layoutManager);
+        recyclerViewFiltros.setItemAnimator(new DefaultItemAnimator());
+        int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+        recyclerViewFiltros.addItemDecoration(new SpacesItemDecoration(space));
         recyclerViewFiltros.setAdapter(adapterFiltros);
 
         recyclerViewFiltros.addOnItemTouchListener(new RecyclerItemClickListener(

@@ -458,8 +458,15 @@ public class TalksJamActivity extends AppCompatActivity {
 
         });
 
-        AlertDialog dialog = alert.create();
-        dialog.show();
+        // TODO: 13/07/2020  CRIAR UMA NOVA CONVERSA SETANDO O VALOR DA MENSAGEM COMO NULO
+
+        if (grupoJam != null){
+            return;
+        }else{
+            AlertDialog dialog = alert.create();
+            dialog.show();
+        }
+
 
     }
 

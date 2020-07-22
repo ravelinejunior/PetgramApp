@@ -16,8 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -56,16 +54,16 @@ import br.com.petgramapp.model.FotoPostada;
 import br.com.petgramapp.model.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,AdapterFirestore.ViewHolderFoto> {
-        public Context context;
-        public OnListItemClick onListItemClick;
-        public List<FotoPostada> fotoPostadaList;
+public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada, AdapterFirestore.ViewHolderFoto> {
+    public Context context;
+    public OnListItemClick onListItemClick;
+    public List<FotoPostada> fotoPostadaList;
 
     public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options) {
         super(options);
     }
 
-    public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options, Context context,OnListItemClick onListItemClick) {
+    public AdapterFirestore(@NonNull FirestorePagingOptions<FotoPostada> options, Context context, OnListItemClick onListItemClick) {
         super(options);
         this.context = context;
         this.onListItemClick = onListItemClick;
@@ -97,26 +95,26 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
     @Override
     protected void onLoadingStateChanged(@NonNull LoadingState state) {
         super.onLoadingStateChanged(state);
-        switch (state){
+        switch (state) {
 
             case FINISHED:
-                Log.d("PAGING_LOG","CARREGADO");
+                Log.d("PAGING_LOG", "CARREGADO");
                 break;
 
             case LOADED:
-                Log.d("PAGING_LOG","Total de itens: "+getItemCount());
+                Log.d("PAGING_LOG", "Total de itens: " + getItemCount());
                 break;
 
             case LOADING_INITIAL:
-                Log.d("PAGING_LOG","Carregando inicial");
+                Log.d("PAGING_LOG", "Carregando inicial");
                 break;
 
             case LOADING_MORE:
-                Log.d("PAGING_LOG","Carregando mais...");
+                Log.d("PAGING_LOG", "Carregando mais...");
                 break;
 
             case ERROR:
-                Log.d("PAGING_LOG","Erro. ");
+                Log.d("PAGING_LOG", "Erro. ");
                 break;
         }
     }
@@ -129,9 +127,9 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
                 .fitCenterTransform()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .disallowHardwareConfig()
-                .override(holder.imagemPostadaHome.getWidth(),holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
+                .override(holder.imagemPostadaHome.getWidth(), holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
 
-        applyOptions(context,new GlideBuilder());
+        applyOptions(context, new GlideBuilder());
 
         //USUARIOS
         Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
@@ -145,7 +143,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
             holder.descricaoHome.setText(fotoPostada.getDescricaoImagemPostada());
         }
 
-        if (fotoPostada.getDataPostada()!= null){
+        if (fotoPostada.getDataPostada() != null) {
             if (fotoPostada.getDataPostada().equalsIgnoreCase("") || fotoPostada.getDataPostada() == null) {
                 holder.dataPostada.setVisibility(View.GONE);
             } else {
@@ -157,8 +155,8 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         informacoesPublicacao(holder.fotoPerfilHome, holder.nomeUsuarioHome, holder.postadaPorHome, fotoPostada.getIdUsuarioPostou());
 
         //CURTIDAS
-        estaCurtido(fotoPostada.getIdPostagem(),holder.likeButtonHome);
-        quantidadeLikes(holder.qtLikesHome,fotoPostada.getIdPostagem());
+        estaCurtido(fotoPostada.getIdPostagem(), holder.likeButtonHome);
+        quantidadeLikes(holder.qtLikesHome, fotoPostada.getIdPostagem());
 
         //LIKES
         holder.likeButtonHome.setOnLikeListener(new OnLikeListener() {
@@ -171,7 +169,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
                         child(firebaseUser.getUid()).setValue(true);
 
                 //NOTIFICACAO
-                addNovaNotificacao(fotoPostada.getIdUsuarioPostou(),fotoPostada.getIdPostagem());
+                addNovaNotificacao(fotoPostada.getIdUsuarioPostou(), fotoPostada.getIdPostagem());
             }
 
             @Override
@@ -184,11 +182,11 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         });
 
         //SALVAR POSTS
-        fotoSalvar(fotoPostada.getIdPostagem(),holder.salvarButtonHome);
+        fotoSalvar(fotoPostada.getIdPostagem(), holder.salvarButtonHome);
 
         holder.salvarButtonHome.setOnClickListener(v -> {
 
-            if(holder.salvarButtonHome.getTag().equals("Salvar")){
+            if (holder.salvarButtonHome.getTag().equals("Salvar")) {
 
                 ConfiguracaoFirebase.getReferenciaDatabase().child("SalvarFotos")
                         .child(firebaseUser.getUid())
@@ -196,11 +194,10 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
                         .setValue(true);
                 Toast.makeText(context, "Fofo né? Agora está salvo com você.", Toast.LENGTH_LONG).show();
 
-                addNovaNotificacaoSalvar(fotoPostada.getIdUsuarioPostou(),fotoPostada.getIdPostagem());
+                addNovaNotificacaoSalvar(fotoPostada.getIdUsuarioPostou(), fotoPostada.getIdPostagem());
 
 
-
-            }else{
+            } else {
                 ConfiguracaoFirebase.getReferenciaDatabase().child("SalvarFotos")
                         .child(firebaseUser.getUid())
                         .child(fotoPostada.getIdPostagem())
@@ -215,8 +212,8 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         holder.qtLikesHome.setOnClickListener(v -> {
 
             Intent intent = new Intent(context, SeguidoresActivity.class);
-            intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
-            intent.putExtra("titulo","Curtir");
+            intent.putExtra("idPostagem", fotoPostada.getIdPostagem());
+            intent.putExtra("titulo", "Curtir");
             context.startActivity(intent);
 
         });
@@ -224,8 +221,8 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         holder.imagemLikeHome.setOnClickListener(v -> {
 
             Intent intent = new Intent(context, SeguidoresActivity.class);
-            intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
-            intent.putExtra("titulo","Curtir");
+            intent.putExtra("idPostagem", fotoPostada.getIdPostagem());
+            intent.putExtra("titulo", "Curtir");
             context.startActivity(intent);
 
         });
@@ -234,56 +231,81 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         //COMENTARIOS
         holder.comentarioButtonHome.setOnClickListener(v -> {
             Intent intent = new Intent(context, ComentariosActivity.class);
-            intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
-            intent.putExtra("usuarioPostouId",fotoPostada.getIdUsuarioPostou());
+            intent.putExtra("idPostagem", fotoPostada.getIdPostagem());
+            intent.putExtra("usuarioPostouId", fotoPostada.getIdUsuarioPostou());
             context.startActivity(intent);
         });
 
         holder.comentariosTodosHome.setOnClickListener(v -> {
             Intent intent = new Intent(context, ComentariosActivity.class);
-            intent.putExtra("idPostagem",fotoPostada.getIdPostagem());
-            intent.putExtra("usuarioPostouId",fotoPostada.getIdUsuarioPostou());
+            intent.putExtra("idPostagem", fotoPostada.getIdPostagem());
+            intent.putExtra("usuarioPostouId", fotoPostada.getIdUsuarioPostou());
             context.startActivity(intent);
         });
 
-        getQuantidadeComentarios(fotoPostada.getIdPostagem(),holder.comentariosTodosHome);
+        getQuantidadeComentarios(fotoPostada.getIdPostagem(), holder.comentariosTodosHome);
 
         //POSTAGEM DETALHES
         holder.imagemPostadaHome.setOnClickListener(v -> {
             SharedPreferences.Editor editor = context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
-            editor.putString("idPostagem",fotoPostada.getIdPostagem());
+            editor.putString("idPostagem", fotoPostada.getIdPostagem());
             editor.apply();
 
+            try {
+                Intent i = new Intent(context, PostagemUsuarioFragment.class);
+                context.startActivity(i);
+            } catch (Exception e) {
+
+            }
+/*
             ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).
-                    replace(R.id.fragment_container_principal_StartAct,new PostagemUsuarioFragment()).commit();
+                    replace(R.id.fragment_container_principal_StartAct,new PostagemUsuarioFragment()).commit();*/
 
 
         });
 
         holder.nomeUsuarioHome.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
-            editor.putString("idUsuario",fotoPostada.getIdUsuarioPostou());
+            SharedPreferences.Editor editor = context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
+            editor.putString("idUsuario", fotoPostada.getIdUsuarioPostou());
             editor.apply();
 
+            try {
+                Intent i = new Intent(context, PerfilFragment.class);
+                context.startActivity(i);
+            } catch (Exception e) {
+
+            }
+
+/*
             ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
-                    replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();
+                    replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();*/
         });
 
         holder.fotoPerfilHome.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
-            editor.putString("idUsuario",fotoPostada.getIdUsuarioPostou());
+            SharedPreferences.Editor editor = context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
+            editor.putString("idUsuario", fotoPostada.getIdUsuarioPostou());
             editor.apply();
 
+            try {
+                Intent i = new Intent(context, PerfilFragment.class);
+                context.startActivity(i);
+            } catch (Exception e) {
+
+            }
+
+
+
+/*
             ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).
-                    replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();
+                    replace(R.id.fragment_container_principal_StartAct,new PerfilFragment()).commit();*/
 
         });
 
         //DELETAR POSTAGEM
 
-        if (!firebaseUser.getUid().equalsIgnoreCase(fotoPostada.getIdUsuarioPostou())){
+        if (!firebaseUser.getUid().equalsIgnoreCase(fotoPostada.getIdUsuarioPostou())) {
             holder.deletarPostagemHome.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.deletarPostagemHome.setVisibility(View.VISIBLE);
         }
 
@@ -308,7 +330,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
             builder.setPositiveButton(R.string.confirmar, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    deletarPostagem(firebaseUser.getUid(),fotoPostada.getIdPostagem());
+                    deletarPostagem(firebaseUser.getUid(), fotoPostada.getIdPostagem());
                     dialog.dismiss();
                     Intent intent = new Intent(context, StartActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -316,7 +338,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
                 }
             });
             builder.setNegativeButton(R.string.cancelar, (dialog, which) -> {
-                Snackbar.make(v,"Ufa, uma postagem fofa dessas deveria ser suuuper vista, não acha?",Snackbar.LENGTH_LONG).
+                Snackbar.make(v, "Ufa, uma postagem fofa dessas deveria ser suuuper vista, não acha?", Snackbar.LENGTH_LONG).
                         show();
                 dialog.dismiss();
             });
@@ -332,11 +354,11 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
     @NonNull
     @Override
     public ViewHolderFoto onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_homefragment_post,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_homefragment_post, parent, false);
         return new ViewHolderFoto(view);
     }
 
-    private void informacoesPublicacao(CircleImageView imagemPerfil,TextView nomeUsuario, TextView publicadoPor, String userId){
+    private void informacoesPublicacao(CircleImageView imagemPerfil, TextView nomeUsuario, TextView publicadoPor, String userId) {
         DatabaseReference databaseReference = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios").child(userId);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -344,11 +366,11 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
 
-                if (usuario.getUriCaminhoFotoPetUsuario() != null){
+                if (usuario.getUriCaminhoFotoPetUsuario() != null) {
                     Uri uriFotoPerfil = Uri.parse(usuario.getUriCaminhoFotoPetUsuario());
                     // Picasso.get().load(uriFotoPerfil).placeholder(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                     Glide.with(context).load(uriFotoPerfil).priority(Priority.IMMEDIATE).into(imagemPerfil);
-                }else{
+                } else {
                     //Picasso.get().load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                     Glide.with(context).load(R.drawable.ic_pessoa_usuario).into(imagemPerfil);
                 }
@@ -366,7 +388,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         });
     }
 
-    private void getQuantidadeComentarios(String idPostagem,TextView comentariosView){
+    private void getQuantidadeComentarios(String idPostagem, TextView comentariosView) {
         DatabaseReference referenceComentario = ConfiguracaoFirebase.getReferenciaDatabase()
                 .child("Comentarios")
                 .child(idPostagem);
@@ -385,14 +407,14 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         });
     }
 
-    private void quantidadeLikes(TextView quantidadeLikesText, String idPostagem){
+    private void quantidadeLikes(TextView quantidadeLikesText, String idPostagem) {
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference likesRef = reference.child("Likes").child(idPostagem);
 
         likesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                quantidadeLikesText.setText(dataSnapshot.getChildrenCount()+" likes");
+                quantidadeLikesText.setText(dataSnapshot.getChildrenCount() + " likes");
             }
 
             @Override
@@ -403,7 +425,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
 
     }
 
-    private void fotoSalvar(String idPostagem, ImageView imagemSalva){
+    private void fotoSalvar(String idPostagem, ImageView imagemSalva) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference salvarReference = reference.child("SalvarFotos").child(firebaseUser.getUid());
@@ -411,11 +433,11 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         salvarReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(idPostagem).exists()){
+                if (dataSnapshot.child(idPostagem).exists()) {
                     imagemSalva.setImageResource(R.drawable.ic_foto_salva_completo);
                     imagemSalva.setTag("Salva");
 
-                }else{
+                } else {
 
                     imagemSalva.setImageResource(R.drawable.ic_foto_salva_oco);
                     imagemSalva.setTag("Salvar");
@@ -430,7 +452,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
 
     }
 
-    private void estaCurtido(String idPostagem, LikeButton likeButtonImage){
+    private void estaCurtido(String idPostagem, LikeButton likeButtonImage) {
         FirebaseUser user = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
         DatabaseReference likesRef = reference.child("Likes").child(idPostagem);
@@ -438,11 +460,11 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         likesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(user.getUid()).exists()){
+                if (dataSnapshot.child(user.getUid()).exists()) {
                     // likeButtonImage.setImageResource(R.drawable.ic_likebutton_colorido);
                     likeButtonImage.setTag("curtido");
                     likeButtonImage.setLiked(true);
-                }else{
+                } else {
                     // likeButtonImage.setImageResource(R.drawable.ic_like_branco);
                     likeButtonImage.setTag("curtir");
                     likeButtonImage.setLiked(false);
@@ -457,7 +479,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
 
     }
 
-    private void deletarPostagem(String idUsuario,String idPostagem){
+    private void deletarPostagem(String idUsuario, String idPostagem) {
 
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference postsRef = ConfiguracaoFirebase.getReferenciaDatabase()
@@ -467,11 +489,11 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (idUsuario.equals(firebaseUser.getUid())){
+                if (idUsuario.equals(firebaseUser.getUid())) {
                     postsRef.removeValue().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()){
-                            deletaNotificacao(idUsuario,idPostagem);
-                            alteraNotificacao(idUsuario,idPostagem);
+                        if (task.isSuccessful()) {
+                            deletaNotificacao(idUsuario, idPostagem);
+                            alteraNotificacao(idUsuario, idPostagem);
                             Toast.makeText(context, "Deletado com sucesso.", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -486,40 +508,40 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         });
     }
 
-    private void addNovaNotificacao(String idUsuario,String idPostagem){
+    private void addNovaNotificacao(String idUsuario, String idPostagem) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+        DatabaseReference notificacaoReference = reference.child("Notificacao").
                 child(idUsuario);
         // child(idPostagem).child(idUsuario);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("idUsuario",firebaseUser.getUid());
-        hashMap.put("comentarioFeito","Gostou da sua postagem");
-        hashMap.put("idPostagem",idPostagem);
-        hashMap.put("isPostado",true);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario", firebaseUser.getUid());
+        hashMap.put("comentarioFeito", "Gostou da sua postagem");
+        hashMap.put("idPostagem", idPostagem);
+        hashMap.put("isPostado", true);
 
         notificacaoReference.push().setValue(hashMap);
 
     }
 
-    private void alteraNotificacao(String idUsuario,String idPostagem){
+    private void alteraNotificacao(String idUsuario, String idPostagem) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+        DatabaseReference notificacaoReference = reference.child("Notificacao").
                 child(idUsuario).child(idPostagem);
         //    child(idPostagem).child(idUsuario);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("idUsuario",firebaseUser.getUid());
-        hashMap.put("idPostagem",null);
-        hashMap.put("isPostado",true);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario", firebaseUser.getUid());
+        hashMap.put("idPostagem", null);
+        hashMap.put("isPostado", true);
 
         notificacaoReference.updateChildren(hashMap);
 
     }
 
-    private void deletaNotificacao(String idUsuario,String idPostagem){
+    private void deletaNotificacao(String idUsuario, String idPostagem) {
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").child(idUsuario);
+        DatabaseReference notificacaoReference = reference.child("Notificacao").child(idUsuario);
         notificacaoReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -527,8 +549,8 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
 
                 notificacaoReference.removeValue().addOnCompleteListener(task -> {
 
-                    if (task.isSuccessful()){
-                        Log.i("notificacaoReference","Notificação excluida. Id Postagem = "+idPostagem);
+                    if (task.isSuccessful()) {
+                        Log.i("notificacaoReference", "Notificação excluida. Id Postagem = " + idPostagem);
                     }
                 });
             }
@@ -540,24 +562,24 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
         });
     }
 
-    private void addNovaNotificacaoSalvar(String idUsuario,String idPostagem){
+    private void addNovaNotificacaoSalvar(String idUsuario, String idPostagem) {
         FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioAtual();
         DatabaseReference reference = ConfiguracaoFirebase.getReferenciaDatabase();
-        DatabaseReference notificacaoReference =  reference.child("Notificacao").
+        DatabaseReference notificacaoReference = reference.child("Notificacao").
                 child(idUsuario);
         //    child(idPostagem).child(idUsuario);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("idUsuario",firebaseUser.getUid());
-        hashMap.put("comentarioFeito","Salvou sua postagem!");
-        hashMap.put("idPostagem",idPostagem);
-        hashMap.put("isPostado",true);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("idUsuario", firebaseUser.getUid());
+        hashMap.put("comentarioFeito", "Salvou sua postagem!");
+        hashMap.put("idPostagem", idPostagem);
+        hashMap.put("isPostado", true);
 
         notificacaoReference.push().setValue(hashMap);
 
     }
 
-    public interface OnListItemClick{
-        void OnItemClick(DocumentSnapshot snapshot,int position);
+    public interface OnListItemClick {
+        void OnItemClick(DocumentSnapshot snapshot, int position);
     }
 
     public class ViewHolderFoto extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -605,7 +627,7 @@ public class AdapterFirestore extends FirestorePagingAdapter<FotoPostada,Adapter
 
         @Override
         public void onClick(View v) {
-            onListItemClick.OnItemClick(getItem(getAdapterPosition()),getAdapterPosition());
+            onListItemClick.OnItemClick(getItem(getAdapterPosition()), getAdapterPosition());
         }
     }
 

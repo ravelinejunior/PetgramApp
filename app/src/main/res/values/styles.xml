@@ -25,6 +25,13 @@
         <item name="colorAccent">@color/preto</item>
     </style>
 
+    <style name="AppThemeImageEdit" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/azulescuro</item>
+        <item name="colorPrimaryDark">@color/cinzaClaro</item>
+        <item name="colorAccent">@color/branco</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

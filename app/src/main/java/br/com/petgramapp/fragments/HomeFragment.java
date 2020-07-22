@@ -19,8 +19,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -52,10 +50,11 @@ import br.com.petgramapp.helper.ConfiguracaoFirebase;
 import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
 import br.com.petgramapp.model.Stories;
+import br.com.petgramapp.testes.FirestoreTestes;
 
 public class HomeFragment extends Fragment {
 
-    private static final int TOTAL_ITENS = 15;
+    private static final int TOTAL_ITENS = 25;
     private static int TOTAL_ITEM_EACH_LOAD = 10;
     List<DocumentChange> documentChanges;
     FirebaseAuth firebaseAuth;
@@ -429,6 +428,8 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+
     private void deslogarUsuario() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.deseja_sair_app);
@@ -471,14 +472,14 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         } else if (item.getItemId() == R.id.atualizar_update_MenuSair) {
 
-            ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction().
+       /*     ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction().
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
-                    replace(R.id.fragment_container_principal_StartAct, new FirestoreHomeFragment()).commit();
+                    replace(R.id.fragment_container_principal_StartAct, new FirestoreHomeFragment()).commit();*/
 
 
-           /* Intent intent = new Intent(getContext(), FirestoreTestes.class);
+            Intent intent = new Intent(getContext(), FirestoreTestes.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);*/
+            startActivity(intent);
 
         }
         return super.onOptionsItemSelected(item);

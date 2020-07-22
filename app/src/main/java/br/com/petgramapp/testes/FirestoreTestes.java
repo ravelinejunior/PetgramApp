@@ -56,6 +56,8 @@ public class FirestoreTestes extends AppCompatActivity implements AdapterFiresto
         setContentView(R.layout.activity_firestore_testes);
         recyclerViewFirestore = findViewById(R.id.recyclerViewTestes_Firestore);
         firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //query
         Query query = firebaseFirestore.collection("Posts").orderBy("dataPostada", Query.Direction.DESCENDING);
@@ -65,25 +67,6 @@ public class FirestoreTestes extends AppCompatActivity implements AdapterFiresto
                 .setInitialLoadSizeHint(1)
                 .setPageSize(10)
                 .build();
-
-        //RECYCLER OPTIONS
-      /*  FirestorePagingOptions<FotoPostada> options = new FirestorePagingOptions.Builder<FotoPostada>()
-                .setLifecycleOwner(this)
-                .setQuery(query,config,FotoPostada.class)
-                .build();
-                */
-
-     /*   FirestorePagingOptions<FotoPostada> options = new FirestorePagingOptions.Builder<FotoPostada>()
-                .setLifecycleOwner(this)
-                .setQuery(query, config, new SnapshotParser<FotoPostada>() {
-                    @NonNull
-                    @Override
-                    public FotoPostada parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                        FotoPostada fotoPostada = snapshot.toObject(FotoPostada.class);
-                        return fotoPostada;
-                    }
-                })
-                .build();*/
 
         FirestorePagingOptions<FotoPostada> options = new FirestorePagingOptions.Builder<FotoPostada>()
                 .setLifecycleOwner(this)

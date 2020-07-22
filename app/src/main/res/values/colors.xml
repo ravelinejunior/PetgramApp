@@ -44,6 +44,10 @@
     <color name="vermelho_icones">#FF0016</color>
     <color name="textColor_padrao">#171111</color>
     <color name="branco_azulado">#E0F7FA</color>
+    <color name="selected_filter">#221F20</color>
+    <color name="normal_filter">#8a8889</color>
+    <color name="color_option_menu">#FF3990</color>
+    <color name="color_option_menu_branco">#fff</color>
 
 
 </resources>
