@@ -36,7 +36,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -115,13 +114,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
     String nomeImagem = "Image From PetGram";
 
 
-        RequestOptions reqOpt = RequestOptions
-                .fitCenterTransform()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .disallowHardwareConfig()
-                .override(holder.imagemPostadaHome.getWidth(),holder.imagemPostadaHome.getHeight()); // Overrides size of downloaded image and converts it's bitmaps to your desired image size;
 
-    applyOptions(context,new GlideBuilder());
 
     //USUARIOS
     Uri fotoUri = Uri.parse(fotoPostada.getImagemPostada());
@@ -286,6 +279,7 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
                             if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                                     PackageManager.PERMISSION_GRANTED) {
                                 String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
                                 startDownloading(fotoUri);
                             } else {
                                 startDownloading(fotoUri);
@@ -568,10 +562,10 @@ public class AdapterFotoPostada extends RecyclerView.Adapter<AdapterFotoPostada.
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
         request.setTitle("Download");
         request.setDescription("Baixando ...");
-
+        request.setAllowedOverMetered(true).setAllowedOverRoaming(true);
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,""+System.currentTimeMillis()+".jpeg");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,System.currentTimeMillis()+".jpeg");
 
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);

@@ -72,4 +72,5 @@
         android:layout_below="@id/smartTabLayout"
         />
 
+
 </RelativeLayout>

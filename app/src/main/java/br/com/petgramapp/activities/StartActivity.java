@@ -1,5 +1,6 @@
 package br.com.petgramapp.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,10 +26,19 @@ import br.com.petgramapp.fragments.PerfilFragment;
 import br.com.petgramapp.fragments.PesquisarFragment;
 import br.com.petgramapp.fragments.PostarFragment;
 import br.com.petgramapp.helper.ConfiguracaoFirebase;
+import br.com.petgramapp.helper.Permissao;
 
 public class StartActivity extends AppCompatActivity {
     //firebase
     private FirebaseAuth firebaseAuth;
+
+    //lista de permissões
+    private final String[] listaPermissoesNecessarias = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
+
 
     //navigations
     public BottomNavigationView bottomNavigationViewStart;
@@ -38,6 +48,8 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         carregarElementos();
+        //validando as permissoes
+        Permissao.validarPermissoes(listaPermissoesNecessarias,this,1);
 
         //configurações iniciais
         configurarBottomNavigation();
