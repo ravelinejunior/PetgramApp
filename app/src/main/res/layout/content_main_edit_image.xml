@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.EditarImagem.EditarImagem"
+    tools:showIn="@layout/activity_edit_image">
+
+    <ImageView
+        android:id="@+id/image_preview"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:scaleType="centerCrop" />
+
+    <br.com.petgramapp.utils.NonSwipeableViewPager
+        android:id="@+id/nonSwipebleViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tabLayout_ContentMain"
+        android:layout_below="@id/image_preview"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout_ContentMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabTextColor="#000" />
+
+
+</RelativeLayout>
