@@ -16,6 +16,12 @@
         app:showAsAction="ifRoom"
         />
 
+    <item android:id="@+id/video_upload_MenuSair"
+        android:icon="@drawable/ic_baseline_videocam_24"
+        android:title="@string/video"
+        app:showAsAction="ifRoom"
+        />
+
     <item android:id="@+id/item_sair_MenuSair"
         android:title="@string/sair"
         />

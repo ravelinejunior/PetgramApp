@@ -51,6 +51,7 @@ import br.com.petgramapp.helper.UsuarioFirebase;
 import br.com.petgramapp.model.FotoPostada;
 import br.com.petgramapp.model.Stories;
 import br.com.petgramapp.testes.FirestoreTestes;
+import br.com.petgramapp.testes.VideoPostActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -471,16 +472,13 @@ public class HomeFragment extends Fragment {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         } else if (item.getItemId() == R.id.atualizar_update_MenuSair) {
-
-       /*     ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction().
-                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).
-                    replace(R.id.fragment_container_principal_StartAct, new FirestoreHomeFragment()).commit();*/
-
-
             Intent intent = new Intent(getContext(), FirestoreTestes.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+        }else if(item.getItemId() == R.id.video_upload_MenuSair){
+            Intent intent = new Intent(getContext(), VideoPostActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
 

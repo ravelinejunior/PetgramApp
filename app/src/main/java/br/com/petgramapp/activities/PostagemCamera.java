@@ -28,8 +28,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -55,12 +53,9 @@ public class PostagemCamera extends AppCompatActivity {
 
     // firebase
     StorageTask uploadTaskPostagem;
-    StorageReference storageReferencePostagem;
+
     private DatabaseReference usuariosRef;
-    private DatabaseReference usuarioLogadoRef;
-    private DatabaseReference firebaseRef;
     ProgressDialog dialog;
-    private FirebaseFirestore firebaseFirestore;
 
     //usuarios
     private String idUsuarioLogado;
@@ -73,8 +68,6 @@ public class PostagemCamera extends AppCompatActivity {
         carregarElementos();
 
         //CONFIGURAÇÕES INICIAIS
-        firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
-        firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
         usuarioLogado = UsuarioFirebase.getUsuarioLogado();
         idUsuarioLogado = UsuarioFirebase.getIdentificadorUsuario();
         usuariosRef = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios");
@@ -114,7 +107,7 @@ public class PostagemCamera extends AppCompatActivity {
     }
 
     private void recuperarDadosPostagem(){
-        usuarioLogadoRef = usuariosRef.child(idUsuarioLogado);
+        DatabaseReference usuarioLogadoRef = usuariosRef.child(idUsuarioLogado);
         //assim que função é acionada, setar valor como true
         abrirDialogCarregamento("Carregando dados, aguarde!");
         usuarioLogadoRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -142,7 +135,6 @@ public class PostagemCamera extends AppCompatActivity {
     private void uploadFotoPostagem(){
         abrirDialogCarregamento("Sua petFoto está sendo postada! Aguarde...");
         FotoPostada fotoPostada = new FotoPostada();
-        CollectionReference collectionReference = firebaseFirestore.collection("Posts");
 
         fotoPostada.setIdUsuarioPostou(idUsuarioLogado);
         fotoPostada.setDescricaoImagemPostada(Objects.requireNonNull(descricaoInputTextPostagem.getText()).toString());
@@ -169,8 +161,6 @@ public class PostagemCamera extends AppCompatActivity {
             bmp.isMutable();
             bmp.compress(Bitmap.CompressFormat.WEBP, 20, baos);
             byte[] data = baos.toByteArray();
-
-            //uploadTaskPostagem = imagemRef.putFile(uriImagemPostagem);
 
             uploadTaskPostagem = imagemRef.putBytes(data);
 
@@ -205,22 +195,6 @@ public class PostagemCamera extends AppCompatActivity {
                         Toast.makeText(getContext(), "Erro ao postar foto. Verifique sua internet.", Toast.LENGTH_SHORT).show();
                     }
 
-                    /*DatabaseReference postagemRef = firebaseRef.child("Posts");
-                    String postId = postagemRef.push().getKey();
-
-                    HashMap<String, Object> hashMap = new HashMap<>();
-
-                    hashMap.put("idPostagem", postId);
-                    hashMap.put("imagemPostada", imagemUrlPostagem);
-                    hashMap.put("descricaoImagemPostada", descricaoInputTextPostagem.getText().toString());
-                    hashMap.put("idUsuarioPostou", FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                    postagemRef.child("idPostagem").setValue(hashMap);*/
-
-                    //dialog.dismiss();
-
-                  /*  startActivity(new Intent(getContext(), StartActivity.class));
-                    finish();*/
                 }else{
                     Toast.makeText(getContext(), "Algo deu errado. Verifique sua conexão com a internet!", Toast.LENGTH_LONG).show();
                 }

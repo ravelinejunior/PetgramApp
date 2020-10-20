@@ -92,6 +92,10 @@
     <string name="participantes">Participantes</string>
     <string name="pesquisar_conversas_ou_contatos">Pesquisar conversas ou contatos</string>
     <string name="developed_by_franklin_juniorraveline">Developed by Franklin | @JuniorRaveline</string>
+    <string name="selecione_um_arquivo">Selecione um arquivo</string>
+    <string name="nenhum_arquivo_selecionado">Nenhum arquivo selecionado</string>
+    <string name="upload">Upload</string>
+    <string name="video">Video</string>
 
 
 </resources>

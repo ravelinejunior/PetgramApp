@@ -30,14 +30,8 @@
         android:roundIcon="@mipmap/launcherpet"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".testes.VideoPostActivity"></activity>
         <activity android:name=".activities.splashes.SplashScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.splashes.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -208,7 +202,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".launcher.SlideHomeLauncher"
-            android:theme="@style/Theme.Intro"></activity>
+            android:theme="@style/Theme.Intro" />
     </application>
 
 </manifest>

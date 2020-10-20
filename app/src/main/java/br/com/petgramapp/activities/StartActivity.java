@@ -8,9 +8,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -71,9 +69,6 @@ public class StartActivity extends AppCompatActivity {
         }else{
             fragmentTransaction.replace(R.id.fragment_container_principal_StartAct,new HomeFragment()).commit();
         }
-
-
-
 
     }
 
@@ -147,52 +142,11 @@ public class StartActivity extends AppCompatActivity {
         firebaseAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
    }
 
-    private void deslogarUsuario(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(R.string.deseja_sair_app);
-        builder.setIcon(R.drawable.ic_pets_black_24dp);
-        builder.setMessage(R.string.deseja_sair_app_message);
-        builder.setCancelable(false);
-        builder.setPositiveButton(getString(R.string.confirmar), (dialog, which) -> {
-            try {
-                firebaseAuth.signOut();
-                startActivity(new Intent(getContext(), LoginActivity.class));
-            } catch (Exception e) {
-                Toast.makeText(this, "Erro." + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancelar, (dialog, which) -> {
-            Toast.makeText(getContext(), "Muito bem. Continue se divertindo com os pets do mundo todo!", Toast.LENGTH_SHORT).show();
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-    }
 
     private Context getContext() {
         return StartActivity.this;
     }
 
-    /*//criando menu na tela
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_sair_usuarios,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    //recuperando valores dos itens
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.item_sair_MenuSair) {
-            deslogarUsuario();
-        }
-        return super.onOptionsItemSelected(item);
-
-    }*/
 
 }
 

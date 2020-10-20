@@ -20,17 +20,6 @@ public class FotoPostada {
 
     }
 
-    public Map<String,Object> conversorMap(){
-        HashMap<String, Object> hashMap = new HashMap<>();
-
-        hashMap.put("idPostagem", getIdPostagem());
-        hashMap.put("imagemPostada", getImagemPostada());
-        hashMap.put("descricaoImagemPostada", getDescricaoImagemPostada());
-        hashMap.put("idUsuarioPostou", getIdUsuarioPostou());
-
-        return hashMap;
-
-    }
 
     private String idPostagem;
     private String idUsuarioPostou;
@@ -95,17 +84,7 @@ public class FotoPostada {
         Usuario usuarioLogado = UsuarioFirebase.getUsuarioLogado();
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
 
-       /* String combinacaodeId = "/"+getIdUsuarioPostou()+"/"+getIdPostagem();
-        objeto.put("/Posts"+combinacaodeId+"/idPostagem",getIdPostagem());
-        objeto.put("/Posts"+combinacaodeId+"/imagemPostada",getImagemPostada());
-        objeto.put("/Posts"+combinacaodeId+"/descricaoImagemPostada",getDescricaoImagemPostada());
-        objeto.put("/Posts"+combinacaodeId+"/usuario/nomePetUsuario",getUsuario().getNomePetUsuario());
-        objeto.put("/Posts"+combinacaodeId+"/usuario/emailPetUsuario",getUsuario().getEmailPetUsuario());
-        objeto.put("/Posts"+combinacaodeId+"/usuario/uriCaminhoFotoPetUsuario",getUsuario().getUriCaminhoFotoPetUsuario());
-*/
-
         String combinacaodeId = "/"+getIdPostagem();
-        //objeto.put("/Posts"+combinacaodeId+"/idPostagem",getIdPostagem());
         objeto.put("/Posts"+combinacaodeId+"/imagemPostada",getImagemPostada());
         objeto.put("/Posts"+combinacaodeId+"/idPostagem",getIdPostagem());
         objeto.put("/Posts"+combinacaodeId+"/idUsuarioPostou",getIdUsuarioPostou());
@@ -116,13 +95,6 @@ public class FotoPostada {
         objeto.put("/Posts"+combinacaodeId+"/usuario/emailPetUsuario",getUsuario().getEmailPetUsuario());
         objeto.put("/Posts"+combinacaodeId+"/usuario/uriCaminhoFotoPetUsuario",getUsuario().getUriCaminhoFotoPetUsuario());
 
-        /*DatabaseReference postagemRef = ConfiguracaoFirebase.getReferenciaDatabase().child("Posts")
-                .child(getIdUsuarioPostou());
-
-        objeto.put("idPostagem", getIdPostagem());
-        objeto.put("imagemPostada", getImagemPostada());
-        objeto.put("descricaoImagemPostada", getDescricaoImagemPostada());
-        objeto.put("idUsuarioPostou", usuarioLogado.getId());*/
 
         firebaseRef.updateChildren(objeto);
         return true;
@@ -134,7 +106,6 @@ public class FotoPostada {
         Map objeto = new HashMap();
         FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirebaseFirestore();
 
-        //objeto.put("/Posts"+combinacaodeId+"/idPostagem",getIdPostagem());
         objeto.put("imagemPostada",getImagemPostada());
         objeto.put("idPostagem",getIdPostagem());
         objeto.put("idUsuarioPostou",getIdUsuarioPostou());
